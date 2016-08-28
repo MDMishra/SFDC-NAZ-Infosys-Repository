@@ -1,0 +1,27 @@
+Create new Object:
+
+Label Name: Account Target Program
+API Name: US_Account_Target_Program__c
+
+And add below fields to this object:
+
+Location__c
+Count Of SKUs
+Account Target Count
+Wholesaler Number
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+In addition, make sure we have all the mentioned fields corresponds to the objects are available in PROD:
+
+    <types>
+        <members>Account.Account_Targets_Count__c</members>
+        <members>Account.Location__c</members>
+        <members>US_Account_Target_Program__c.Count_of_SKUs__c</members>
+        <members>US_Account_Target_Program__c.Program_Target_Level__c</members>
+        <members>US_Account_Target_Program__c.WSLR_Target_Program__c</members>
+        <members>US_Account_Target_Program__c.Wholesaler_Number__c</members>
+        <members>WSLR_Target_Program__c.WSLR_NBR__c</members>
+        <members>WSLR_Target_Program__c.Wholesaler__c</members>
+        <name>CustomField</name>
+    </types>
+------------------------------------------------------------------------------------------------------------------------------------------------
