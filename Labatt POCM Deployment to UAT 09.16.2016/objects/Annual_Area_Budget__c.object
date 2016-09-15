@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>true</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Custom object to track the cascading of budget for POC Planning for the region, district &amp; territory. (Slalom 8/2016)</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableDivisions>false</enableDivisions>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Approval_Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Approval Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Not Required</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Required</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Submitted for Approval</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Assigned_KI_Volume__c</fullName>
+        <externalId>false</externalId>
+        <label>Assigned KI Volume</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Budget_Area__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Budget Area</label>
+        <referenceTo>Budget_Area__c</referenceTo>
+        <relationshipLabel>Annual Area Budgets</relationshipLabel>
+        <relationshipName>Annual_Area_Budgets</relationshipName>
+        <required>true</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Budget_Plan__c</fullName>
+        <externalId>false</externalId>
+        <formula>HYPERLINK( LEFT($Api.Partner_Server_URL_260, FIND( &apos;/services&apos;, $Api.Partner_Server_URL_260))+ &quot;apex/POCPlanningApp&quot; + &quot;?Page=Dashboard&quot; + &quot;&amp;TerritoryId=&quot; + Budget_Area__c + &quot;&amp;Year=&quot; +  Budget_Year__c , &quot;Planning App&quot; , &quot;_blank&quot;)</formula>
+        <inlineHelpText>Link to this Territory&apos;s entire Budget Plan</inlineHelpText>
+        <label>Budget Plan</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Budget_Year__c</fullName>
+        <defaultValue>TEXT(YEAR(TODAY()))</defaultValue>
+        <externalId>false</externalId>
+        <label>Budget Year</label>
+        <length>4</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CAPEX_Assets_Budget__c</fullName>
+        <externalId>false</externalId>
+        <label>CAPEX Assets Budget</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>DSM_Parked_Budget__c</fullName>
+        <externalId>false</externalId>
+        <formula>District_Budget_Total__c - District_Budget_Allocated__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>DSM Parked Budget</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Discretionary_Budget__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Discretionary Budget</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Discretionary_Pre_Planning_Spend__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Calculated roll-up field of all Discretionary Pre-Planning spend for this budget.</inlineHelpText>
+        <label>Discretionary Pre-Planning Spend</label>
+        <summarizedField>Annual_POC_Budget_Plan__c.Discretionary_Pre_Planning_Spend__c</summarizedField>
+        <summaryForeignKey>Annual_POC_Budget_Plan__c.Annual_Territory_Budget__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Discretionary_Spend__c</fullName>
+        <externalId>false</externalId>
+        <formula>Discretionary_Pre_Planning_Spend__c +  Discretionary_Variable_Spend__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Discretionary Spend</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Discretionary_Variable_Spend__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Calculated roll-up field of all Discretionary Variable spend for this budget.</inlineHelpText>
+        <label>Discretionary Variable Spend</label>
+        <summarizedField>Annual_POC_Budget_Plan__c.Discretionary_Pre_Planning_Spend__c</summarizedField>
+        <summaryForeignKey>Annual_POC_Budget_Plan__c.Annual_Territory_Budget__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>District_Budget_Allocated__c</fullName>
+        <externalId>false</externalId>
+        <label>District Budget Allocated</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>District_Budget_Total__c</fullName>
+        <externalId>false</externalId>
+        <label>District Budget Total</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Driver_Spend__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Calculated roll-up field of all Driver spend for this budget.</inlineHelpText>
+        <label>Driver Spend</label>
+        <summarizedField>Annual_POC_Budget_Plan__c.Driver_Spend__c</summarizedField>
+        <summaryForeignKey>Annual_POC_Budget_Plan__c.Annual_Territory_Budget__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Drivers_Budget__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Drivers Budget</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Sales_Territory__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Sales Territory</label>
+        <referenceTo>lboc_Sales_Territory__c</referenceTo>
+        <relationshipLabel>Annual Area Budgets</relationshipLabel>
+        <relationshipName>Annual_Area_Budgets</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>DSM Draft</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Target_Volume__c</fullName>
+        <externalId>false</externalId>
+        <label>Target Volume</label>
+        <summarizedField>Annual_POC_Budget_Plan__c.Target_Vol_HL__c</summarizedField>
+        <summaryForeignKey>Annual_POC_Budget_Plan__c.Annual_Territory_Budget__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Total_Budget__c</fullName>
+        <externalId>false</externalId>
+        <formula>Trade_Activation_Budget__c + Drivers_Budget__c +  Discretionary_Budget__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Budget</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Trade_Activation_Budget__c</fullName>
+        <externalId>false</externalId>
+        <label>Trade Activation Budget</label>
+        <summarizedField>Annual_Brand_Area_Budget_Plan__c.Brand_Budget__c</summarizedField>
+        <summaryForeignKey>Annual_Brand_Area_Budget_Plan__c.Annual_Area_Budget__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <label>Annual Area Budget</label>
+    <listViews>
+        <fullName>All_2016_Annual_Area_Budgets</fullName>
+        <columns>NAME</columns>
+        <columns>Sales_Territory__c</columns>
+        <columns>Budget_Year__c</columns>
+        <columns>Assigned_KI_Volume__c</columns>
+        <columns>Total_Budget__c</columns>
+        <columns>Trade_Activation_Budget__c</columns>
+        <columns>Discretionary_Budget__c</columns>
+        <columns>Drivers_Budget__c</columns>
+        <columns>Status__c</columns>
+        <columns>RECORDTYPE</columns>
+        <columns>OWNER.ALIAS</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Budget_Year__c</field>
+            <operation>equals</operation>
+            <value>2016</value>
+        </filters>
+        <label>All 2016 Annual Area Budgets</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>All_Annual_Area_Budgets</fullName>
+        <columns>NAME</columns>
+        <columns>Budget_Year__c</columns>
+        <columns>Assigned_KI_Volume__c</columns>
+        <columns>Total_Budget__c</columns>
+        <columns>Trade_Activation_Budget__c</columns>
+        <columns>Discretionary_Budget__c</columns>
+        <columns>Drivers_Budget__c</columns>
+        <columns>Status__c</columns>
+        <columns>RECORDTYPE</columns>
+        <columns>OWNER.ALIAS</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Annual Area Budgets</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <displayFormat>AAB-{0000}</displayFormat>
+        <label>Annual Area Budget ID</label>
+        <trackHistory>true</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Annual Area Budgets</pluralLabel>
+    <recordTypeTrackHistory>true</recordTypeTrackHistory>
+    <recordTypes>
+        <fullName>District</fullName>
+        <active>true</active>
+        <description>Use this record type for all District budgets.</description>
+        <label>District</label>
+        <picklistValues>
+            <picklist>Approval_Status__c</picklist>
+            <values>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Not Required</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Required</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Submitted for Approval</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>DSM Draft</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Territory</fullName>
+        <active>true</active>
+        <description>Use this record type for all Territory budgets.</description>
+        <label>Territory</label>
+        <picklistValues>
+            <picklist>Approval_Status__c</picklist>
+            <values>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Not Required</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Required</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Submitted for Approval</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>DSM Draft</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <customTabListAdditionalFields>Budget_Year__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Assigned_KI_Volume__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Total_Budget__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Trade_Activation_Budget__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Discretionary_Budget__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Drivers_Budget__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>RECORDTYPE</customTabListAdditionalFields>
+        <customTabListAdditionalFields>OWNER.ALIAS</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>Budget_Year__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>RECORDTYPE</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>OWNER.ALIAS</lookupDialogsAdditionalFields>
+        <searchFilterFields>Approval_Status__c</searchFilterFields>
+        <searchFilterFields>Budget_Year__c</searchFilterFields>
+        <searchFilterFields>Status__c</searchFilterFields>
+        <searchFilterFields>RECORDTYPE</searchFilterFields>
+        <searchResultsAdditionalFields>Budget_Year__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Assigned_KI_Volume__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Total_Budget__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Discretionary_Budget__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Drivers_Budget__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Trade_Activation_Budget__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>RECORDTYPE</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>OWNER.ALIAS</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <startsWith>Vowel</startsWith>
+</CustomObject>

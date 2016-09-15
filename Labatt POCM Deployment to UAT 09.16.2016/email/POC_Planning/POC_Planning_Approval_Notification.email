@@ -1,0 +1,13 @@
+The following Budget requires your approval: <br>
+<br>
+Owner: {!Annual_Area_Budget__c.OwnerFullName}<br>
+Total Budget: {!Annual_Area_Budget__c.Total_Budget__c}<br>
+Total Trade Activation Budget: {!Annual_Area_Budget__c.Trade_Activation_Budget__c}<br>
+Driver Budget: {!Annual_Area_Budget__c.Drivers_Budget__c}<br>
+Discretionary Budget: {!Annual_Area_Budget__c.Discretionary_Budget__c}<br>
+<br>
+Trade Activation Spend: <br>
+Driver Spend: {!Annual_Area_Budget__c.Driver_Spend__c}<br>
+Discretionary Spend: {!Annual_Area_Budget__c.Discretionary_Spend__c}<br>
+<br>
+Click on the link to access this budget plan: {!Annual_Area_Budget__c.Budget_Plan__c}

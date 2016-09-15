@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>true</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This custom object is used for POC Planning (Slalom Aug 2016)</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableDivisions>false</enableDivisions>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Annual_Brand_Area_Budget_Plan__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Annual Brand Area Budget Plan</label>
+        <referenceTo>Annual_Brand_Area_Budget_Plan__c</referenceTo>
+        <relationshipName>Marketing_Kits</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Brand__c</fullName>
+        <externalId>false</externalId>
+        <formula>Marketing_Program_Name__r.Brand__r.Name</formula>
+        <label>Brand</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Discretionary_Spend__c</fullName>
+        <externalId>false</externalId>
+        <label>Discretionary Spend</label>
+        <summarizedField>Trade_Activation_Kit_Item__c.Item_Spend__c</summarizedField>
+        <summaryFilterItems>
+            <field>Trade_Activation_Kit_Item__c.Marketing_Type__c</field>
+            <operation>equals</operation>
+            <value>Visibility, Promotional</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Trade_Activation_Kit_Item__c.Marketing_Kit__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Driver_Spend__c</fullName>
+        <externalId>false</externalId>
+        <label>Driver Spend</label>
+        <summarizedField>Trade_Activation_Kit_Item__c.Item_Spend__c</summarizedField>
+        <summaryFilterItems>
+            <field>Trade_Activation_Kit_Item__c.Marketing_Type__c</field>
+            <operation>equals</operation>
+            <value>Driver</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Trade_Activation_Kit_Item__c.Marketing_Kit__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Execution_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Execution End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Execution_Start_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Execution Start Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Marketing_Program_Name__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Marketing Program Name</label>
+        <referenceTo>Marketing_Program__c</referenceTo>
+        <relationshipName>Marketing_Kits</relationshipName>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>POC_Spend_Category__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>POC Spend Category</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>POC_Spend_Category__c.RecordType.DeveloperName</field>
+                <operation>equals</operation>
+                <value>Trade_Activation</value>
+            </filterItems>
+            <isOptional>false</isOptional>
+        </lookupFilter>
+        <referenceTo>POC_Spend_Category__c</referenceTo>
+        <relationshipName>Marketing_Kits</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Total_Spend__c</fullName>
+        <externalId>false</externalId>
+        <formula>Discretionary_Spend__c +  Driver_Spend__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Spend</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <label>Shopped Kit</label>
+    <nameField>
+        <label>Shopped Kit Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Shopped Kit</pluralLabel>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Brand__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Annual_Brand_Area_Budget_Plan__c</lookupDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Brand__c</searchFilterFields>
+        <searchFilterFields>Annual_Brand_Area_Budget_Plan__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Program_and_Budget_Brands_Must_Match</fullName>
+        <active>true</active>
+        <errorConditionFormula>Annual_Brand_Area_Budget_Plan__r.Brand__c != Marketing_Program_Name__r.Brand__c</errorConditionFormula>
+        <errorMessage>Program and Budget Brands Must Match</errorMessage>
+    </validationRules>
+</CustomObject>

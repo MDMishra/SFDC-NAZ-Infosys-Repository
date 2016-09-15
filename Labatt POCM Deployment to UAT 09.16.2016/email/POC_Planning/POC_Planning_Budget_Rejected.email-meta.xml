@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Email template for POC Planning Budget Rejected Notification</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>POC Planning Budget Rejected</name>
+    <style>none</style>
+    <subject>POC Planning Budget Rejected</subject>
+    <textOnly>The following Budget has been rejected:  
+
+Click on the link to access this budget plan: {!Annual_Area_Budget__c.Budget_Plan__c}</textOnly>
+    <type>custom</type>
+</EmailTemplate>

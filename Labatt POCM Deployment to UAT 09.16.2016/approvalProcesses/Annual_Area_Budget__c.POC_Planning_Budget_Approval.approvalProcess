@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+        <field>Approval_Status__c</field>
+        <field>Total_Budget__c</field>
+        <field>Discretionary_Pre_Planning_Spend__c</field>
+        <field>Discretionary_Spend__c</field>
+        <field>Discretionary_Variable_Spend__c</field>
+        <field>Drivers_Budget__c</field>
+        <field>Assigned_KI_Volume__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>Budget_Plan_Approval_Notification</name>
+                <type>Alert</type>
+            </action>
+            <action>
+                <name>Update_Approval_Status_to_Approved</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <type>userHierarchyField</type>
+            </approver>
+        </assignedApprover>
+        <description>All budget plans must be approved by the DSM</description>
+        <label>Approval to DSM</label>
+        <name>Approval_to_DSM</name>
+        <rejectionActions>
+            <action>
+                <name>Budget_Plan_Rejection_Notification</name>
+                <type>Alert</type>
+            </action>
+            <action>
+                <name>Update_Approval_Status_to_Rejected</name>
+                <type>FieldUpdate</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <description>Approval process of the POC Planning Budget from the Field Sales rep to the District Sales Manager (DSM)</description>
+    <emailTemplate>POC_Planning/POC_Planning_Approval_Notification</emailTemplate>
+    <enableMobileDeviceAccess>true</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Annual_Area_Budget__c.Approval_Status__c</field>
+            <operation>equals</operation>
+            <value>Required,Rejected</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Annual_Area_Budget__c.Status__c</field>
+            <operation>equals</operation>
+            <value>In Progress</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Annual_Area_Budget__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Territory</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Update_Approval_Status_to_Submitted</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>POC Planning Budget Approval</label>
+    <nextAutomatedApprover>
+        <useApproverFieldOfRecordOwner>false</useApproverFieldOfRecordOwner>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

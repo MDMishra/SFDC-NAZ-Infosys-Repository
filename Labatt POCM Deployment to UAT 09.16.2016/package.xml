@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Annual_Area_Budget__c.POC_Planning_Budget_Approval</members>
+        <name>ApprovalProcess</name>
+    </types>
+    <types>
+        <members>Account.Craft_Territory_lD__c</members>
+        <members>Account.Labatt_Territory_ID__c</members>
+        <members>Account.MBC_Territory_ID__c</members>
+        <members>lboc_Sales_Territory__c.District_Sales_Manager_SAML_Fed_ID__c</members>
+        <members>lboc_Sales_Territory__c.FSEM_Labatt_SAML_Fed_ID__c</members>
+        <members>lboc_Sales_Territory__c.Line_of_Business__c</members>
+        <members>lboc_Sales_Territory__c.Regional_Sales_Managerr_SAML_Fed_ID__c</members>
+        <members>lboc_Sales_Territory__c.Territory_Sales_Rep_SAML_Fed_ID__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Annual_Area_Budget__c</members>
+        <members>Annual_Brand_Area_Budget_Plan__c</members>
+        <members>Annual_POC_Budget_Plan__c</members>
+        <members>Area_Item_Inventory__c</members>
+        <members>Brand__c</members>
+        <members>Budget_Area__c</members>
+        <members>Budget_Load_Staging__c</members>
+        <members>Driver_Item__c</members>
+        <members>Item_Load_Staging__c</members>
+        <members>Marketing_Item__c</members>
+        <members>Marketing_Kit__c</members>
+        <members>Marketing_Program_Item__c</members>
+        <members>Marketing_Program__c</members>
+        <members>POC_Spend_Category__c</members>
+        <members>Trade_Activation_Brands__c</members>
+        <members>Trade_Activation_Brands__c</members>
+        <members>Trade_Activation_Kit_Item__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Annual_Area_Budget__c</members>
+        <members>Brand__c</members>
+        <members>Marketing_Item__c</members>
+        <members>Marketing_Program__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>POC_Planning</members>
+        <members>POC_Planning/POC_Planning_Approval_Notification</members>
+        <members>POC_Planning/POC_Planning_Budget_Approved</members>
+        <members>POC_Planning/POC_Planning_Budget_Rejected</members>
+        <members>POC_Planning/POC_Planning_Budget_Updated</members>
+        <name>EmailTemplate</name>
+    </types>
+    <types>
+        <members>DSM%2FFSEM Home Page with Approval</members>
+        <members>Trade Activation and Trade Marketing</members>
+        <name>HomePageLayout</name>
+    </types>
+    <types>
+        <members>Annual_Area_Budget__c-Annual Territory Budget Layout</members>
+        <members>Annual_Area_Budget__c-District Budget Layout</members>
+        <members>Annual_Brand_Area_Budget_Plan__c-Annual Brand Budget Plan Layout</members>
+        <members>Annual_POC_Budget_Plan__c-Annual POC Budget Plan Layout</members>
+        <members>Area_Item_Inventory__c-Area Item Inventory Layout</members>
+        <members>Brand__c-Brand Layout</members>
+        <members>Driver_Item__c-Driver Item Layout</members>
+        <members>Marketing_Item__c-Item Layout</members>
+        <members>Marketing_Kit__c-Shopped Kit Layout</members>
+        <members>Marketing_Program_Item__c-Toolkit Item Layout</members>
+        <members>Marketing_Program__c-Toolkit Layout</members>
+        <members>POC_Spend_Category__c-Discretionary</members>
+        <members>POC_Spend_Category__c-Driver</members>
+        <members>POC_Spend_Category__c-Trade Activation</members>
+        <members>Trade_Activation_Kit_Item__c-Trade Activation Kit Item Layout</members>
+        <members>lboc_Sales_Territory__c-Territory Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Annual_Area_Budget__c.Budget_Plan_Approval_Notification</members>
+        <members>Annual_Area_Budget__c.Budget_Plan_Rejection_Notification</members>
+        <members>Annual_Area_Budget__c.POC_Planning_Budget_Updated</members>
+        <name>WorkflowAlert</name>
+    </types>
+    <types>
+        <members>Annual_Area_Budget__c.Update_Approval_Status_to_Approved</members>
+        <members>Annual_Area_Budget__c.Update_Approval_Status_to_Rejected</members>
+        <members>Annual_Area_Budget__c.Update_Approval_Status_to_Required</members>
+        <members>Annual_Area_Budget__c.Update_Approval_Status_to_Submitted</members>
+        <name>WorkflowFieldUpdate</name>
+    </types>
+    <types>
+        <members>Annual_Area_Budget__c.Update Approval Status to Required when updated</members>
+        <name>WorkflowRule</name>
+    </types>
+    <version>37.0</version>
+</Package>

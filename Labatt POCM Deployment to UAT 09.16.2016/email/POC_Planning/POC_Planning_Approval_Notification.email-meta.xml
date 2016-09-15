@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Email template for POC Planning Budget Approval</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>POC Planning Approval Notification</name>
+    <style>none</style>
+    <subject>POC Planning Budget Approval Required</subject>
+    <textOnly>The following Budget requires your approval:  
+
+Owner: {!Annual_Area_Budget__c.OwnerFullName} 
+Total Budget: {!Annual_Area_Budget__c.Total_Budget__c} 
+Total Trade Activation Budget: {!Annual_Area_Budget__c.Trade_Activation_Budget__c} 
+Driver Budget: {!Annual_Area_Budget__c.Drivers_Budget__c} 
+Discretionary Budget: {!Annual_Area_Budget__c.Discretionary_Budget__c}  
+
+Trade Activation Spend: 
+Driver Spend: {!Annual_Area_Budget__c.Driver_Spend__c} 
+Discretionary Spend: {!Annual_Area_Budget__c.Discretionary_Spend__c}  
+
+Click on the link to access this budget plan: {!Annual_Area_Budget__c.Budget_Plan__c}</textOnly>
+    <type>custom</type>
+</EmailTemplate>

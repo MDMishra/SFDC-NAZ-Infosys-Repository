@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <description>Brands used for budgeting</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Budget_Load_Staging_Field_APIs__c</fullName>
+        <externalId>false</externalId>
+        <label>Budget Load Staging Field APIs</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Trade Activation Brands</label>
+    <visibility>Public</visibility>
+</CustomObject>

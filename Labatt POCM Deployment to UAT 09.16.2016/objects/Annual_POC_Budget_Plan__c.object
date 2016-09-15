@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>true</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This custom object is used for POC Planning (Slalom Aug 2016)</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableDivisions>false</enableDivisions>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Account__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Annual POC Budget Plans</relationshipLabel>
+        <relationshipName>Annual_POC_Budget_Plans</relationshipName>
+        <required>true</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Annual_Territory_Budget__c</fullName>
+        <externalId>false</externalId>
+        <label>Annual Area Budget</label>
+        <referenceTo>Annual_Area_Budget__c</referenceTo>
+        <relationshipLabel>Annual POC Budget Plans</relationshipLabel>
+        <relationshipName>Annual_POC_Budget_Plans</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>true</reparentableMasterDetail>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Discretionary_Pre_Planning_Spend__c</fullName>
+        <externalId>false</externalId>
+        <label>Discretionary Pre-Planning Spend</label>
+        <summarizedField>POC_Spend_Category__c.Pre_Planning_Spend__c</summarizedField>
+        <summaryFilterItems>
+            <field>POC_Spend_Category__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Discretionary</value>
+        </summaryFilterItems>
+        <summaryForeignKey>POC_Spend_Category__c.Annual_POC_Budget_Plan__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Discretionary_Spend__c</fullName>
+        <externalId>false</externalId>
+        <formula>Discretionary_Pre_Planning_Spend__c +  Discretionary_Variable_Spend__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Discretionary Spend</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Discretionary_Variable_Spend__c</fullName>
+        <externalId>false</externalId>
+        <label>Discretionary Variable Spend</label>
+        <summarizedField>POC_Spend_Category__c.Variable_Spend__c</summarizedField>
+        <summaryFilterItems>
+            <field>POC_Spend_Category__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Discretionary</value>
+        </summaryFilterItems>
+        <summaryForeignKey>POC_Spend_Category__c.Annual_POC_Budget_Plan__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Driver_Spend__c</fullName>
+        <externalId>false</externalId>
+        <label>Driver Spend</label>
+        <summarizedField>POC_Spend_Category__c.Driver_Spend__c</summarizedField>
+        <summaryFilterItems>
+            <field>POC_Spend_Category__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Driver</value>
+        </summaryFilterItems>
+        <summaryForeignKey>POC_Spend_Category__c.Annual_POC_Budget_Plan__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Target_Vol_HL__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Target Vol (HL)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Trade_Activation_Discretionary_Spend__c</fullName>
+        <externalId>false</externalId>
+        <label>Trade Activation Discretionary Spend</label>
+        <summarizedField>POC_Spend_Category__c.Trade_Activation_Discretionary_Spend__c</summarizedField>
+        <summaryFilterItems>
+            <field>POC_Spend_Category__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Trade Activation</value>
+        </summaryFilterItems>
+        <summaryForeignKey>POC_Spend_Category__c.Annual_POC_Budget_Plan__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Trade_Activation_Driver_Spend__c</fullName>
+        <externalId>false</externalId>
+        <label>Trade Activation Driver Spend</label>
+        <summarizedField>POC_Spend_Category__c.Trade_Activation_Driver_Spend__c</summarizedField>
+        <summaryFilterItems>
+            <field>POC_Spend_Category__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Trade Activation</value>
+        </summaryFilterItems>
+        <summaryForeignKey>POC_Spend_Category__c.Annual_POC_Budget_Plan__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Trade_Activation_Spend__c</fullName>
+        <externalId>false</externalId>
+        <formula>Trade_Activation_Discretionary_Spend__c + Trade_Activation_Driver_Spend__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Trade Activation Spend</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <label>Annual POC Budget Plan</label>
+    <nameField>
+        <label>Annual POC Budget Plan Name</label>
+        <trackHistory>true</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Annual POC Budget Plans</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <startsWith>Vowel</startsWith>
+</CustomObject>
