@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>SAP_Color_Indicator_Num__c</fullName>
+        <externalId>false</externalId>
+        <label>SAP Color Indicator #</label>
+        <precision>1</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SAP_Color_Indicator__c</fullName>
+        <description>if no targets achieved = red (-1),  if achieved targets &gt; program target level then green(1), else yellow(0)</description>
+        <externalId>false</externalId>
+        <formula>if(Achieved_Targets__c = 0, -1,
+if(Achieved_Targets__c &gt;= Program_Target_Level__c, 1, 0))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>if no targets achieved = red (-1),  if achieved targets &gt; program target level then green(1), else yellow(0)</inlineHelpText>
+        <label>SAP Color Indicator</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

@@ -1,0 +1,915 @@
+<!--Visual Force Page:ABS_WholesalerAccountDetail
+  Description:This page is developed to display wholesalers records
+  Created By :Deepthi Toranala
+  Created Date:5/30/2016
+  Modified Date:
+  Modified By:
+  -->
+<apex:page docType="html-5.0" controller="ABS_WholesalerAccountDetail"  showHeader="false" setup="false" id="wholePage" >
+<html lang="en" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <head>
+      <meta charset="utf-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <apex:includeScript value="{!URLFOR($Resource.ABS_Bootstrap, 'jquery.min.js')}"/>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJcHlM9CnrvooBrt7RmBzpscDCfx2WiM4" type="text/javascript"></script>
+      <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+      <script src="../../soap/ajax/37.0/connection.js" type="text/javascript"></script>
+      <apex:stylesheet value="{!URLFOR($Resource.LDS, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
+      
+
+      <style>  
+        body{font-family: "Salesforce Sans",Arial,sans-serif !important;}
+        .header {background-color:#000033;color: #ffffff;padding: 10px;}                                              
+        #map_canvas {margin:0 auto;height:400px;min-width:100%;float:right;}
+        #map_canvas {margin:0 auto;height:400px;min-width:100%;float:right;}
+        #map_wrapper {height: 300px;}                                                
+        #map_canvas { width: 100%; height: 100%;}
+        .collBar{
+            height: 45px;
+            border-radius: 7px;
+            background-image: linear-gradient( #444,#2d2d2d );
+        }
+        .retailerBar{
+            border: 1px solid #d8dde6;
+            height: 45px;
+            border-radius: 7px;
+            background: #fff;;
+        }
+        .Greencircle
+        {
+            width:60px;
+            height:60px;
+            border-radius:260px;
+            font-size:15px;
+            font-weight:bold;
+            //color:#fff;
+            line-height:60px;
+            text-align:center;
+            background:green;
+        }
+        .Yellowcircle
+        {
+            width:60px;
+            height:60px;
+            border-radius:260px;
+            font-size:15px;
+            font-weight:bold;
+            //color:#fff;
+            line-height:60px;
+            text-align:center;
+            background:yellow;
+        }
+        .Redcircle{
+            width:60px;
+            height:60px;
+            border-radius:260px;
+            font-size:15px;
+            font-weight:bold;
+            //color:#fff;
+            line-height:60px;
+            text-align:center;
+            background:Red;
+        }
+        .bold_text{
+            font-weight: bold;
+        }
+        .text_bold
+        {
+            font-size: 20px;
+            font-weight: bold;
+        }
+         .text_bold1
+        {
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .plus_symbol{
+            color: white;
+            cursor:pointer;
+        }
+        .account_heading_color{
+            color: white;
+         }
+        .textcenter{
+            left: 0;
+            line-height: 200px;
+            margin-top: -100px;
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            width: 100%;
+       }
+       .textcenterRe{
+           left: 0;
+           line-height: 363px;
+           text-align: center;
+           top: 50%;
+           width: 100%;
+           padding-left: 365px;
+       }
+       .textu{
+        text-decoration: underline
+       }
+       ul li{
+            margin-left:0px;
+        }
+       
+      </style>
+    </head>
+    <apex:form id="frm">
+        <apex:outputPanel id="scriptPanel">
+        <script type="text/javascript">
+        var navLog;
+        var navlat;
+          // fuction which loads on page load pull geo loacation values
+          /*function callbackSuccess()
+          {
+              if(navigator.geolocation)
+              {
+                 navigator.geolocation.getCurrentPosition(jsfind,showError);
+              }
+              else{
+                console.log('navigator not supported');
+              }
+          }*/
+          
+          // fuction is called if geolocation is not pulled
+          /*function showError(error) 
+          {
+             navLog=0;
+             navlat=0;
+             callfind(0,0);
+          }*/
+          
+          //fuction which send geolocation is to action function
+          /*function jsfind(position)
+          {
+              //get latitude and longitude
+              var pos = {};
+              pos = position.coords;
+              console.log(pos);
+              var lat = pos.latitude;
+              var lon = pos.longitude;
+              navLog=pos.longitude;
+              navlat=pos.latitude;
+              callfind(lat,lon);
+          }*/
+          
+          google.maps.event.addDomListener(window, 'load',callbackSuccess);
+          
+          //fuction to collpase and expanding
+          function change_autorefreshdiv()
+          {
+              var NAME = document.getElementById("collpased");
+              var currentClass = NAME.className;
+              if (currentClass == "slds-is-collapsed") 
+              {
+                    // Check the current class name
+                    dc();
+                    NAME.className = "slds-is-expanded";   // Set other class name
+                    document.getElementById("accord").innerHTML = "-";
+               }else {
+                    NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
+                    document.getElementById("accord").innerHTML = "+";
+               }
+          } 
+          var markersData = [];
+          var mainlag;
+          var mainlng;
+          var mainaddress1='';
+          var mainaddress2='';
+          var mainaddress3='';
+          var mainaddress4='';
+          var mainpostalcode='';
+          var maincolormap='';
+          var mainRecordId='';
+          var accname="{!currentuser.name}";
+          var myList = [];
+          
+          // function which intializes the map 
+          function dc()
+          {
+              markersData = [];
+              <apex:repeat value="{!lstWrap}" var="a">
+                  var markerDatas = new Object();
+                  markerDatas.lat = {!a.lat};
+                  markerDatas.lng = {!a.lng};
+                  console.log('{!a.name}');
+                  markerDatas.name ='{!JSENCODE(a.name)}';
+                  markerDatas.address1 = '{!a.address1}';
+                  markerDatas.address2 = '{!a.address2}';
+                  markerDatas.address3 = '{!a.address3}';
+                  markerDatas.address4 = '{!a.address3}';
+                  markerDatas.postalCode ='{!a.postalCode}';
+                  markerDatas.colormap ='{!a.colormap}';
+                  markerDatas.isMain ={!a.isMain};
+                  markerDatas.url='{!a.url}';
+                  markerDatas.RecordId='{!a.recordId}';
+                  markersData.push(markerDatas);
+              </apex:repeat>
+             initialize() ;
+          }
+         
+          // function which send data to create Poc markers
+          function displayMarkers()
+          {
+                var bounds = new google.maps.LatLngBounds();
+                for (var i = 0; i < markersData.length; i++)
+                {
+                      var latlng = new google.maps.LatLng(markersData[i].lat, markersData[i].lng);
+                      var address1 = markersData[i].address1;
+                      var address2 = markersData[i].address2;
+                      var address3 = markersData[i].address3;
+                      var address4 = markersData[i].address4;
+                      var postalCode = markersData[i].postalCode;
+                      var colormap = markersData[i].colormap;
+                      var isMain = markersData[i].isMain;
+                      var urls=markersData[i].url;
+                      var RecordIds=markersData[i].RecordId;
+                      var name=markersData[i].name;
+                     
+                      createMarker(latlng, address1, address2,address3,address4,postalCode,colormap,isMain,urls,RecordIds,name);
+                      bounds.extend(latlng);
+                }
+                map.fitBounds(bounds);
+          }
+          // function which creates map pointers
+          function createMarker(latlng, address1, address2, address3,address4,postalCode,colormap,isMain,urls,RecordIds,name)
+          {
+              if(isMain==false)
+              {
+                  var pocMap = JSON.parse('{!JSENCODE(JsonMap)}');
+                  var pocMapPin =JSON.parse('{!JSENCODE(JsonPointerColor)}');
+                  var mapPinColor =pocMapPin[RecordIds];
+                  var value = pocMap[RecordIds];
+                  var iscore;
+                  var isAlnr;
+                  var HighEnd;
+                  var FMB;
+                  var DRFT;
+                  var ALNR;
+                  var Core;
+                  if(value !== undefined)
+                  {
+                      console.log(value);
+                      console.log(value.isCore);
+                       if(value.isCore=== true)
+                       {
+                           FMB=value.FMB;
+                           HighEnd =value.HighEnd;
+                           Core=value.Core;
+                           iscore=value.isCore;
+                       }if(value.isALNR=== true)
+                       {            
+                            ALNR=value.ALNR;
+                            //DRFT=value.DRFT;
+                            isAlnr=value.isALNR;
+                            //alert(isAlnr);
+                       }
+                  }
+                  var pinColor = colormap;
+                  var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+mapPinColor;
+                  name = name.replace("\\","");
+                  var marker = new google.maps.Marker({
+                       map: map,
+                       position: latlng,
+                       title: name,
+                       icon: pinsImage,
+                       //shadow: pinShadow
+                        url: urls
+                  });
+          
+                  // Variable to define the HTML content to be inserted in the infowindow
+                  var iwContent='';
+                  var nodata='';
+                  if(isAlnr=== true)
+                  {
+                      iwContent = '<div id="iw_container">' +
+                      '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font>'+'</div>'+
+                      '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'AL-DR:'+ALNR+ '</font>'+ '</div>' +
+                      '<div class="iw_content">' +'<font color="Green",weight="bold">'+'</font>'+'<br />'+ 
+                      '</div></div>';
+                  
+                  }else if(iscore===true){
+                  
+                      iwContent = '<div id="iw_container">' +
+                      '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font>'+'</div>'+
+                      '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+Core + '</font>'+ '</div>' +
+                      '<div class="iw_content">' +'<font color="Green",weight="bold">'+'High End:'+HighEnd+ '</font>'+'<br />' 
+                      +'<font color="Green",weight="bold">'+'FMB:'+FMB+ '</font>'+'<br />'+'</div></div>';
+                  }
+                  else{
+                      
+                      iwContent =iwContent = '<div id="iw_container">' +
+                     '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font>'+'</div></div>'
+                  }
+                  var infowindow = new google.maps.InfoWindow({
+                      content: iwContent 
+                  });
+                  
+                  marker.addListener('click', function() {
+                        infowindow.open(map, this);
+                  });
+        
+                  // assuming you also want to hide the infowindow when user mouses-out
+                  /*commented to remove focus out functionality on 30-08-2016*/
+                  //marker.addListener('mouseout', function() {
+                        //infowindow.close();
+                  //});
+        
+                  google.maps.event.addListener(marker, 'dblclick', function() {
+                        //window.open(marker.url);
+                        try
+                        {
+                            sforce.one.navigateToURL(marker.url);
+                        }
+                        catch(e)
+                        {
+                            window.location.href = marker.url;
+                        }
+                              
+                  });
+              }
+              map.setCenter(new google.maps.LatLng(mainlag, mainlng));
+          }
+          
+          // function which diplays wholesaler pointer
+          function initialize() 
+          { 
+                  
+              for (var i = 0; i < markersData.length; i++)
+              {
+                  var isMain = markersData[i].isMain;
+                  if(isMain==true)
+                  {
+                      mainlag=markersData[i].lat;
+                      mainlng=markersData[i].lng;
+                      mainaddress1=markersData[i].address1;
+                      mainaddress2=markersData[i].address2;
+                      mainaddress3=markersData[i].address3;
+                      mainaddress4=markersData[i].address4;
+                      mainpostalcode=markersData[i].postalCode;;
+                      maincolormap=markersData[i].colormap;
+                      mainRecordId=markersData[i].RecordId;
+                  }
+              }
+              var pinColor = maincolormap;
+              var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+pinColor;
+              console.log(mainlag);
+              console.log(mainlng);
+          
+              var myLatlng = new google.maps.LatLng(mainlag,mainlng);
+              //alert(myLatlng );
+              var mapOptions = {center: myLatlng,
+                                //icon: pinsImage,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                zoom: 15,
+                                };
+              var markers = new google.maps.Marker({
+                               position: myLatlng,
+                               icon: pinsImage,
+                               zoom: 15,
+                               
+               });
+              
+               map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
+               markers.setMap(map);
+               var mapBoundary = new google.maps.LatLngBounds();
+               mapBoundary.extend(myLatlng );
+               map.fitBounds(mapBoundary);
+          
+               // Variable to define the HTML content to be inserted in the infowindow
+               var iwContent = '<div id="con">' +
+               '<div class="ti">' + accname + '</div>' +
+               '<div class="tent">' + mainaddress1+ '<br />' +
+               mainaddress2+ '<br />' +
+               mainpostalcode+ '</div></div>';
+               var infowindow = new google.maps.InfoWindow({
+                  content: iwContent 
+               });
+              // Event that opens the InfoWindow with a click on the map
+              google.maps.event.addListener(markers, 'click', function() {
+                  infowindow.open(map, markers); 
+              });
+          
+              // Event that closes the InfoWindow with a click on the map
+              google.maps.event.addListener(map, 'click', function() { infoWindow.close();
+                  
+              });
+          
+              // Finally displayMarkers() function is called to begin the markers creation
+              displayMarkers();
+          }
+          // fuction which loads on page load pull geo loacation values
+          function callbackSuccess()
+          {
+              if(navigator.geolocation)
+              {
+                 navigator.geolocation.getCurrentPosition(jsfind,showError);
+              }
+              else{
+                console.log('navigator not supported');
+              }
+          }
+          // fuction is called if geolocation is not pulled
+          function showError(error) 
+          {
+             callfind(0,0);
+             navLog=0;
+             navlat=0;
+          }
+          //fuction which send geolocation is to action function
+          function jsfind(position)
+          {
+              //get latitude and longitude
+              var pos = {};
+              pos = position.coords;
+              console.log(pos);
+              var lat = pos.latitude;
+              var lon = pos.longitude;
+              navLog=pos.longitude;
+              navlat=pos.latitude;
+              callfind(lat,lon);
+          }
+          google.maps.event.addDomListener(window, 'load',callbackSuccess);
+          
+          //fuction to collpase and expanding
+          function change_autorefreshdiv()
+          {
+              var NAME = document.getElementById("collpased");
+              var currentClass = NAME.className;
+              if (currentClass == "slds-is-collapsed") 
+              {
+                    // Check the current class name
+                    dc();
+                    NAME.className = "slds-is-expanded";   // Set other class name
+                    document.getElementById("accord").innerHTML = "-";
+               }else {
+                    NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
+                    document.getElementById("accord").innerHTML = "+";
+               }
+          } 
+          // Navigation to Poc 
+          function navigatePage(accountid)
+          { 
+            var id=accountid;
+            try
+            {
+                sforce.one.navigateToURL('/apex/ABS_PocAccountDetaiLPage?id='+accountid+'&lat='+navlat+'&lon='+navLog);
+            }
+            catch(e)
+            {
+                window.location.href = '/apex/ABS_PocAccountDetaiLPage?id='+accountid+'&lat='+navlat+'&lon='+navLog;
+            }
+          }  // Navigation to Poc 
+          function navigateRetailersPage(accountid)
+          { 
+            var id=accountid;
+            try
+            {
+                sforce.one.navigateToURL('/apex/ABS_MyRetailersAccountDetail?id='+accountid);
+            }
+            catch(e)
+            {
+                window.location.href = '/apex/ABS_MyRetailersAccountDetail?id='+accountid;
+            }
+          }
+          //$('body').bind('touchmove', function(e){e.preventDefault()});
+          function openPopUp(id)
+          {
+                var toggleElements = $(".slds-popover");
+                $.each(toggleElements, function (key, value) {
+                    if ($(this).hasClass('slds-show')) {
+                        $(this).removeClass('slds-show');
+                        $(this).addClass('slds-hide');
+                        $(this).on("click", function(e) {
+                          // Do things
+                          e.preventDefault()
+                          return false;
+                        });
+                    }
+                });
+                var x = document.getElementById(id);
+                document.getElementById(id+"Open").className = "slds-popover slds-nubbin--top-left slds-show slds-size--1-of-1";
+                //return false;
+          }
+          function closePopup(id){
+                document.getElementById(id+"Open").className = "slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1";
+                //return false;
+                //$('body').unbind('touchmove');
+          }
+                            
+         window.onload = function() {
+             try{
+                 var a=navigator.userAgent; 
+                 if((a.indexOf('Salesforce')!=-1)&&(a.indexOf('iPhone')!=-1||a.indexOf('iPad')!=-1)&&(a.indexOf('OS/9')!=-1||a.indexOf('OS 9')!=-1)&&(a.indexOf('Safari')==-1))
+                 {
+                     var s=document.createElement('style'); 
+                     s.innerHTML="html,html body{overflow: auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}"; 
+                     document.getElementsByTagName('head')[0].appendChild(s);
+                 }
+             }catch(e){}
+         };
+         var ua=navigator.userAgent; 
+         if((ua.indexOf('Salesforce')!=-1)&&(ua.indexOf('iPhone')!=-1||ua.indexOf('iPad')!=-1)&&(ua.indexOf('OS/9')!=-1||ua.indexOf('OS 9')!=-1)&&(ua.indexOf('Safari')==-1)){ 
+         function IOS_SCROLL_BOOTSTRAP() { 
+            var children = Array.prototype.slice.call(document.body.children), 
+            placeholder = document.createElement('section'), 
+            fragment = document.createDocumentFragment(), 
+            styles, 
+            width, 
+            height; 
+            children.forEach(function(c){fragment.appendChild(c);}); 
+            placeholder.appendChild(fragment); 
+            styles = [ 
+            'width:100%;', 
+            'height:', (window.screen.height - 42), 'px;', 
+            'position: absolute; overflow: auto; -webkit-overflow-scrolling: touch' 
+            ].join(''); 
+            placeholder.style.cssText = styles; 
+            document.body.appendChild(placeholder); 
+            } 
+            window.addEventListener('load',function (e) { 
+            IOS_SCROLL_BOOTSTRAP(); 
+            }); 
+        } 
+        function navigateFilterPage()
+        {
+            var res;
+            var currentLocation = window.location.toString();
+            //alert(currentLocation +'currentLocation');
+            if(currentLocation.includes("?"))
+            {
+                var pos = currentLocation.lastIndexOf("?");
+                res = currentLocation.substring(pos);
+            }
+            //alert(res)
+            if(res === undefined)
+            {
+                try
+                {
+                    sforce.one.navigateToURL('/apex/ABS_MyFilters');
+                }
+                catch(e)
+                {
+                    window.location.href = '/apex/ABS_MyFilters';
+    
+                }
+             }else{
+                try
+                {
+                    sforce.one.navigateToURL('/apex/ABS_MyFilters'+res);
+                }
+                catch(e)
+                {
+                    window.location.href = '/apex/ABS_MyFilters'+res;
+                }
+                
+             }
+        }
+        </script> 
+        </apex:outputPanel>
+    </apex:form>
+   <!--<body id="touchlist" style="position: relative;top:0px;">-->
+   <body>
+    <div id="touchloader" style="text-align: center;display: none;">Loading.....</div>
+    <apex:form id="wholeSalerForm">
+        <!-- Action function start -->
+        <apex:actionFunction name="callfind" action="{!myActionInController}" reRender="scriptPanel,mainPanel," status="myStatus"  >
+            <apex:param name="firstParam" assignTo="{!userLat}" value="" />
+            <apex:param name="secondParam" assignTo="{!userLong}" value="" />
+        </apex:actionFunction>
+        <!-- Action function End -->
+        <!--  Main Panel Start -->
+        <apex:outputPanel id="mainPanel">
+            <!--  No Records Panel Start -->
+            <apex:outputPanel id="norecordsmainPanel" rendered="{!lstWrap.size=0}" >
+                <span class="slds-text-heading--Large text_bold textcenter" >Location Services are turned off</span>
+            </apex:outputPanel>
+            <!--  No Records Panel end -->
+            
+            <!--  Records Panel Start -->
+            <apex:outputPanel id="recordsmainPanel" rendered="{!lstWrap.size !=0}" >
+                <!-- start of slds -->
+                <div class="slds" id="sldsclass">
+                    <!-- start of slds conatiner-->
+                    <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large ">
+                        
+                        <!--Start of  slds grid -->
+                        <div class="slds-grid collBar ">
+                            <div class='slds-size--1-of-6 slds-small-size--1-of-8 slds-medium-size--1-of-12 slds-text-align--center '>
+                                <span class="slds-text-heading--large plus_symbol text_bold1" id="accord" onclick="change_autorefreshdiv();"> +  </span>
+                            </div><!-- slds size -->
+                  
+                            <div class='slds-size--11-of-12  slds-small-size--6-of-12 slds-medium-size--4-of-12 slds-p-top--x-small'>
+                                <span class="slds-text-heading--medium account_heading_color textu" >Account Map </span>
+                            </div> <!-- slds size -->
+                        </div>
+                        <!--ENd of  slds grid -->
+        
+                        <!-- Map -->
+                        <apex:outputPanel id="mapPanel">
+                           <div id="collpased" class="slds-is-collapsed" >
+                              <div id="map_wrapper">
+                                <div id="map_canvas" class="mapping"></div>
+                              </div>
+                            </div>
+                        </apex:outputPanel>
+                        <!-- Map -->
+                        
+                        <div class="slds-p-around--xxx-small"></div> 
+                        <!--Retailers Header  slds grid start-->     
+                        <div class="slds-grid slds-p-around--x-small retailerBar">
+                            <div class='slds-size--1-of-1 slds-col slds-has-flexi-truncate' id='Retailers' ><span class="slds-text-heading--medium">Retailers Around You</span></div>
+                            <!-- <apex:actionRegion >
+                            <apex:selectList value="{!size}" multiselect="false" size="1" onchange="callbackSuccess();" >
+                            <apex:selectOptions value="{!SizeOption}"/>
+                            </apex:selectList>
+                            </apex:actionRegion> -->
+                            
+                            <div class="slds-text-align--right slds-col slds-no-flex">
+                            <a id="Refresh" onclick="loadNewData();">Refresh</a>&nbsp;
+                            <c:ABS_Component styleClass="slds-icon--x-small slds-icon-text-default" path="assets/icons/utility-sprite/svg/symbols.svg#filterList" />
+                            <a id="myRetailers" onclick="navigateFilterPage();">My Filters</a>
+                             </div>
+                            
+ 
+                            <!--<apex:outputPanel rendered="{!myRetailers.size != 0}" >
+                            <div class="slds-text-align--right slds-col slds-no-flex">
+                            <c:ABS_Component styleClass="slds-icon--x-small slds-icon-text-default" path="assets/icons/utility-sprite/svg/symbols.svg#filterList" />
+                            <a id="myRetailers" onclick="navigateRetailersPage('{!currentuser.id}');">My Retailers</a> </div>
+                            </apex:outputPanel>-->
+                            
+                        
+                       </div>
+                       <!--Retailers Header  slds grid End --> 
+                       
+                       <div class="slds-p-around--xxx-small"></div> 
+                       
+         
+                       <apex:outputPanel id="pocPanel" >
+                       <apex:outputPanel rendered="{!relatesPOCAccounts.size=0}">
+                                       <span class="slds-text-heading--Large text_bold textcenterRe" >No Records to display</span>
+
+                       </apex:outputPanel>
+                       <apex:outputPanel rendered="{!relatesPOCAccounts.size!=0}">
+                            <apex:repeat value="{!relatesPOCAccounts}" var="rPocs" >
+                            <script>
+                            </script>
+                            <!-- Retailer grid Card Start-->
+                            <div class="slds-card" id="gridCard">
+                                <!-- Retailer grid Card Header Start-->
+                                <div class="slds-grid slds-card__header slds-wrap slds-p-left--large slds-p-top--small">
+                                    <!-- start of slds-media -->
+                                    <div class="slds-media slds-media--center slds-col--padded slds-size--1-of-1 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-p-top--x-small">
+                                        <!--  start of slds-tile-->
+                                        <div class="slds-tile slds-media">
+                                            <!--  start of slds-media__figure-->
+                                            <div class="slds-media__figure">
+                                                <span class="slds-avatar slds-avatar--x-large">
+                                                    <apex:image url="{!$Resource.ABS_Icon}"/> 
+                                                </span>
+                                            </div>
+                                            <!-- End of slds-media__figure -->
+                            
+                                            <!-- slds media body-->
+                                            <div class="slds-media__body">
+                                                
+                                                <div class="slds-grid slds-grid--align-spread slds-has-flexi-truncate">
+                                                    <p title="rname" class="slds-text-heading--medium bold_text" ><a id="rnames" target="_blank" onclick="navigatePage('{!rPocs.id}');">{!rPocs.name}</a></p>
+                                                 </div>
+                                                <!-- start of slds-tile__detail -->
+                                                <div class="slds-tile__detail slds-text-body--small">
+                                                    <ul class="slds-list--horizontal">
+                                                        <li class="slds-item slds-p-right--x-small"><p  class="slds-text-heading--small bold_text"  title="PremiseFlag">PremiseFlag : </p></li>
+                                                        <li class="slds-item"><p  class="slds-text-heading--regular slds-p-top--xxx-small slds-p-left--x-small"  title="PremiseFlag"> {!rPocs.CORP_ON_OFF_PREMIS_CD_US__c}</p> </li>
+                                                    </ul>
+                                                    <ul class="slds-list--horizontal">
+                                                        <li class="slds-item slds-p-right--x-small"><p  class="slds-text-heading--small bold_text"  title="Channel">Channel : </p></li>
+                                                        <li class="slds-item slds-p-top--xxx-small slds-p-left--x-small"><p class="slds-text-heading--regular" title="Channel"> {!rPocs.RTL_SEG_NM_US__c}</p></li>
+                                                    </ul>
+                                                </div>
+                                                <!-- End of slds-tile__detail -->
+                                   
+                                            </div>
+                                            <!-- End of slds-media__body -->
+                        
+                                        </div>
+                                        <!-- End of slds-tile -->
+                                    </div>
+                                    <!-- End of slds-media -->
+                                    <!-- slds column  to show SAP Score-->
+                                    <div class="slds-col slds-size--1-of-1 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-p-top--xx-small">
+                                        <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,rPocs.id),true,false)}" >
+                                            
+                                            <apex:outputPanel rendered="{!IF(mapAccWrap[rPocs.id].isALNR==true,true,false)}">
+                                                <div class="slds-grid">
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate slds-p-left--x-small bold_text">AL-DR</div>
+                                                   <!-- <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate slds-p-left--x-small bold_text">DRFT</div>-->
+                                                </div>
+                                                <div class="slds-grid">
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-text-align--center bold_text">
+                                                        <div id="{!rPocs.id}ALNR" style="cursor: pointer;" onclick="openPopUp('{!rPocs.id}ALNR');return false;" class="{!mapAccWrap[rPocs.id].colorALNR}">{!mapAccWrap[rPocs.id].ALNR}</div>
+                                                        <div class="slds-popover slds-nubbin--bottom slds-hide" id="{!rPocs.id}ALNROpen"  aria-hidden="false" aria-describedby="{!rPocs.id}ALNR" >
+                                                          <div class="slds-popover__header">
+                                                            <div class="slds-text-align--right"><a href="#!" onclick="closePopup('{!rPocs.id}ALNR');return false;">X &nbsp;</a></div>
+                                                          </div>
+                                                          <div class="slds-popover__body">
+                                                            <p>Program</p>
+                                                            <p>Target</p>
+                                                            <p>{!mapAccWrap[rPocs.id].pgmALNR}</p>
+                                                          </div>
+                                                        </div>
+                                                    </div>
+                                                   <!-- <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-text-align--center bold_text">
+                                                        <div id="{!rPocs.id}DRFT" style="cursor: pointer;" onclick="openPopUp('{!rPocs.id}DRFT'); return false;" class="{!mapAccWrap[rPocs.id].colorDRFT}">{!mapAccWrap[rPocs.id].DRFT}</div>
+                                                        <div class="slds-popover slds-nubbin--bottom slds-hide" id="{!rPocs.id}DRFTOpen"  aria-hidden="false" aria-describedby="{!rPocs.id}ALNR" >
+                                                          <div class="slds-popover__header">
+                                                            <div class="slds-text-align--right"><a href="#!" onclick="closePopup('{!rPocs.id}DRFT');">X</a></div>
+                                                          </div>
+                                                          <div class="slds-popover__body">
+                                                            <p>Program</p>
+                                                            <p>Target</p>
+                                                            <p>{!mapAccWrap[rPocs.id].pgmDRFT}</p>
+                                                          </div>
+                                                        </div>
+                                                    </div>-->
+                                                    
+                                                </div>
+                                            </apex:outputPanel>
+                                
+                                            <apex:outputPanel rendered="{!IF(mapAccWrap[rPocs.id].isCore==true,true,false)}">
+                                                <div class="slds-grid">
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate slds-p-left--x-small bold_text">Core</div>
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate bold_text">High End</div>
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate slds-p-left--x-small bold_text">FMB</div>
+
+                                                </div>
+                                                <div class="slds-grid">
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-text-align--center bold_text">
+                                                        <div id="{!rPocs.id}Core" style="cursor: pointer;" onclick="openPopUp('{!rPocs.id}Core');return false;" class="{!mapAccWrap[rPocs.id].colorCore}">{!mapAccWrap[rPocs.id].Core}</div>
+                                                        <div class="slds-popover slds-nubbin--bottom slds-hide slds-size--1-of-1"  id="{!rPocs.id}CoreOpen"  aria-hidden="false" aria-describedby="{!rPocs.id}ALNR" >
+                                                          <div class="slds-popover__header">
+                                                            <div class="slds-text-align--right"><a href="#!" onclick="closePopup('{!rPocs.id}Core');return false;">X</a></div>
+                                                          </div>
+                                                          <div class="slds-popover__body">
+                                                            <p>Program</p>
+                                                            <p>Target</p>
+                                                            <p>{!mapAccWrap[rPocs.id].pgmCore}</p>
+                                                          </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-text-align--center bold_text">
+                                                        <div id="{!rPocs.id}HighEnd" style="cursor: pointer;" onclick="openPopUp('{!rPocs.id}HighEnd');return false;" class="{!mapAccWrap[rPocs.id].colorHighEnd}">{!mapAccWrap[rPocs.id].HighEnd}</div>
+                                                        <div class="slds-popover slds-nubbin--bottom slds-hide" id="{!rPocs.id}HighEndOpen"  aria-hidden="false" aria-describedby="{!rPocs.id}ALNR" >
+                                                          <div class="slds-popover__header">
+                                                            <div class="slds-text-align--right"><a href="#!" onclick="closePopup('{!rPocs.id}HighEnd');return false;">X</a></div>
+                                                          </div>
+                                                          <div class="slds-popover__body">
+                                                            <p>Program</p>
+                                                            <p>Target</p>
+                                                            <p>{!mapAccWrap[rPocs.id].pgmHighEnd}</p>
+                                                          </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-text-align--center bold_text">
+                                                        <div id="{!rPocs.id}FMB" style="cursor: pointer;" onclick="openPopUp('{!rPocs.id}FMB');return false;" class="{!mapAccWrap[rPocs.id].colorFmb}">{!mapAccWrap[rPocs.id].FMB}</div>
+                                                        <div class="slds-popover slds-nubbin--bottom slds-hide" id="{!rPocs.id}FMBOpen"  aria-hidden="false" aria-describedby="{!rPocs.id}ALNR" >
+                                                          <div class="slds-popover__header">
+                                                            <div class="slds-text-align--right"><a href="#!" onclick="closePopup('{!rPocs.id}FMB');return false;">X</a></div>
+                                                          </div>
+                                                          <div class="slds-popover__body">
+                                                            <p>Program</p>
+                                                            <p>Target</p>
+                                                            <p>{!mapAccWrap[rPocs.id].pgmFmb}</p>  
+                                                          </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </apex:outputPanel>
+                                        </apex:outputPanel>
+                                    </div>
+                                    <!-- slds column  to show SAP Score-->
+                                </div><!-- End of slds-grid -->
+                            </div><!-- end of main slds-card -->
+                            </apex:repeat>
+                        </apex:outputPanel>
+                        </apex:outputPanel>
+                    </div> 
+                     <!-- End of slds conatiner-->
+                </div>
+                <!-- SLDS div end-->
+            </apex:outputPanel>
+         
+        </apex:outputPanel>
+        <!--  Main Panel End -->
+        
+        
+    </apex:form>
+    </body>
+ </html>
+<script>
+//grab the list
+var list = document.getElementById("touchlist");
+//grab the loading div
+var loader = document.getElementById("touchloader");
+//keep the state whether the fingers are touched
+var isTouched = false;
+//keep the state whether a PULL actually went out
+var isMoved = false;
+//This has the original Top offset (relative to screen) position of the list
+var prevY = parseInt(list.offsetTop);
+//This has the original Top CSS position of the list
+var cssY = list.style.top;
+cssY = parseInt(cssY.substring(0, cssY.length - 2));
+
+//Add the start of the touching
+list.addEventListener("touchstart", function (e) {
+    //touch started ? YES
+    isTouched = true;
+    //initialize the touched point
+    prevY = e.changedTouches[0].clientY;
+    //we use css3 transitions when available for smooth sliding
+    list.style.transition = "";
+   // e.preventDefault();
+}, false);
+list.addEventListener("touchend", function (e) {
+    //on touchup we cancel the touch event
+    isTouched = false;
+    //now if the list has moved downwards, it should come up but in a transition
+    list.style.transition = "top 1s";
+    if (isMoved) {
+        //show the loader div
+        loader.style.display = "block";
+        loadNewData();
+    }
+    list.style.top = cssY + 'px';
+    isMoved = false;
+
+    //e.preventDefault();
+}, false);
+list.addEventListener("touchmove", function (e) {
+    if (isTouched) {
+        if (e.changedTouches[0].clientY > prevY) {
+            //on touchmove, we add the exact amount fingers moved to the top of the list
+            var change = e.changedTouches[0].clientY - prevY;
+            //and add it to the style
+            list.style.top = cssY + change + 'px';
+            isMoved = true;
+        }
+    }
+    //e.preventDefault();
+}, false);
+
+
+//binding mouse events to make this work in desktop browsers as well
+list.addEventListener("mousedown", function (e) {
+    isTouched = true;
+    prevY = e.clientY;
+    list.style.transition = "";
+    //e.preventDefault();
+}, false);
+list.addEventListener("mouseup", function (e) {
+    isTouched = false;
+
+    list.style.transition = "top 1s";
+    if (isMoved) {
+        loader.style.display = "block";
+        loadNewData();
+    }
+    list.style.top = cssY + 'px';
+    isMoved = false;
+
+   // e.preventDefault();
+}, false);
+list.addEventListener("mousemove", function (e) {
+    if (isTouched) {
+        if (e.clientY > prevY) {
+            var change = e.clientY - prevY;
+            list.style.top = cssY + change + 'px';
+            isMoved = true;
+        }
+    }
+   // e.preventDefault();
+}, false);
+function loadNewData() {
+    setTimeout(function () {
+        //list.innerHTML = '<li>new user</li><li>new user 2</li>' + list.innerHTML;
+        url='/apex/ABS_WholesalerAccountDetail';
+        try
+        {
+            sforce.one.navigateToURL(url);
+        }
+        catch(e)
+        {
+            window.location.href = url;
+        }
+        loader.style.display = "none";
+    }, 1000);
+    /**
+     * do what ever to get data here
+     */
+
+}
+</script>
+</apex:page>
