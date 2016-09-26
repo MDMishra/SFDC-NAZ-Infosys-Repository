@@ -14,10 +14,9 @@ public class ABS_PocAccountDetailcls {
     public string core{get;set;} // holds core value
     public string highEnd{get;set;}// holds highend value
     public string fmb{get;set;}// holds fmb value
-    public string ALNR{get;set;}// holds alnr value
-    public string DRFT{get;set;}// holds drft value
     public boolean iscore{get;set;} // boolean value which is true if core,fmb and he
-    public boolean isALNR{get;set;} // boolean value which is true if alnr,drft
+    public boolean ishighEnd{get;set;} // boolean value which is true if alnr,drft
+    public boolean isfmb{get;set;} // boolean value which is true if alnr,drft
     public Contact primaryContact{get;set;}// poc primary contact details
     public string pocName{get;set;} // holds poc name
     public list<US_Account_Target__c> lstAccountTarget{get;set;} // list holds lstAccountTarget records 
@@ -26,14 +25,8 @@ public class ABS_PocAccountDetailcls {
     public string colorCore{get;set;}
     public string colorHighEnd{get;set;}
     public string colorFmb{get;set;}
-    public string colorALNR{get;set;}
-    public string colorDRFT{get;set;}    
     public map<string,Integer> BrandSize{get;set;}
     public string mapPinColor{get;set;}
-    public integer AlnrAchived{get;set;}
-    public integer DrftAchived{get;set;}
-    public integer AlnrProgram{get;set;}
-    public integer DRFTprogram{get;set;}
     public decimal navlat{get;set;}
     public decimal navlong{get;set;}
     public user currentuser;
@@ -50,6 +43,7 @@ public class ABS_PocAccountDetailcls {
         navlat=decimal.valueof(Apexpages.currentPage().getParameters().get('lat'));
         navlong=decimal.valueof(Apexpages.currentPage().getParameters().get('lon'));
         currentuser=[Select Id,Name,Email,Latitude,Longitude from User where Id=:userinfo.getuserId()];
+        
         // Assign the lat and long values
         if(currentuser != null)
         {
@@ -96,14 +90,14 @@ public class ABS_PocAccountDetailcls {
         {
             lstAccTarget =[select Achieved_Targets__c,Program_Target_Level__c,Account__c,Brand_Category__c,Count_of_SKUs__c from 
                         US_Account_Target_Program__c where Account__c =:objPocAccount.id and Brand_Category__c  
-                        IN('CORE','HE','High End','ALNR','AL-DR','FMB')];
+                        IN('CORE','HE','High End','FMB')];
         }
         // query to retrive Account Targets
         if(objPocAccount != null)
         {
             lstAccountTarget=[select Brand_Package__c,Acheivement_Score__c,id,Account__c,Brand_Category__c,SKU__c from 
                               US_Account_Target__c where Account__c=:objPocAccount.id and Brand_Category__c  
-                              IN('CORE','HE','High End','AL-DR','FMB')];
+                              IN('CORE','HE','High End','FMB')];
         }
         system.debug(lstAccountTarget+'lstAccountTarget');
         map<string,list<US_Account_Target__c >> mapUsTarget = new  map<string,list<US_Account_Target__c >>();
@@ -129,9 +123,7 @@ public class ABS_PocAccountDetailcls {
             BrandSize.put('CORE',0);
             BrandSize.put('HE',0);
             BrandSize.put('High End',0);
-            BrandSize.put('AL-DR',0);
             BrandSize.put('FMB',0);
-            //BrandSize.put('DRFT',0);
             
             for(string Brand:mapUsTarget.KeySet())
             {
@@ -164,11 +156,9 @@ public class ABS_PocAccountDetailcls {
             }
         }
         iscore=false;
-        isALNR=false;
-        AlnrAchived=0;
-        DrftAchived=0;
-        AlnrProgram=0;
-        DRFTprogram=0;
+        isHighEnd=false;
+        isFmb=false;
+        
         // Prepare Core,He,fmb,alnr and drft data to display on the page
         if(!lstAccTarget.isEmpty() && lstAccTarget.size()>0)
         {
@@ -178,57 +168,29 @@ public class ABS_PocAccountDetailcls {
                 {
                     core=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
                     iscore=true;
-                    isALNR=false;
                     colorCore=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
                 }
                 if(objAccProgram.Brand_Category__c=='HE' || objAccProgram.Brand_Category__c=='High End')
                 {
                     highEnd=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
-                    iscore=true;
-                    isALNR=false;
                     colorHighEnd=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
+                    ishighEnd=true;
+
                 }
                 if(objAccProgram.Brand_Category__c=='FMB')
                 {
                     fmb=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
-                    iscore=true;
-                    isALNR=false;
                     colorFmb=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
+                    isfmb=true;
                 }
-                if(objAccProgram.Brand_Category__c=='AL-DR')
-                {
-                system.debug('Entered Alnr');
-                    ALNR=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
-                    iscore=false;
-                    isALNR=true;
-                    colorALNR=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
-                    AlnrAchived=integer.valueof(objAccProgram.Achieved_Targets__c);
-                    AlnrProgram=integer.valueof(objAccProgram.Program_Target_Level__c);
-                }
-                /*if(objAccProgram.Brand_Category__c=='DRFT')
-                {
-                    DRFT=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
-                    iscore=false;
-                    isALNR=true;
-                    colorDRFT=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
-                    DrftAchived=integer.valueof(objAccProgram.Achieved_Targets__c);
-                    DRFTprogram=integer.valueof(objAccProgram.Program_Target_Level__c);
-                }*/
+                
+                
             }
-            if(iscore)
+            system.debug(iscore );
+            system.debug(ishighEnd );
+            system.debug(isfmb);
+            if(iscore && ishighEnd && isfmb)
             {
-                if(highEnd==null){
-                    HighEnd ='0/0';
-                    colorHighEnd='plus_symbolcorered';
-                }
-                if(FMB==null){
-                    FMB ='0/0';
-                    colorFmb='plus_symbolcorered';
-                }
-                if(Core==null){
-                    Core ='0/0';
-                    colorCore='plus_symbolcorered';
-                }
                 if(colorCore == 'plus_symbolcoregreen' && colorHighEnd =='plus_symbolcoregreen' && colorFmb =='plus_symbolcoregreen')
                 {
                     mapPinColor='green-dot.png';
@@ -241,45 +203,20 @@ public class ABS_PocAccountDetailcls {
                     mapPinColor='yellow-dot.png';
                 }
             }
-            if(isALNR)
+            if(iscore && ishighEnd==false && isfmb==false)
             {
-                /*if(DRFT==null){
-                     DRFT='0/0';
-                }*/
-                if(ALNR==null){
-                    ALNR='0/0';
-                }
-                if(colorALNR =='plus_symbolcoregreen')
+                if(colorCore  =='plus_symbolcoregreen')
                 {
                     mapPinColor='green-dot.png';
                     
-                }else if(colorALNR =='plus_symbolcorered'){
+                }else if(colorCore =='plus_symbolcorered'){
                     
                     mapPinColor='red-dot.png';
                     
                 }else{
                     mapPinColor='yellow-dot.png';
                 }
-                /*integer totalAchived=0;
-                integer totalProgram=0;
-                totalAchived=AlnrAchived+DrftAchived;
-                totalProgram=AlnrProgram+DRFTprogram;
-                if(totalAchived >= totalProgram)
-                {
-                    colorDRFT='plus_symbolcoregreen';
-                    colorALNR='plus_symbolcoregreen';
-                }else if((totalAchived > 0) && (totalAchived < totalProgram))
-                {
-                    colorDRFT='plus_symbolcoreyellow';
-                    colorALNR='plus_symbolcoreyellow';
-                }else if(totalAchived == 0){
-                    colorDRFT='plus_symbolcorered';
-                    colorALNR='plus_symbolcorered';
-                }else{
-                    colorDRFT='plus_symbolcorered';
-                    colorALNR='plus_symbolcorered';
-                }*/
-            }
+             }
         }
         // Assigning the related primary contact
         if(objPocAccount != null)

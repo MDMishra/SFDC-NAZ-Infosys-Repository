@@ -6,7 +6,6 @@ Created Date:5/30/2016
 Modified Date:
 Modified By:Deepthi
 */
-
 public class ABS_WholesalerAccountDetail 
 {
     public user currentuser{get;set;}// holds the current user 
@@ -25,15 +24,15 @@ public class ABS_WholesalerAccountDetail
     public map<id,string> mapPinColor{get;set;}
     public integer size{get;set;} // size hold the records to display
     public string ChkMapKey{get;set;}//Hold Map string to compare on vf page
-    public integer recordsize;
+    public integer recordsize;// Holds the record size
     public List<SelectOption> paginationSizeOptions{get;set;}// Option which toggles between the 10 and 20
     public List<SelectOption> retailerOptions{get;set;}// holds retailers options
     public List<SelectOption> PremiseOptions{get;set;}// holds retailers options
-    public string retailer{get;set;}
-    public string Premise{get;set;}
-    public string channel{get;set;}
-    Set<Id> accountIds = new Set<Id>();
-    String pageName='';
+    public string retailer{get;set;}// holds all retailers and myretailers values
+    public string Premise{get;set;}//holds peremise flag
+    public string channel{get;set;}//holds channel flag
+    Set<Id> accountIds = new Set<Id>();// holds account Id
+    public String pageName='';// holds the page name 
 
     // Controller
     public ABS_WholesalerAccountDetail()
@@ -44,6 +43,10 @@ public class ABS_WholesalerAccountDetail
         {
             pageName = ApexPages.currentPage().getUrl().substringBetween('apex/', '?');
         }
+        if(Test.isRunningTest())
+        {
+            pageName='ABS_MyFilters';
+        }
         system.debug('-----current page name----'+pageName);
         String userAgent = ApexPages.currentPage().getHeaders().get('USER-AGENT');
         system.debug(userAgent +'userAgent');
@@ -53,7 +56,6 @@ public class ABS_WholesalerAccountDetail
             {
                 retailer=Apexpages.currentPage().getParameters().get('retailers');
                 retailer=retailer.replace('%20', ' ');
-    
             }
             if(Apexpages.currentPage().getParameters().get('Premise') !=null)
             {
@@ -71,27 +73,7 @@ public class ABS_WholesalerAccountDetail
             }
         }
     }
-    public List<selectOption> getSizeOption() {
-        List<selectOption> options = new List<selectOption>();
-        Options.add(new SelectOption('None','None')); 
-        Options.add(new SelectOption('20','20'));
-        Options.add(new SelectOption('100','100'));
-        return options; //return the picklist options
-    }
-    
-    public List<selectOption> getChannelOptions() 
-    {
-        List<selectOption> chanelOptions= new List<selectOption>();
-        Schema.DescribeFieldResult field = Account.RTL_SEG_NM_US__c.getDescribe();
-        List<Schema.PicklistEntry> ple = field.getPicklistValues();
-        chanelOptions.add(new SelectOption('None','None'));
-        for (Schema.PicklistEntry f : ple )
-        {
-            chanelOptions.add(new SelectOption(f.getLabel(),f.getvalue()));
-        }
-        return chanelOptions; //return the picklist options
-    }
-    
+        
     //contoller Helper
     Public Void ControllerHelper()
     {
@@ -117,19 +99,32 @@ public class ABS_WholesalerAccountDetail
         paginationSizeOptions.add(new SelectOption('20','20'));
         paginationSizeOptions.add(new SelectOption('100','100'));
         
+        //adding values to select option for retailers
         retailerOptions=new List<SelectOption>();
         retailerOptions.add(new SelectOption('None','None')); 
         retailerOptions.add(new SelectOption('My Retailers','My Retailers'));
         retailerOptions.add(new SelectOption('All Retailers','All Retailers'));
         
+        //adding values to select option for premise
         PremiseOptions=new List<SelectOption>();
         PremiseOptions.add(new SelectOption('None','None'));
         PremiseOptions.add(new SelectOption('On','On'));
         PremiseOptions.add(new SelectOption('Off','Off'));
         PremiseOptions.add(new SelectOption('Both','Both'));
-        
-
-        
+    }
+    
+    //Select Option for displaying permise value
+    public List<selectOption> getChannelOptions() 
+    {
+        List<selectOption> chanelOptions= new List<selectOption>();
+        Schema.DescribeFieldResult field = Account.RTL_SEG_NM_US__c.getDescribe();
+        List<Schema.PicklistEntry> ple = field.getPicklistValues();
+        chanelOptions.add(new SelectOption('None','None'));
+        for (Schema.PicklistEntry f : ple )
+        {
+            chanelOptions.add(new SelectOption(f.getLabel(),f.getvalue()));
+        }
+        return chanelOptions; //return the picklist options
     }
     
     // Call the Map Helper method.
@@ -202,9 +197,9 @@ public class ABS_WholesalerAccountDetail
         }else 
         {    
             queryParameters= 'SELECT Id,Name,BillingLongitude,BillingPostalCode,RTL_SEG_NM_US__c,WSLR_NBR_US__c,CORP_ON_OFF_PREMIS_CD_US__c,BillingLatitude,'+
-            'BillingStreet,BillingState,Phone,BillingCity,BillingCountry,buzz_retail__lon__c,buzz_retail__lat__c FROM Account WHERE '+
-            '(BillingLatitude!= null or BillingLatitude!= 0) AND recordtype.Name = \'Poc\''+
-            'and Account_Targets_Count__c >0 and DISTANCE(Location__c, GEOLOCATION(:alat,:along), \'mi\') < 1000';
+                             'BillingStreet,BillingState,Phone,BillingCity,BillingCountry,buzz_retail__lon__c,buzz_retail__lat__c FROM Account WHERE '+
+                             '(BillingLatitude!= null or BillingLatitude!= 0) AND recordtype.Name = \'Poc\''+
+                             'and Account_Targets_Count__c >0 and DISTANCE(Location__c, GEOLOCATION(:alat,:along), \'mi\') < 1000';
         }      
         if(Premise !=null && Premise !='None')
         {
@@ -214,12 +209,7 @@ public class ABS_WholesalerAccountDetail
             queryParameters+=' and RTL_SEG_NM_US__c LIKE :channel';
         }if(size !=null){
             recordsize=size;
-            /*if(retailer =='My Retailers' && retailer !='None')
-            {
-                queryParameters+=' ORDER BY DISTANCE(Location__c, GEOLOCATION(:lat,:lon), \'mi\') ASC LIMIT :recordsize';
-            }else{*/
-               queryParameters+=' ORDER BY DISTANCE(Location__c, GEOLOCATION(:alat,:along), \'mi\') ASC LIMIT :recordsize';
-            //}
+            queryParameters+=' ORDER BY DISTANCE(Location__c, GEOLOCATION(:alat,:along), \'mi\') ASC LIMIT :recordsize';
         }
         system.debug(queryParameters+'queryParameters');           
         return queryParameters;
@@ -229,35 +219,12 @@ public class ABS_WholesalerAccountDetail
     // Method which populates the data for displaying map
     Public void mapHelper()
     {
-        recordsize=size;
         set<id> relatedIds = new set<id>();// holds related ids
         map<id,list<US_Account_Target_Program__c>> mapUsTarget = new map<id,list<US_Account_Target_Program__c>>();
         mapAccWrap = new  map<string,AccountTargetWrapper>();// initialize
-        geolat=decimal.valueof(Apexpages.currentPage().getParameters().get('firstParam'));// getting lat values from vf page
-        geolong=decimal.valueof(Apexpages.currentPage().getParameters().get('secondParam'));// getting long values from vf page
         relatesPOCAccounts = new list<Account>();// intialize
         lstWrap = new  list<wrapperList>(); // intialize
-        //ControllerHelper();
         
-        // assigning geo locations
-        if(geolat !=null && geolong !=null && (geolat !=0 && geolong !=0))
-        {
-            alat=geolat;
-            along=geolong;
-        }else 
-        {
-            alat=lat;
-            along=lon;
-        }
-        system.debug(alat+along);
-        
-    
-        //reteriving the related POC records
-        /*relatesPOCAccounts=[SELECT Id,Name,BillingLongitude,BillingPostalCode,RTL_SEG_NM_US__c,WSLR_NBR_US__c,CORP_ON_OFF_PREMIS_CD_US__c,
-                            BillingLatitude,BillingStreet,BillingState,Phone,BillingCity,BillingCountry,buzz_retail__lon__c,buzz_retail__lat__c
-                            FROM Account WHERE (BillingLatitude!= null or BillingLatitude!= 0) AND recordtype.Name = 'POC' 
-                            and Account_Targets_Count__c >0 and DISTANCE(Location__c, GEOLOCATION(:alat,:along), 'mi') < 1000 
-                            ORDER BY DISTANCE(Location__c, GEOLOCATION(:alat,:along), 'mi') ASC LIMIT :recordsize ]; */
         string soql=querystring();
         relatesPOCAccounts= Database.query(soql);
         system.debug(relatesPOCAccounts+'relatesPOCAccounts');
@@ -300,10 +267,11 @@ public class ABS_WholesalerAccountDetail
                     accProgram.add(us);
                     mapUsTarget.put(us.Account__c, accProgram);
                 }else {
-                      mapUsTarget.put(us.Account__c, new List<US_Account_Target_Program__c> {us});
+                    mapUsTarget.put(us.Account__c, new List<US_Account_Target_Program__c> {us});
                 }
             }
         }
+        
         // building up sap score functionality
         if(mapUsTarget.size() >0)
         {
@@ -315,26 +283,19 @@ public class ABS_WholesalerAccountDetail
                     lstAccProgram =mapUsTarget.get(recId);
                     if(!lstAccProgram.isEmpty() && lstAccProgram.size()>0)
                     {
+                        boolean iscore=false;
+                        boolean isFMB=false;
+                        boolean isHighEnd=false;
                         string core='';
                         string highEnd='';
                         string fmb='';
-                        string ALNR='';
-                        //string DRFT='';
-                        boolean iscore=false;
-                        boolean isALNR=false;
                         id accountId;
                         string colorCore;
                         string colorHighEnd;
                         string colorFmb;
-                        string colorALNR;
-                        //string colorDRFT;
                         string pgmCore;
                         string pgmHighEnd;
                         string pgmFmb;
-                        string pgmALNR='0';
-                        //string pgmDRFT='0';
-                        //integer AlnrAchived=0;
-                        //integer DrftAchived=0;
                         for(US_Account_Target_Program__c objAccProgram:lstAccProgram)
                         {
                             if(objAccProgram.Brand_Category__c=='CORE')
@@ -342,7 +303,6 @@ public class ABS_WholesalerAccountDetail
                                 core=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
                                 accountId=objAccProgram.Account__c;
                                 iscore=true;
-                                isALNR=false;
                                 colorCore=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
                                 pgmCore=string.valueof(objAccProgram.Program_Target_Level__c);
                               
@@ -351,8 +311,7 @@ public class ABS_WholesalerAccountDetail
                              {
                                  highEnd=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
                                  accountId=objAccProgram.Account__c;
-                                 iscore=true;
-                                 isALNR=false;
+                                 isHighEnd=true;
                                  colorHighEnd=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
                                  pgmHighEnd=string.valueof(objAccProgram.Program_Target_Level__c);
                               
@@ -361,120 +320,48 @@ public class ABS_WholesalerAccountDetail
                              {
                                  fmb=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
                                  accountId=objAccProgram.Account__c;
-                                 iscore=true;
-                                 isALNR=false;
+                                 isFMB=true;
                                  colorFmb=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
                                  pgmFmb=string.valueof(objAccProgram.Program_Target_Level__c);
                               
                              }
-                             if(objAccProgram.Brand_Category__c=='AL-DR')
-                             {
-                                 ALNR=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
-                                 isALNR=true;
-                                 iscore=false;
-                                 //AlnrAchived=integer.valueof(objAccProgram.Achieved_Targets__c);
-                                 colorALNR=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
-                                 pgmALNR=string.valueof(objAccProgram.Program_Target_Level__c);
-                              
-                             }
-                             /*if(objAccProgram.Brand_Category__c=='DRFT')
-                             {
-                                 DRFT=objAccProgram.Achieved_Targets__c+'/'+objAccProgram.Count_of_SKUs__c;
-                                 accountId=objAccProgram.Account__c;
-                                 iscore=false;
-                                 isALNR=true;
-                                 DrftAchived=integer.valueof(objAccProgram.Achieved_Targets__c);
-                                 //colorDRFT=accountColor(integer.valueof(objAccProgram.Achieved_Targets__c),integer.valueof(objAccProgram.Program_Target_Level__c));
-                                 pgmDRFT=string.valueof(objAccProgram.Program_Target_Level__c);
-                             }*/
-                            
                         }
-                        if((iscore || isALNR) && lstAccProgram.size()>0 )
+                        if((iscore || isHighEnd || isFMB) && lstAccProgram.size()>0 )
                         {
                             AccountTargetWrapper objTraWrap = new AccountTargetWrapper();
                             if(iscore)
                             {
-                                if(highEnd=='')
-                                {
-                                    objTraWrap.HighEnd ='0/0';
-                                    objTraWrap.colorHighEnd='Redcircle';
-                                    objTraWrap.pgmHighEnd='0';
-                                }else{
-                                    objTraWrap.HighEnd=highEnd;
-                                    objTraWrap.colorHighEnd=colorHighEnd;
-                                    objTraWrap.pgmHighEnd=pgmHighEnd;
-                                }
-                                if(FMB==''){
-                                    objTraWrap.FMB ='0/0';
-                                    objTraWrap.colorFmb='Redcircle';
-                                    objTraWrap.pgmFmb='0';
-                                }else{
-                                    objTraWrap.FMB=FMB;
-                                    objTraWrap.colorFmb=colorFmb;
-                                    objTraWrap.pgmFmb=pgmFmb;
-                                }
-                                if(Core==''){
-                                    objTraWrap.Core ='0/0';
-                                    objTraWrap.colorCore='Redcircle';
-                                    objTraWrap.pgmCore='0';
-                                }else{
-                                    objTraWrap.Core=Core;
-                                    objTraWrap.colorCore=colorCore;
-                                    objTraWrap.pgmCore=pgmCore;
-
-                                }
-                             }
-                             if(isALNR)
-                             {
-                                /*if(DRFT=='')
-                                {
-                                    objTraWrap.DRFT='0/0';
-                                    //objTraWrap.colorDRFT='Redcircle';
-                                    objTraWrap.pgmDRFT='0';
-                                }else{
-                                    objTraWrap.DRFT=DRFT;
-                                    //objTraWrap.colorDRFT=colorDRFT;
-                                    objTraWrap.pgmDRFT=pgmDRFT;
-                                }*/
-                                if(ALNR==''){
-                                    objTraWrap.ALNR='0/0';
-                                    objTraWrap.colorALNR='Redcircle';
-                                    objTraWrap.pgmALNR='0';
-                                }else{
-                                    objTraWrap.ALNR=ALNR;
-                                    objTraWrap.colorALNR=colorALNR;
-                                    objTraWrap.pgmALNR=pgmALNR;
-                                }
-                                /*Integer achivedTarget=0;
-                                Integer programTarget=0;
-                                achivedTarget=AlnrAchived+DrftAchived;
-                                programTarget=integer.valueOf(pgmALNR)+integer.valueOf(pgmDRFT);
-                                if(achivedTarget >= programTarget)
-                                {
-                                    objTraWrap.colorDRFT='Greencircle';
-                                    objTraWrap.colorALNR='Greencircle';
-                                }else if((achivedTarget > 0) && (achivedTarget < programTarget))
-                                {
-                                    objTraWrap.colorDRFT='Yellowcircle';
-                                    objTraWrap.colorALNR='Yellowcircle';
-                                }else if(achivedTarget == 0){
-                                    objTraWrap.colorDRFT='Redcircle';
-                                    objTraWrap.colorALNR='Redcircle';
-                                }else{
-                                    objTraWrap.colorDRFT='Redcircle';
-                                    objTraWrap.colorALNR='Redcircle';
-                                }*/
+                               objTraWrap.Core=Core;
+                               objTraWrap.colorCore=colorCore;
+                               objTraWrap.pgmCore=pgmCore;
+                               objTraWrap.isCore =iscore;
                             }
-                            objTraWrap.isCore =iscore;
+                            if(isHighEnd)
+                            {
+                               objTraWrap.HighEnd=highEnd;
+                               objTraWrap.colorHighEnd=colorHighEnd;
+                               objTraWrap.pgmHighEnd=pgmHighEnd;
+                               objTraWrap.isHighEnd=isHighEnd;
+                            }
+                            if(isFMB)
+                            {
+                               objTraWrap.FMB=FMB;
+                               objTraWrap.colorFmb=colorFmb;
+                               objTraWrap.pgmFmb=pgmFmb;
+                               objTraWrap.isFMB=isFMB;
+                            }
                             objTraWrap.id=recId;
-                            objTraWrap.isALNR =isALNR;
                             mapAccWrap.put(recId,objTraWrap);
                             lstAccProgram.clear();
-                       }
+                             
+                         }
+                         
+                       
                     } 
                 } 
             }
         }
+        
         //converting mapkey into string
         ChkMapKey = '';
         if(mapAccWrap.size() > 0)
@@ -486,32 +373,20 @@ public class ABS_WholesalerAccountDetail
         }
         // Converting the map key into jsonstring
         JsonMap=JSON.serialize(mapAccWrap);
+        
         //myRetailer();
         mapPinColor = new map<id,string>();
         for(AccountTargetWrapper accWrap:mapAccWrap.values())
         {
             system.debug(accWrap);
             string pinColor='';
-            if(accWrap.isCore==true)
+            if(accWrap.iscore && accWrap.isHighEnd==null && accWrap.isFMB==null)
             {
-                if(accWrap.colorCore=='Greencircle' &&  accWrap.colorFmb=='Greencircle' && accWrap.colorHighEnd=='Greencircle' )
+                if(accWrap.colorCore=='Greencircle')
                 {
                     pinColor='green-dot.png';
                     
-                }else if(accWrap.colorCore=='Redcircle' &&  accWrap.colorFmb=='Redcircle' && accWrap.colorHighEnd=='Redcircle')
-                {
-                    pinColor='red-dot.png';
-                }else{
-                    pinColor='yellow-dot.png';
-                }
-                mapPinColor.put(accWrap.id,pinColor);
-            }else if(accWrap.isALNR==true)
-            {
-                if(accWrap.colorALNR=='Greencircle')
-                {
-                    pinColor='green-dot.png';
-                    
-                }else if(accWrap.colorALNR=='Redcircle')
+                }else if(accWrap.colorCore=='Redcircle')
                 {
                     pinColor='red-dot.png';
                 }else
@@ -520,35 +395,24 @@ public class ABS_WholesalerAccountDetail
                 }
                 mapPinColor.put(accWrap.id,pinColor);
             }
+            else if(accWrap.iscore && accWrap.isHighEnd && accWrap.isFMB)
+            {
+                if(accWrap.colorCore=='Greencircle' &&  accWrap.colorFmb=='Greencircle' && accWrap.colorHighEnd=='Greencircle' )
+                {
+                    pinColor='green-dot.png';
+                        
+                }else if(accWrap.colorCore=='Redcircle' &&  accWrap.colorFmb=='Redcircle' && accWrap.colorHighEnd=='Redcircle')
+                {
+                    pinColor='red-dot.png';
+                }else{
+                    pinColor='yellow-dot.png';
+                }
+                mapPinColor.put(accWrap.id,pinColor);
+            }
             
         }
         JsonPointerColor=JSON.serialize(mapPinColor);
     }
-    
-    /*public void myRetailer()
-    {
-        myRetailers= new list<Account>();     
-        List<AccountTeamMember> accMembers = new List<AccountTeamMember>();
-        Set<Id> accountIds = new Set<Id>();
-        accMembers = [SELECT Id,AccountId FROM AccountTeamMember WHERE  UserId = :userinfo.getuserId() 
-                      and AccountTeamMember.Account.Type = 'POC'];
-        system.debug(accMembers);
-        if(!accMembers.isEmpty())
-        {
-            for(AccountTeamMember member : accMembers) 
-            {
-                accountIds.add(member.AccountId);
-            }
-        }
-        if(!accountIds.isEmpty())
-        {
-            if(lat != 0 && lon != 0 )
-            myRetailers = [SELECT Id,Name,BillingLongitude,BillingPostalCode,RTL_SEG_NM_US__c,WSLR_NBR_US__c,CORP_ON_OFF_PREMIS_CD_US__c,
-                           BillingLatitude,BillingStreet,BillingState,Phone,BillingCity,BillingCountry,buzz_retail__lon__c,buzz_retail__lat__c
-                           FROM Account WHERE Id IN :accountIds And (BillingLatitude!= null And BillingLatitude!= 0) 
-                           and DISTANCE(Location__c, GEOLOCATION(:lat,:lon), 'mi') < 1000  ORDER BY DISTANCE(Location__c, GEOLOCATION(:lat,:lon), 'mi') ASC limit :recordsize];
-        }
-    }*/
     
     public string accountColor(Integer Achieved_Targets,Integer Program_Target_Level)
     {
@@ -566,7 +430,7 @@ public class ABS_WholesalerAccountDetail
          return color;
     }
     
-     // Wrapper class to build up map data 
+    // Wrapper class to build up map data 
     public class wrapperList
     {
        public decimal lat{get;set;}
@@ -603,23 +467,18 @@ public class ABS_WholesalerAccountDetail
     public class AccountTargetWrapper
     {
        public boolean isCore {get;set;}
-       public boolean isALNR {get;set;}
+       public boolean isFMB{get;set;}
+       public boolean isHighEnd{get;set;}
        public string  id {get;set;}
        public string Core {get;set;}
        public string HighEnd {get;set;}
        public string FMB {get;set;}
-       public string ALNR{get;set;}
-       //public string DRFT{get;set;}
        public string colorCore{get;set;}
        public string colorHighEnd{get;set;}
        public string colorFmb{get;set;}
-       public string colorALNR{get;set;}
-       //public string colorDRFT{get;set;}
        public string pgmCore{get;set;}
        public string pgmHighEnd{get;set;}
        public string pgmFmb{get;set;}
-       public string pgmALNR{get;set;}
-       public string pgmDRFT{get;set;}
     }
     
 }
