@@ -173,7 +173,7 @@
         scrollTop: $("#corePanel").offset().top},
         'slow');
     }  
-     function change_highend()
+    function change_highend()
     {
     //alert('highEndPanel');
         var NAME = document.getElementById("highEndPanel");
@@ -222,22 +222,7 @@
         'slow');
         
     }
-    /*function change_DRFT()
-    {
-    //alert('drft');
-        var NAME = document.getElementById("DRFTPanel");
-        var currentClass = NAME.className;
-        if(currentClass == "slds-is-collapsed") { // Check the current class name
-            NAME.className = "slds-is-expanded";   // Set other class name
-            document.getElementById("DRFT").innerHTML = "-";
-        }else{
-            NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
-            document.getElementById("DRFT").innerHTML = "+";
-        }
-        $('body').animate({
-        scrollTop: $("#DRFTPanel").offset().top},
-        'slow');
-    }*/
+   
    
     /* Display Map on the Page*/
     google.maps.event.addDomListener(window, 'load',initialize);
@@ -265,14 +250,12 @@
         map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
         markers.setMap(map);
            
-        
+        var iscore='{!iscore}';
+        var ishighEnd='{!isHighEnd}'
+        var isFMB='{!isFmb}'
         var core='{!core}';
         var highEnd='{!highEnd}';
         var fmb='{!fmb}';
-        var ALNR='{!ALNR}';
-        var DRFT='{!DRFT}';
-        var iscore='{!iscore}';
-        var isALNR='{!isALNR}';
         var iwContent='';
         var name='{!pocName}';
         var palat='{!palat}';
@@ -280,18 +263,18 @@
         var ulatlng = new google.maps.LatLng(palat,palon);
         var userColorPin='blue-dot.png'
     
-        if(iscore == 'true')
+        if(iscore == 'true' && ishighEnd == 'true' && isFMB == 'true')
         {
                iwContent = '<div id="iw_container">' +
               '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold">'+name + '</font>'+'</div>'+
-              '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+core + '</font>'+ '</div>' +
+              '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+core+ '</font>'+ '</div>' +
               '<div class="iw_content">' +'<font color="Green",weight="bold">'+'High End:'+highEnd+ '</font>'+'<br />' 
               +'<font color="Green",weight="bold">'+'FMB:'+fmb+ '</font>'+'<br />'+'</div></div>';
-        }else if(isALNR =='true')
+        }else if(iscore == 'true' && ishighEnd == 'false' && isFMB == 'false')
         {
               iwContent = '<div id="iw_container">' +
               '<div style="font-weight: normal;font-size: 14px;">'+'<font color="black",weight="bold">'+name + '</font>'+'</div>' +
-              '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'ALNR:'+ALNR+ '</font>'+ '</div>' +
+              '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+core+ '</font>'+ '</div>' +
               '<div class="iw_content">' +'<font color="Green",weight="bold">'+'</font>'+'<br />'+ 
               '</div></div>';
         
@@ -336,7 +319,6 @@
           
      window.onload = function() {
         var iscore='{!iscore}';
-        var isALNR='{!isALNR}';
         if( iscore == 'true')
         {
             var colorCore='{!colorCore}'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
@@ -347,8 +329,7 @@
             document.getElementById('fmb').className = colorFmb;
          }else if(isALNR =='true')
          {
-            var colorALNR='{!colorALNR}'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
-            var colorDRFT='{!colorDRFT}'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+            var colorALNR='{!colorCore}'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
             document.getElementById('ALNR').className = colorALNR;
             document.getElementById('DRFT').className = colorDRFT;
          
@@ -443,9 +424,9 @@
           <div class="slds-grid slds-card slds-p-around--small slds-theme--default">
              <div class="slds-size--1-of-1 slds-small-size--4-of-5 slds-medium-size--2-of-4">
                     <div class='slds-size--1-of-1' id='wholesalers'><span class="slds-text-heading--medium ">{!objPocAccount.name}</span></div>
+                    <!--
                     <div class="clearfix visible-xs-block"></div>
                     <div class="slds-p-around--xxx-small"></div> 
-                    <!-- 
                     <div class="slds-grid-padded">
                       <apex:outputText styleclass="slds-text-heading--small " value="Primary Contact: " />
                       <apex:outputText styleclass="slds-text-body--regular" value="{!primaryContact.name}" />
@@ -458,28 +439,31 @@
                     <div class="slds-p-around--xxx-small"></div> 
                     <div class="slds-grid--padded">
                       <apex:outputText styleclass="slds-text-heading--small " value="Phone: " />
+                        
                       <a href="tel:{!primaryContact.phone}">{!primaryContact.phone}</a>
                     </div>
                     <div class="slds-p-around--xxx-small"></div> 
                     <div class="slds-grid--padded">
                       <apex:outputText styleclass="slds-text-heading--small " value="Email: " />
                       <apex:outputLink value="mailto:{!primaryContact.Email}">{!primaryContact.Email}</apex:outputLink>
+                      
                     </div>
-                  -->   
+                    -->
                   </div>
-                  
          </div>
+         <!--
          <div class="broderClass"></div>
          <div class="slds-grid slds-p-around--x-small retailerBar">
             <div class='slds-size--1-of-1' id='wholesalers'><span class="slds-text-heading--medium">Overall Score</span></div>
-         </div> 
+         </div>
+         --> 
          <!-- No Records to Display Pannel -->
-         <apex:outputPanel rendered="{!IF((iscore==false && isALNR==false),true,false)}">
+         <apex:outputPanel rendered="{!IF((iscore==false && ishighEnd==false && isfmb==false),true,false)}">
             <div class="slds-grid slds-p-around--x-large retailerBar slds-text-align--center">
                  <div class='slds-size--1-of-1' id='wholesalers'><span class="slds-text-heading--large slds-text-align--center">No Records to display</span></div>
             </div>
          </apex:outputPanel> 
-         <apex:outputPanel rendered="{!IF(isCore==true,true,false)}">
+         <apex:outputPanel rendered="{!IF((isCore == true && isfmb == true && ishighEnd==true),true,false)}">
               
               <div class="slds-box slds-theme--inverse slds-p-around--x-large slds-text-heading--medium">
                  <div class="slds-grid slds-size--1-of-1" >
@@ -674,41 +658,35 @@
                 </div>
               </apex:outputPanel>
          </apex:outputPanel>
-         <apex:outputPanel rendered="{!IF(isALNR==true,true,false)}">
-              
-              <div class="slds-box slds-theme--inverse slds-p-around--x-large slds-text-heading--medium">
+         <apex:outputPanel rendered="{!IF((iscore==true && ishighEnd==false && isfmb==false),true,false)}">
+          <div class="slds-box slds-theme--inverse slds-p-around--x-large slds-text-heading--medium">
                  <div class="slds-grid slds-size--1-of-1" >
-                    <div class="slds-text-align--left slds-col slds-has-flexi-truncate"><b>ALNR&nbsp;-&nbsp; {!SUBSTITUTE(ALNR, '/', ' of ')}</b></div>
+                    <div class="slds-text-align--left slds-col slds-has-flexi-truncate"><b>Core&nbsp;-&nbsp; {!SUBSTITUTE(core, '/', ' of ')}</b></div>
                     <div class="slds-text-align--right slds-col slds-no-flex">
-                        <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="ALNR" onclick="change_ALNR();">
+                        <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="core" onclick="change_core();">
                            +
                         </button>
                     </div> 
                  </div>
               </div>
-              
-              <apex:outputPanel > 
-                <div id="ALNRPanel" class="slds-is-collapsed" >
+             <apex:outputPanel >
+             <div id="corePanel" class="slds-is-collapsed" >
                     <div>
-                        <!-- alnr start -->
-                        <apex:outputPanel rendered="{!BrandSize['AL-DR']==0}">
+                          <!-- core start -->
+                          <apex:outputPanel rendered="{!BrandSize['CORE']==0}">
                            No Records to display
                           </apex:outputPanel>
-                         <apex:repeat value="{!lstAccountTarget}" var="actarget">
-                          <apex:outputPanel rendered="{!actarget.Brand_Category__c=='AL-DR'}">
+                          <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                          <apex:outputPanel rendered="{!actarget.Brand_Category__c=='CORE'}">
                             <div class="slds-grid">
                             
                               <!-- Product Image -->
                               <div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 "> 
                                <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,actarget.SKU__c),true,false)}" >
-                                <!--<span class="slds-avatar slds-avatar--x-large">                   
-                                    <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}" width="200" height="50" > </apex:image>                      
-                                </span>-->
-                                <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                   
-                                    <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}" > </apex:image>                      
-                                </span>
-                                
-                               </apex:outputPanel>
+                                    <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                   
+                                        <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}"> </apex:image>                                                           
+                                    </span>
+                                </apex:outputPanel>
                                </div>
                                <!-- Product Image -->
                                
@@ -736,66 +714,15 @@
                           </apex:outputPanel>
                           
                           </apex:repeat>
-                          <!-- alnr end -->
+                           <!-- core End -->
                     </div>
                 </div>
               </apex:outputPanel>
-            <!-- <div class="slds-p-around--xxx-small"></div> 
-             <div class="slds-box slds-theme--inverse slds-p-around--x-large slds-text-heading--medium">
-                 <div class="slds-grid slds-size--1-of-1" >
-                    <div class="slds-text-align--left slds-col slds-has-flexi-truncate"><b>DRFT&nbsp;-&nbsp; {!SUBSTITUTE(DRFT, '/', ' of ')}</b></div>
-                    <div class="slds-text-align--right slds-col slds-no-flex">
-                        <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="DRFT" onclick="change_DRFT();">
-                           +
-                        </button>
-                    </div>
-                 </div>
-              </div> -->
-               <!--<apex:outputPanel > 
-               <div id="DRFTPanel" class="slds-is-collapsed" >
-                    <div >
-                         <apex:outputPanel rendered="{!BrandSize['DRFT']==0}">
-                           No Records to display
-                          </apex:outputPanel>
-                         <apex:repeat value="{!lstAccountTarget}" var="actarget">
-                          <apex:outputPanel rendered="{!actarget.Brand_Category__c=='DRFT'}">
-                            <div class="slds-grid">
-                            
-                              <div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 "> 
-                               <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,actarget.SKU__c),true,false)}" >
-                            
-                                <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                   
-                                    <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}"> </apex:image>                      
-                                </span>
-                                
-                               </apex:outputPanel>
-                               </div>
-                               
-                              <div class="sslds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center">{!actarget.Brand_Package__c} </div>
-                              
-                              <div class="slds-col--padded slds-size--1-of-5 slds-small-size--1-of-5 slds-medium-size--1-of-5  slds-text-align--right slds-media slds-media--center">
-                                <apex:outputPanel rendered="{!actarget.Acheivement_Score__c >= 2 }" >
-                                 <p class="green-circle"></p>
-                                </apex:outputPanel>             
-                                <apex:outputPanel rendered="{!actarget.Acheivement_Score__c = 1 }" >
-                                 <p class="yellow-circle"></p>
-                                </apex:outputPanel>
-                                <apex:outputPanel rendered="{!actarget.Acheivement_Score__c = 0 }" >
-                                 <p class="red-circle"></p>
-                                </apex:outputPanel></div>
-                            </div>
-                           
-                             <div class="broderClass"></div>    
-                                                 
-                    
-                          </apex:outputPanel>
-                          
-                          </apex:repeat>
-                    </div>
-                </div>
-              </apex:outputPanel> -->
+             <div class="slds-p-around--xxx-small"></div> 
+   
               
          </apex:outputPanel>
+              
        
        
      </div><!-- End of slds conatiner-->

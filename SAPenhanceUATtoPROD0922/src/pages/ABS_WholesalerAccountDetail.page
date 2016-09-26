@@ -243,7 +243,9 @@
                   var mapPinColor =pocMapPin[RecordIds];
                   var value = pocMap[RecordIds];
                   var iscore;
-                  var isAlnr;
+                  var isAllcore;
+                  var ishighEnd;
+                  var isFmb;
                   var HighEnd;
                   var FMB;
                   var DRFT;
@@ -253,18 +255,17 @@
                   {
                       console.log(value);
                       console.log(value.isCore);
-                       if(value.isCore=== true)
+                       if(value.isCore === true && value.isHighEnd === null && value.isFMB === null)
                        {
-                           FMB=value.FMB;
-                           HighEnd =value.HighEnd;
                            Core=value.Core;
-                           iscore=value.isCore;
-                       }if(value.isALNR=== true)
-                       {            
-                            ALNR=value.ALNR;
-                            //DRFT=value.DRFT;
-                            isAlnr=value.isALNR;
-                            //alert(isAlnr);
+                           iscore=true;
+                       }else 
+                       {    
+                            FMB=value.FMB;
+                            HighEnd =value.HighEnd;
+                            Core=value.Core;
+                            isAllcore=true;
+
                        }
                   }
                   var pinColor = colormap;
@@ -282,15 +283,15 @@
                   // Variable to define the HTML content to be inserted in the infowindow
                   var iwContent='';
                   var nodata='';
-                  if(isAlnr=== true)
+                  if(iscore === true)
                   {
                       iwContent = '<div id="iw_container">' +
                       '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font>'+'</div>'+
-                      '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'AL-DR:'+ALNR+ '</font>'+ '</div>' +
+                      '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+Core+ '</font>'+ '</div>' +
                       '<div class="iw_content">' +'<font color="Green",weight="bold">'+'</font>'+'<br />'+ 
                       '</div></div>';
                   
-                  }else if(iscore===true){
+                  }else if(isAllcore  === true){
                   
                       iwContent = '<div id="iw_container">' +
                       '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font>'+'</div>'+
@@ -702,43 +703,29 @@
                                     <div class="slds-col slds-size--1-of-1 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-p-top--xx-small">
                                         <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,rPocs.id),true,false)}" >
                                             
-                                            <apex:outputPanel rendered="{!IF(mapAccWrap[rPocs.id].isALNR==true,true,false)}">
+                                            <apex:outputPanel rendered="{!IF((mapAccWrap[rPocs.id].isCore==true && mapAccWrap[rPocs.id].isHighEnd==null && mapAccWrap[rPocs.id].isFMB==null),true,false)}">
                                                 <div class="slds-grid">
-                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate slds-p-left--x-small bold_text">AL-DR</div>
+                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate slds-p-left--x-small bold_text">Core</div>
                                                    <!-- <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate slds-p-left--x-small bold_text">DRFT</div>-->
                                                 </div>
                                                 <div class="slds-grid">
-                                                    <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-text-align--center bold_text">
-                                                        <div id="{!rPocs.id}ALNR" style="cursor: pointer;" onclick="openPopUp('{!rPocs.id}ALNR');return false;" class="{!mapAccWrap[rPocs.id].colorALNR}">{!mapAccWrap[rPocs.id].ALNR}</div>
-                                                        <div class="slds-popover slds-nubbin--bottom slds-hide" id="{!rPocs.id}ALNROpen"  aria-hidden="false" aria-describedby="{!rPocs.id}ALNR" >
+                                                     <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-text-align--center bold_text">
+                                                        <div id="{!rPocs.id}Core" style="cursor: pointer;" onclick="openPopUp('{!rPocs.id}Core');return false;" class="{!mapAccWrap[rPocs.id].colorCore}">{!mapAccWrap[rPocs.id].Core}</div>
+                                                        <div class="slds-popover slds-nubbin--bottom slds-hide slds-size--1-of-1"  id="{!rPocs.id}CoreOpen"  aria-hidden="false" aria-describedby="{!rPocs.id}ALNR" >
                                                           <div class="slds-popover__header">
-                                                            <div class="slds-text-align--right"><a href="#!" onclick="closePopup('{!rPocs.id}ALNR');return false;">X &nbsp;</a></div>
+                                                            <div class="slds-text-align--right"><a href="#!" onclick="closePopup('{!rPocs.id}Core');return false;">X</a></div>
                                                           </div>
                                                           <div class="slds-popover__body">
                                                             <p>Program</p>
                                                             <p>Target</p>
-                                                            <p>{!mapAccWrap[rPocs.id].pgmALNR}</p>
+                                                            <p>{!mapAccWrap[rPocs.id].pgmCore}</p>
                                                           </div>
                                                         </div>
                                                     </div>
-                                                   <!-- <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-text-align--center bold_text">
-                                                        <div id="{!rPocs.id}DRFT" style="cursor: pointer;" onclick="openPopUp('{!rPocs.id}DRFT'); return false;" class="{!mapAccWrap[rPocs.id].colorDRFT}">{!mapAccWrap[rPocs.id].DRFT}</div>
-                                                        <div class="slds-popover slds-nubbin--bottom slds-hide" id="{!rPocs.id}DRFTOpen"  aria-hidden="false" aria-describedby="{!rPocs.id}ALNR" >
-                                                          <div class="slds-popover__header">
-                                                            <div class="slds-text-align--right"><a href="#!" onclick="closePopup('{!rPocs.id}DRFT');">X</a></div>
-                                                          </div>
-                                                          <div class="slds-popover__body">
-                                                            <p>Program</p>
-                                                            <p>Target</p>
-                                                            <p>{!mapAccWrap[rPocs.id].pgmDRFT}</p>
-                                                          </div>
-                                                        </div>
-                                                    </div>-->
-                                                    
                                                 </div>
                                             </apex:outputPanel>
                                 
-                                            <apex:outputPanel rendered="{!IF(mapAccWrap[rPocs.id].isCore==true,true,false)}">
+                                            <apex:outputPanel rendered="{!IF((mapAccWrap[rPocs.id].isCore==true && mapAccWrap[rPocs.id].isHighEnd==true && mapAccWrap[rPocs.id].isFMB==true),true,false)}">
                                                 <div class="slds-grid">
                                                     <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate slds-p-left--x-small bold_text">Core</div>
                                                     <div class="slds-size--1-of-4 slds-small-size--2-of-4 slds-medium-size--1-of-4 slds-truncate bold_text">High End</div>
@@ -809,89 +796,6 @@
     </body>
  </html>
 <script>
-//grab the list
-var list = document.getElementById("touchlist");
-//grab the loading div
-var loader = document.getElementById("touchloader");
-//keep the state whether the fingers are touched
-var isTouched = false;
-//keep the state whether a PULL actually went out
-var isMoved = false;
-//This has the original Top offset (relative to screen) position of the list
-var prevY = parseInt(list.offsetTop);
-//This has the original Top CSS position of the list
-var cssY = list.style.top;
-cssY = parseInt(cssY.substring(0, cssY.length - 2));
-
-//Add the start of the touching
-list.addEventListener("touchstart", function (e) {
-    //touch started ? YES
-    isTouched = true;
-    //initialize the touched point
-    prevY = e.changedTouches[0].clientY;
-    //we use css3 transitions when available for smooth sliding
-    list.style.transition = "";
-   // e.preventDefault();
-}, false);
-list.addEventListener("touchend", function (e) {
-    //on touchup we cancel the touch event
-    isTouched = false;
-    //now if the list has moved downwards, it should come up but in a transition
-    list.style.transition = "top 1s";
-    if (isMoved) {
-        //show the loader div
-        loader.style.display = "block";
-        loadNewData();
-    }
-    list.style.top = cssY + 'px';
-    isMoved = false;
-
-    //e.preventDefault();
-}, false);
-list.addEventListener("touchmove", function (e) {
-    if (isTouched) {
-        if (e.changedTouches[0].clientY > prevY) {
-            //on touchmove, we add the exact amount fingers moved to the top of the list
-            var change = e.changedTouches[0].clientY - prevY;
-            //and add it to the style
-            list.style.top = cssY + change + 'px';
-            isMoved = true;
-        }
-    }
-    //e.preventDefault();
-}, false);
-
-
-//binding mouse events to make this work in desktop browsers as well
-list.addEventListener("mousedown", function (e) {
-    isTouched = true;
-    prevY = e.clientY;
-    list.style.transition = "";
-    //e.preventDefault();
-}, false);
-list.addEventListener("mouseup", function (e) {
-    isTouched = false;
-
-    list.style.transition = "top 1s";
-    if (isMoved) {
-        loader.style.display = "block";
-        loadNewData();
-    }
-    list.style.top = cssY + 'px';
-    isMoved = false;
-
-   // e.preventDefault();
-}, false);
-list.addEventListener("mousemove", function (e) {
-    if (isTouched) {
-        if (e.clientY > prevY) {
-            var change = e.clientY - prevY;
-            list.style.top = cssY + change + 'px';
-            isMoved = true;
-        }
-    }
-   // e.preventDefault();
-}, false);
 function loadNewData() {
     setTimeout(function () {
         //list.innerHTML = '<li>new user</li><li>new user 2</li>' + list.innerHTML;
