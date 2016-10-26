@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Category__c</fullName>
+        <description>This field is using in IOS mobile360 application to create task</description>
+        <externalId>false</externalId>
+        <label>Category</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Display</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>POCM</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Activation</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Order</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sign Making</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Glassware</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Other</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>End_Geo_Location__c</fullName>
+        <displayLocationInDecimal>false</displayLocationInDecimal>
+        <externalId>false</externalId>
+        <label>End Geo Location</label>
+        <required>false</required>
+        <scale>9</scale>
+        <type>Location</type>
+    </fields>
+    <fields>
+        <fullName>Out_of_Range_Reason__c</fullName>
+        <externalId>false</externalId>
+        <label>Out of Range Reason</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Order Entry</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inaccurate Signal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Pre-Planning</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Out_of_Range_on_End__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Out of Range on End</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Out_of_Range_on_Start__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Out of Range on Start</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Start_Geo_Location__c</fullName>
+        <displayLocationInDecimal>false</displayLocationInDecimal>
+        <externalId>false</externalId>
+        <label>Start Geo Location</label>
+        <required>false</required>
+        <scale>9</scale>
+        <type>Location</type>
+    </fields>
+    <fields>
+        <fullName>Visit_Completed__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Visit Completed</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Visit_in_Progress__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Visit in Progress</label>
+        <type>Checkbox</type>
+    </fields>
+</CustomObject>
