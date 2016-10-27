@@ -5,8 +5,8 @@
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>ABS_FAQs</label>
     <packageVersions>
-        <majorNumber>3</majorNumber>
-        <minorNumber>61</minorNumber>
+        <majorNumber>4</majorNumber>
+        <minorNumber>6</minorNumber>
         <namespace>ONTAP</namespace>
     </packageVersions>
 </ApexPage>
