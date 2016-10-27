@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <recordTypes>
+        <fullName>SAP_Cases</fullName>
+        <active>true</active>
+        <label>SAP_Cases</label>
+        <picklistValues>
+            <picklist>ONTAP__Case_Origin__c</picklist>
+            <values>
+                <fullName>Mobile</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Support</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Telesales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Web</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>ONTAP__Details__c</picklist>
+            <values>
+                <fullName>Furniture%2C Equipment</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Owner Change</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Packing%2C General Information</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Product Specific</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Third Party</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>ONTAP__Equipment_Damage__c</picklist>
+            <values>
+                <fullName>Glass Panel</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Internal Damage</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Malfunction</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Marketing Panel</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>ONTAP__Picklist__c</picklist>
+            <values>
+                <fullName>1</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>2</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>3</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>4</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>ONTAP__Priority__c</picklist>
+            <values>
+                <fullName>1</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>2</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>3</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>4</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>ONTAP__Status__c</picklist>
+            <values>
+                <fullName>Assigned</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Closed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Open</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Reassigned</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Support Level 1</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Support Level 2</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>ONTAP__Uninstall_Details__c</picklist>
+            <values>
+                <fullName>Commercial Relationship</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Equip%2E not necessary</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>High Energy Consumption</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Low Usage</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+</CustomObject>

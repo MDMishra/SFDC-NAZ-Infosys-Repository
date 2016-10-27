@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Core_Away__c</fullName>
+        <externalId>false</externalId>
+        <label>Core Away</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>FMB_Away__c</fullName>
+        <externalId>false</externalId>
+        <label>FMB Away</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>HE_Away__c</fullName>
+        <externalId>false</externalId>
+        <label>HE Away</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SAP_Channel__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(OR(CONTAINS( RTL_ACCT_CLASS_CD_US__c ,&apos;21%&apos;),CONTAINS( RTL_ACCT_CLASS_CD_US__c ,&apos;26%&apos;)), &apos;Large Format&apos;,
+IF(CONTAINS( RTL_ACCT_CLASS_CD_US__c ,&apos;24%&apos;), &apos;Package Liquor&apos;,  
+IF(AND(CONTAINS( RTL_ACCT_CLASS_CD_US__c ,&apos;29%&apos;),CONTAINS(BillingState,&apos;PA&apos;) ), &apos;Package Liquor&apos;,  
+IF(CONTAINS( RTL_ACCT_CLASS_CD_US__c ,&apos;23%&apos;), &apos;Convenience&apos;,  IF(AND(OR(CONTAINS(DRGHT_CNSMPTN_TYP_NM_US__c,&apos;On-Premise&apos;),CONTAINS(DRGHT_CNSMPTN_TYP_NM_US__c,&apos;Both&apos;)),CONTAINS(PREMIS_CNSMPTN_TYP_NM_US__c ,&apos;10&apos;)), &apos;On Premise&apos;
+, &apos;&apos;) ) ) ))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>SAP Channel</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

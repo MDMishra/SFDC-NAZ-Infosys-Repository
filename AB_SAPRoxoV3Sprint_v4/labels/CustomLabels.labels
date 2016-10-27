@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>ABS_Profiles</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ABS_Profiles</shortDescription>
+        <value>BAM Platform User,TAM Platform User,WOD Lead,WOD Management,WOD Representative</value>
+    </labels>
+    <labels>
+        <fullName>SAP_Case_Record_Type</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SAP Case Record Type</shortDescription>
+        <value>SAP_Cases</value>
+    </labels>
+</CustomLabels>
