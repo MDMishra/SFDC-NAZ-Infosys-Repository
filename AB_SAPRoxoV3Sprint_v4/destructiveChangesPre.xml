@@ -3,12 +3,9 @@
     <types>
         <members>ABS_PocAccountDetailcls</members>
         <members>ABS_WholesalerAccountDetail</members>
-        <members>TestABS_WholesalerAccountDetail</members>
         <name>ApexClass</name>
     </types>
     <types>
-        <members>ABS_FAQs</members>
-        <members>ABS_MyFilters</members>
         <members>ABS_PocAccountDetailPage</members>
         <members>ABS_WholesalerAccountDetail</members>
         <name>ApexPage</name>
