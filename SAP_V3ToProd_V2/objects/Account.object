@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Core_Away__c</fullName>
+        <externalId>false</externalId>
+        <label>Core Away</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>FMB_Away__c</fullName>
+        <externalId>false</externalId>
+        <label>FMB Away</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>HE_Away__c</fullName>
+        <externalId>false</externalId>
+        <label>HE Away</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SAP_Channel__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(OR( ISPICKVAL( RTL_SEG_NM_US__c ,&apos;BAR/NIGHTCLUB&apos;), 
+ISPICKVAL( RTL_SEG_NM_US__c ,&apos;CLUB &apos;),
+ISPICKVAL( RTL_SEG_NM_US__c ,&apos;CONCESSIONAIRE&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;GAMING&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;KAM IND ACCT OFF PREMISE&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;LODGING&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;OTHER ON-PREMISE&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;RECREATION&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;RESTAURANT&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;TRAVEL&apos;)),&apos;On Premise&apos;,IF(OR( ISPICKVAL( RTL_SEG_NM_US__c ,&apos;SUPERCNTR/MASS M&apos;), ISPICKVAL( RTL_SEG_NM_US__c ,&apos;SUPERMKT/GROC&apos;)), &apos;Large Format&apos;,IF(OR(ISPICKVAL( RTL_SEG_NM_US__c ,&apos;CONVENIENCE&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;DRUG&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;MILITARY&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;MILITARY EXPORT&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;OTHER OFF-PREMISE&apos;),ISPICKVAL( RTL_SEG_NM_US__c ,&apos;PACKAGE LIQUOR&apos;)), &apos;Small Format&apos;, &apos;&apos;) ))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>SAP Channel</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>
