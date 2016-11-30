@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>muteFeeds__c</fullName>
+        <description>Holds all Muted FeedItem Id&apos;s for User</description>
+        <externalId>false</externalId>
+        <label>muteFeeds</label>
+        <length>131072</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+</CustomObject>
