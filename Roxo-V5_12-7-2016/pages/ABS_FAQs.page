@@ -1,0 +1,505 @@
+<apex:page docType="html-5.0" controller="ABS_WholesalerAccountDetail" CACHE="True" showHeader="false" setup="false" id="wholePage">
+    <html lang="en" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <head>
+            <meta charset="utf-8"/>
+            <meta name="viewport"  content="width=device-width, height=device-height, initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+            <apex:includeScript value="{!URLFOR($Resource.ABS_Bootstrap, 'jquery.min.js')}"/>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB5OoIjmYbz9A9clKvOC-y7EqWZw7wRRc" type="text/javascript"></script>      
+            <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+            <script src="../../soap/ajax/37.0/connection.js" type="text/javascript"></script>
+            <script src="https://code.jquery.com/jquery-1.8.2.js"></script>
+            <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+            <script src="https://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+            <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css"/>
+            <apex:stylesheet value="{!URLFOR($Resource.LDS, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
+            <style>
+                body{font-family: "Salesforce Sans",Arial,sans-serif !important;}
+                .header {background-color:#000033;color: #ffffff;padding: 10px;}                                              
+                #map_canvas {margin:0 auto;height:400px;min-width:100%;float:right;}
+                #map_canvas {margin:0 auto;height:400px;min-width:100%;float:right;}
+                #map_wrapper {height: 300px;}                                                
+                #map_canvas { width: 100%; height: 100%;}
+                .collBar{
+                height: 50px;
+                border-radius: 0px;
+                background-image: linear-gradient(black,black);
+                }
+                .SpinnerBackground{
+                border-radius: 1px;
+                background-image: linear-gradient(white,white);
+                }
+              
+                .HelpContainer {
+                overflow-y:auto;
+                margin-top : 5px;
+                }
+                .mapping{
+                overflow-y:auto;
+                }
+                .line-separator{
+                height:1px;
+                background:#d8dde6;
+                border-bottom:0px solid #313030;
+                }
+                .bold_text{
+                font-weight: bold;
+                }
+                .bolder_text{
+                font-weight: bolder;
+                }
+                .color_black{
+                color: #000000;
+                }
+                .Channel_heading_color{
+                color: black !important;
+                }
+                .text_bold
+                {
+                font-size: 20px;
+                font-weight: bold;
+                }
+                .text_bold1
+                {
+                font-size: 30px;
+                font-weight: bold;
+                }
+                .plus_symbol{
+                color: white;
+                cursor:pointer;
+                }
+                .account_heading_color{
+                color: white;
+                }
+                .textcenter
+                {
+                left: 0;
+                line-height: 200px;
+                margin-top: -100px;
+                position: absolute;
+                text-align: center;
+                top: 50%;
+                width: 100%;
+                }
+                .textcenterRe{
+                left: 0;
+                line-height: 363px;
+                text-align: center;
+                top: 50%;
+                width: 100%;
+                padding-left: 365px;
+                }
+                .textu{
+                text-decoration: underline
+                }
+                .textcur{
+                cursor: pointer; cursor: hand; 
+                }
+                ul li{
+                margin-left:0px;
+                }
+                .slds-card+.slds-card {
+                margin-top: 5px !important;
+                }
+            </style>
+            <script type = "text/javascript"> 
+            $(function()
+            {
+            var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; 
+			var  ih = (iOS) ? screen.height : window.innerHeight;
+                var h = (iOS)?ih -162 : ih -105;
+                $('.HelpContainer').css({'height':h + 'px'});
+                $(window).resize(function(){
+                    $('.HelpContainer').css({'height': h +'px'});
+                });
+            });
+            </script>
+            <script>
+            
+            var iosVer=0;
+            var ua=navigator.userAgent;              
+            window.onload = function() 
+            {
+                try
+                {
+                    if (/iP(hone|od|ad)/.test(navigator.platform))
+                    {
+                        var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+                        var ver=[parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+                        iosVer=ver[0];
+                     }
+                     var a=navigator.userAgent; 
+                     if((a.indexOf('Salesforce')!=-1)&&(a.indexOf('iPhone')!=-1||a.indexOf('iPad')!=-1)&&(a.indexOf('OS/'+iosVer)!=-1||a.indexOf('OS '+iosVer)!=-1)&&(a.indexOf('Safari')==-1))
+                     {
+                         var s=document.createElement('style'); 
+                         s.innerHTML="html,html body{overflow: auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}"; 
+                         document.getElementsByTagName('head')[0].appendChild(s);
+                     }
+                 }catch(e){}
+            };
+         
+            if((ua.indexOf('Salesforce')!=-1)&&(ua.indexOf('iPhone')!=-1||ua.indexOf('iPad')!=-1)&&(ua.indexOf('OS/'+iosVer)!=-1||ua.indexOf('OS '+iosVer)!=-1)&&(ua.indexOf('Safari')==-1))
+            { 
+                function IOS_SCROLL_BOOTSTRAP() 
+                { 
+                    var children = Array.prototype.slice.call(document.body.children), 
+                    placeholder = document.createElement('section'), 
+                    fragment = document.createDocumentFragment(), 
+                    styles, 
+                    width, 
+                    height; 
+                    children.forEach(function(c){fragment.appendChild(c);}); 
+                    placeholder.appendChild(fragment); 
+                    styles = [ 
+                    'width:100%;', 
+                    'height:', (window.screen.height - 42), 'px;', 
+                    'position: absolute; overflow: auto; -webkit-overflow-scrolling: touch' 
+                    ].join(''); 
+                    placeholder.style.cssText = styles; 
+                    document.body.appendChild(placeholder); 
+                } 
+                window.addEventListener('load',function (e) { 
+                IOS_SCROLL_BOOTSTRAP(); 
+                }); 
+            } 
+            
+             function loadNewData()
+	            {
+	                setTimeout(function () {
+	                    //list.innerHTML = '<li>new user</li><li>new user 2</li>' + list.innerHTML;
+	                    url='/apex/ABS_WholesalerAccountDetail';
+	                    url=window.location.href;
+	                    //alert(url);
+	                    try
+	                    {
+	                        sforce.one.navigateToURL(url);
+	                    }
+	                    catch(e)
+	                    {
+	                        window.location.href = url;
+	                    }
+	                    loader.style.display = "none";
+	                }, 1000);
+	            }
+	            
+            
+             function resizePage()
+                {
+                        var h = window.innerHeight -105;
+                        $('.HelpContainer').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.HelpContainer').css({'height': h +'px'});
+                        });
+                 }
+            
+            window.addEventListener("orientationchange", function() {
+               // Announce the new orientation number
+               //document.location.reload(true);
+                resizePage();
+            }, false);
+            
+          
+            function navigateMainPage()
+            {
+                var url ='';
+                var currentUrl=window.location.href;
+                var nIndex = currentUrl.indexOf("?");
+                if(nIndex > 0) 
+                {
+                    url =currentUrl.substring(nIndex);
+                }
+                try
+                {
+                    sforce.one.navigateToURL('/apex/ABS_WholesalerAccountDetail'+url);
+                }
+                catch(e)
+                {
+                    window.location.href = '/apex/ABS_WholesalerAccountDetail'+url;                
+                }
+            }
+            </script>
+            <div id="MainPage">
+                <apex:outputPanel id="recordsmainPanel">
+                    <!-- start of slds -->
+                    <div class="slds " i="sldsclass">
+                        <!-- start of slds conatiner-->
+                        <div  id="sldscontainer" class="slds-container--center FilterBg slds-container--small slds-container--medium slds-container--large ">
+                            <!-- freeze pannel start -->
+                            <div id="freezepan">
+                                <!--Start of  slds grid -->
+                                <div class="slds-grid collBar">                                   
+                                    <!--End: Header changes -->
+                                    <div class="slds-global-header__item slds-global-header__item--search slds-m-top--small slds-size--1-of-1  slds-text-align--center">
+                                        <div class="slds-container--center slds-form-element slds-size--5-of-6">
+                                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                                                <label class="slds-assistive-text" for="searchName">Search</label>
+                                                <c:ABS_Component styleClass="slds-input__icon slds-icon-text-default" path="/assets/icons/utility-sprite/svg/symbols.svg#search" />
+                                                <input  id="searchName" onsubmit="return false;" onkeydown="search();"   class="slds-input slds-lookup__search-input" type="search" placeholder="Search" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--ENd of  slds grid -->
+                                                        
+                                <!-- Help  Pannel start-->
+                               <apex:form id="FormId">
+                                <apex:actionFunction action="{!submitCase}" name="SubmitAction" reRender="SubmitFeedBackId"/>
+                                <div class="slds-grid HelpContainer">
+                                    <div class="slds-col">
+                                       
+                                        <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large">
+                                            <div class="slds-page-header">
+                                                <div class="slds-text-align--center slds-text-heading--large">HELP PAGE</div>
+                                            </div> 
+                                            <!--Tab section start-->
+                                            <div class="slds-tabs--default">
+                                                <ul class="slds-tabs--default__nav" role="tablist">
+                                                    <li class="slds-tabs__item slds-text-heading--label" title="Item Two" id="Itemtwo" role="presentation">
+                                                        <a href="#" role="tab" id="tabtwo" onclick="changetab('tabtwo');" tabindex="-1" aria-selected="false">User Guide</a>
+                                                    </li>
+                                                    <li class="slds-tabs__item slds-text-heading--label slds-active" id="ItemOne" title="Item One" role="presentation">
+                                                        <a href="#" role="tab" id="tabone" onclick="changetab('tabone');" tabindex="0" aria-selected="true">Submit Feedback</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="slds-grid slds-p-right--large">
+                                                <div id="tab1" class="slds-tabs__content slds-show slds-small-size--1-of-2 " role="tabpanel">
+                                                    <!-- Slds form start-->
+                                                    <div class="slds-tabs__content slds-show slds-m-left--large" id="SubmitFeedBackId">
+                                                        <div class="slds-form-element__control slds-p-top--small">
+                                                            <b>The following information will be included in your ticket</b><br/>
+                                                        </div>
+                                                        <!--Name field-->
+                                                        <!--  <div class="slds-col slds-small-size--1-of-2 slds-medium-size--2-of-6 slds-large-size--12-of-12">-->
+                                                        <div class="slds-card slds-theme--default">
+                                                            <ul>
+                                                                <li class="slds-item">
+                                                                <div class="slds-form--horizontal">
+                                                                    <div class="slds-form-element slds-m-left--x-small slds-p-top--xx-small slds-p-bottom--xx-small slds-size--1-of-1">
+                                                                        <label class="slds-form-element__label bold_text" for="inputSample2">Name</label>
+                                                                       <div class="slds-form-element__control">
+                                                                            <apex:outputText styleclass="slds-output slds-form-element__label" value="{!$User.FirstName} {!$User.LastName}" /><!--{!sapCase.ONTAP__Contact_Name__c}-->
+                                                                        </div>
+                                                                    </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li class="slds-has-divider--top">
+                                                                <div class="slds-form--horizontal">
+                                                                    <div class="slds-form-element slds-m-left--x-small slds-p-top--xx-small slds-p-bottom--xx-small slds-size--1-of-1">
+                                                                        <label class="slds-form-element__label bold_text" for="inputSample2">E-mail Address</label>
+                                                                         <div class="slds-form-element__control">
+                                                                            <!--<apex:inputText styleclass="slds-input" value="{!sapCase.ONTAP__Email__c}" />-->
+                                                                            <apex:outputText styleclass="slds-output" value="{!$User.Email}" /><!--{!sapCase.ONTAP__Email__c}-->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                </li>
+                                                                
+                                                            </ul>
+                                                        </div>
+                                                          <div class="slds-form--horizontal">
+                                                        <div class="slds-form-element slds-p-top--xx-small slds-p-bottom--xx-small slds-size--1-of-1">
+                                                            <label class="slds-form-element__label bold_text" for="inputSample2">Subject <abbr class="slds-required" title="required">*</abbr></label>
+                                                            <div class="slds-form-element__control">
+                                                                <apex:inputText styleclass="slds-input" value="{!sapCase.ONTAP__Subject__c}" id="SubjectId"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="slds-form-element  slds-p-top--xx-small slds-p-bottom--xx-small slds-size--1-of-1">
+                                                            <!--   <div class="slds-form-element">-->
+                                                            <label class="slds-form-element__label bold_text" for="textareaSample2">Description <abbr class="slds-required" title="required">*</abbr></label>
+                                                            <!--</div>-->
+                                                            <div class="slds-form-element__control">
+                                                                <apex:inputTextarea styleclass="slds-textarea" value="{!sapCase.ONTAP__Description__c}" id="DescriptionId"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="slds-form-element  slds-p-top--xx-small slds-p-bottom--xx-small slds-size--1-of-1">
+                                                            <label class="slds-form-element__label bold_text" for="inputSample2" >Priority </label>
+                                                            <div class="slds-form-element__control">
+                                                                <apex:inputfield styleclass="slds-input" value="{!sapCase.ONTAP__Priority__c}" />
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="slds-p-top--medium">
+                                                            <div class="slds-size--1-of-1 slds-text-align--center">
+                                                                <!--<apex:commandLink styleclass="button" onclick="FunSubmit();" value="Submit Feedback" id="theCommandLink" reRender="FormId"/><!--action="{!submitCase}"-->
+                                                                <apex:commandLink styleclass="button" action="{!submitCase}" value="Submit Feedback" id="theCommandLink"/>
+                                                            </div>
+                                                           
+                                                            
+                                                         
+                                                        </div>
+                                                        <!--</div>-->
+                                                    </div>
+                                                    <!-- Slds form End-->
+                                                </div>
+                                            </div>
+                                            <div id="tab2" class="slds-tabs__content slds-hide" role="tabpanel"><!-- slds-m-left--large-->
+                                                <div class="scrollable" id="scrollpannel1" >
+                                                    <div class="slds-card">
+                                                        <apex:repeat value="{!lstFAQs}" var="faq"> 
+                                                            <div class="slds-box slds-theme--default slds-m-vertical--xx-small"> 
+                                                                <div class="slds-form-element slds-m-left--large">                                       
+                                                                    <label class="slds-form-element__label bold_text slds-text-heading--small" for="text-input-01">{!faq.Name}</label>                                        
+                                                                    <div class="slds-form-element__control slds-text-heading--small">
+                                                                        <apex:outputText value="{!faq.Answer__c}" escape="false"/>
+                                                                    </div>                                        
+                                                                </div>
+                                                            </div>  
+                                                        </apex:repeat>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--/Tab section close-->
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </apex:form> 
+                                 <!--Data Stop-->
+                                <!-- Help Pannel End -->
+                            </div><!-- freeze pannel End -->
+                        </div>
+                        <!--Slds Container -->
+                    </div>
+                    <!--slds -->          
+                </apex:outputPanel>
+            </div>
+            <!--Data Start-->
+            <style>
+                .scrollable {
+                overflow-y:auto;
+               
+                }
+                .slds-tabs--default{
+                background-color: LightGray !important;
+                }
+                .button {
+                background-color: DodgerBlue !important;
+                border: 2px;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 15px;
+                margin: 4px 2px;
+                cursor: pointer;
+                border-radius: 4px;
+                background-image: none !important;
+                }
+            </style>
+            <script>
+            function navigateMainPage()
+            {
+                var url ='';
+                var currentUrl=window.location.href;
+                var nIndex = currentUrl.indexOf("?");
+                if(nIndex > 0) 
+                {
+                    url =currentUrl.substring(nIndex);
+                }
+                try
+                {
+                    sforce.one.navigateToURL('/apex/ABS_WholesalerAccountDetail'+url);
+                }
+                catch(e)
+                {
+                    window.location.href = '/apex/ABS_WholesalerAccountDetail'+url;                
+                }
+            }
+            // Validations of Submit and Description fields         
+            function FunSubmit(){
+                if(document.getElementById("wholePage:FormId:DescriptionId").value == '' && document.getElementById("wholePage:FormId:SubjectId").value == ''){
+                    alert("Description and Subject are Required");
+                }
+                else{
+                    if(document.getElementById("wholePage:FormId:SubjectId").value == ''){
+                        alert("Subject is Required");
+                    }
+                    if(document.getElementById("wholePage:FormId:DescriptionId").value == ''){
+                        alert("Description is Required");
+                    }
+                    if(document.getElementById("wholePage:FormId:DescriptionId").value != '' && document.getElementById("wholePage:FormId:SubjectId").value != ''){
+                        SubmitAction()
+                    }
+                }
+            }
+            function navigateMainPage()
+            {
+                var url ='';
+                var currentUrl=window.location.href;
+                var nIndex = currentUrl.indexOf("?");
+                if(nIndex > 0) 
+                {
+                    url =currentUrl.substring(nIndex);
+                }
+                try
+                {
+                    sforce.one.navigateToURL('/apex/ABS_WholesalerAccountDetail'+url);
+                }
+                catch(e)
+                {
+                    window.location.href = '/apex/ABS_WholesalerAccountDetail'+url;                
+                }
+            }
+            function changetab(id)
+            {
+                var tabname=id;
+                if(tabname==='tabone')
+                {
+                    document.getElementById('tab1').className="slds-tabs__content slds-show slds-float--left slds-small-size--1-of-2";
+                    document.getElementById('tab2').className="slds-tabs__content slds-hide ";
+                    document.getElementById('ItemOne').className="slds-tabs__item slds-text-heading--label slds-active"
+                    document.getElementById('Itemtwo').className="slds-tabs__item slds-text-heading--label"
+                }else if(tabname==='tabtwo')
+                {
+                    document.getElementById('tab2').className="slds-tabs__content slds-show";//slds-m-left--large
+                    document.getElementById('tab1').className="slds-tabs__content slds-hide";
+                    document.getElementById('Itemtwo').className="slds-tabs__item slds-text-heading--label slds-active"
+                    document.getElementById('ItemOne').className="slds-tabs__item slds-text-heading--label"
+                }
+            }
+            </script>
+            
+            <!-- Start footer-->
+            <div class="slds" id="sldsclassfooter">
+                <!-- start of slds conatiner-->
+                <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large ">
+                    <!-- Freeze Pan -->
+                    <div id="freezepan">
+                        <!-- slds collbar start-->
+                        <div class="slds-grid collBar" >
+                            <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical'  >
+                                <span class='slds-avatar slds-avatar--Large'  >
+                                    <img src="{!URLFOR($Resource.LDS, '/assets/images/Survey_1.png')}"  onclick="LoadSurvey();" alt='Header logo' style="cursor: pointer; cursor: hand;"/>
+                                </span>
+                                <span class = "slds-text-heading--small account_heading_color" >
+                                    <label style="cursor: pointer; cursor: hand;">Survey</label> 
+                                </span>
+                            </div>  
+                            <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical'  >
+                                <span class='slds-avatar slds-avatar--Large'  >
+                                    <img src="{!URLFOR($Resource.LDS, '/assets/images/Refresh_1.png')}"  onclick="loadNewData();" alt='Header logo' style="cursor: pointer; cursor: hand;"/>
+                                </span>
+                                <span class = "slds-text-heading--small account_heading_color" >
+                                    <label style="cursor: pointer; cursor: hand;">Refresh</label> 
+                                </span>
+                            </div>                           
+                            <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical' >
+                                <span class='slds-avatar slds-avatar--Large'>
+                                    <img src="{!URLFOR($Resource.LDS, '/assets/images/Questions2.png')}" onclick="navigateMainPage();" alt='Header logo' style="cursor: pointer; cursor: hand;"  />
+                                </span>
+                                <span class = "slds-text-heading--small account_heading_color" >
+                                    <label style="cursor: pointer; cursor: hand;" onclick="navigateMainPage();">Close</label> 
+                                </span>
+                            </div>           
+                        </div>
+                        <!-- slds collbar End-->
+                    </div>
+                    <!-- Freeze pan -->
+                </div>
+                <!-- slds container End-->
+            </div>
+            <!-- slds main end-->
+            <!--  End footer-->
+        </head>
+    </html>
+</apex:page>

@@ -1,0 +1,2295 @@
+<apex:page docType="html-5.0" controller="ABS_WholesalerAccountDetail"  CACHE="True"  showHeader="false" setup="false" id="wholePage">
+    <html lang="en" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport"  content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+        <apex:includeScript value="{!URLFOR($Resource.ABS_Bootstrap, 'jquery.min.js')}"/>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB5OoIjmYbz9A9clKvOC-y7EqWZw7wRRc" type="text/javascript"></script>      
+        <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+        <script src="../../soap/ajax/37.0/connection.js" type="text/javascript"></script>
+        <script src="https://code.jquery.com/jquery-1.8.2.js"></script>
+        <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+        <script src="https://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css"/>
+        <apex:stylesheet value="{!URLFOR($Resource.LDS, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
+        <style>
+            body{font-family: "Salesforce Sans",Arial,sans-serif !important;}
+            .header {background-color:#000033;color: #ffffff;padding: 10px;}                                              
+            #map_canvas {margin:0 auto;height:400px;min-width:100%;float:right;}
+            #map_canvas {margin:0 auto;height:400px;min-width:100%;float:right;}
+            #map_wrapper {height: 300px;}                                                
+            #map_canvas { width: 100%; height: 100%;}
+            .collBar{height: 50px;border-radius: 0px;background-image: linear-gradient(black,black);}
+            .SpinnerBackground{border-radius: 1px;background-image: linear-gradient(white,white);}
+            .scrollable {overflow-y:auto;margin-top : 5px;}
+            .mapping{overflow-y:auto;}
+            .line-separator{height:1px;background:#d8dde6;border-bottom:0px solid #313030;}
+            .slds-p-around--xxx-small{padding: .01rem !important;}
+            .retailerBar{border: 0px solid #d8dde6;height: 45px;border-radius: 0px;background: #EFEFF4;}
+            .Greencircle{font-size:15px;font-weight:bold;text-align:center; background:green;color: white;}
+            .Yellowcircle{width:60px;height:60px;border-radius:260px;font-size:15px;font-weight:bold;line-height:60px;text-align:center;background:yellow;color: white;}
+            .Redcircle{font-size:15px;font-weight:bold;text-align:center; background:Red;color: white;}           
+            .bold_text{ font-weight: bold;}
+            .bolder_text{font-weight: bolder;}
+            .color_black{ color: #000000;}
+            .Channel_heading_color{color: black !important;}
+            .text_bold {font-size: 30px; font-weight: bold; color: white !important;}
+            .text_bold1{font-size: 30px;font-weight: bold;}
+            .plus_symbol{color: white;cursor:pointer;}
+            .account_heading_color{color: white;}
+            .textcenter{left: 0;line-height: 200px;margin-top: -100px;position: absolute;text-align: center;top: 50%;width: 100%;}
+            .textcenterRe{ left: 0;line-height: 363px;text-align: center; top: 50%;width: 100%;padding-left: 365px;}
+            .textu{text-decoration: underline}
+            .textcur{cursor: pointer; cursor: hand; }
+            ul li{margin-left:0px;}
+            .slds-card+.slds-card {margin-top: 5px !important;}
+            .item-cls{ border:1px solid #ddd;margin:2px;border-radius:5px;margin:auto}
+            .border-round{ border-radius:50%;}
+            .clr-red{background-color:#E14938;}
+            .clr-green{background-color:#41A85F;}
+            .txt-center{text-align:center;}
+            .innerdiv-3{margin:auto;color:#fff; border-radius:50%; width:62px; height:62px; line-height:62px;overflow:hidden;}
+            .innerdiv-2{margin:auto;color:#fff;width:62px; height:62px; line-height:62px;border-radius:50%;overflow:hidden;}
+            .innerdiv-1{margin:auto;color:#fff; border-radius: 50%; width:62px; height:62px; line-height: 62px; overflow:hidden;}
+            .info{margin-left:0.5%; padding:0.5%}
+            .lef-bor{ border-right: 1px solid #ddd;}
+            .pd1{padding-bottom: 1%;}
+            .BlackCircle{font-size:15px;font-weight:bold;text-align:center; background:Black;color: white;margin:auto;color:#fff;border-radius:50%;width:48px; height:48px; line-height:48px;overflow:hidden;}
+            .text_bold1_poc{font-size: 30px;font-weight: bold;}
+            .plus_symbol_poc{color: white;cursor:pointer;}
+            .Greencircle_pocss{color: black;cursor:pointer;background-color:#61bd43 !important;border-color: #61bd43 !important;}  
+            .Yellowcircle_pocss{color: black;cursor:pointer;background-color: yellow !important;border-color: yellow !important;}    
+            .Redcircle_pocss{color: black;cursor:pointer;background-color: red !important;border-color: red !important;}     
+            .Greencircle_pocss:hover{color: black;cursor:pointer;background-color: #61bd43 !important;border-color: #61bd43 !important;}
+            .Yellowcircle_pocss:hover{color: black;cursor:pointer; background-color: yellow !important; border-color: yellow !important;}
+            .Redcircle__pocss:hover{color: black;cursor:pointer;background-color: red !important;border-color: red !important;}
+            #map_canvas_poc {margin:0 auto;height:400px;min-width:100%;float:right;}
+            #map_canvas_poc {margin:0 auto;height:400px;min-width:100%;float:right;}
+            #map_wrapper_poc {height: 300px;}
+            #map_canvas_poc {width: 50%; height: 100%;}
+            .retailerBar_poc { border: 1px solid #d8dde6;border-radius: 7px;background: #fff;}
+            .textcenter_poc{left: 0;line-height: 150px;margin-top: -101px; text-align: center; top: 50%;width: 100%;margin-left: 450px;}
+            .green-circle_poc {background-color:green;height:25px;width:25px; -webkit-border-radius:75px;-moz-border-radius:75px;border-radius:20px;}
+            .yellow-circle_poc {background-color:yellow;height:25px;width:25px;-webkit-border-radius:75px;-moz-border-radius:75px;border-radius:20px;}
+            .red-circle_poc {background-color:red;height:25px;width:25px;-webkit-border-radius:75px;-moz-border-radius:75px;border-radius:20px;}
+            .imageWidth{width:auto !important;height: 100px !important;}
+            .emptyPanel{height:0.5px;}
+            .broderClass_poc{border-bottom: 1px solid #9C9C9C;box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);}
+            .headerpoc {background-color:#000033;color: #ffffff;padding: 10px;}
+            .FilterBg{ background: #EFEFF4;}
+            .button{background-color: lightblue !important;border: 2px;color: white;text-align: center;text-decoration: none;display: inline-block;font-size: 15px;margin: 4px 2px;cursor: pointer;border-radius: 4px;background-image: none !important;} 
+            .Filterhg {overflow-y:auto; margin-top : 5px;}  
+            .pocPagePanel1 {overflow-y:auto; margin-top : 5px;}         
+            .Accountgrdbg{background-color: #ffffff !important;}
+            .textcenterpoc{left: 0;line-height: 150px;margin-top: -101px;text-align: center;top: 50%;width: 100%;margin-left: 450px;}
+            .slds-grid .slds-size--1-of-3, .slds-grid .slds-large-size--1-of-1{ position:relative;}
+            .slds-grid .slds-popover{ position:absolute !important;  width:100%;  margin-top: -12px !important; left:auto; right:auto;}
+            .slds-nubbin--top-left:after{left: inherit;}
+            .slds-nubbin--top-left:before{left: inherit; }
+            
+            @media only screen and (min-width:480px) and (max-width: 767px) {
+            .innerdiv-3{margin:auto;color:#fff; border-radius:50%; width:42px; height:42px; line-height:42px;overflow:hidden;}
+            .innerdiv-2{margin:auto;color:#fff;width:42px; height:42px; line-height:42px;border-radius:50%;overflow:hidden;}
+            .innerdiv-1{margin:auto;color:#fff; border-radius: 50%; width:42px; height:42px; line-height: 42px; overflow:hidden;}
+            .innerdiv-3, .innerdiv-2, .innerdiv-1{ font-size: 13px;}  
+            }
+            
+            @media only screen and (min-width:320px) and (max-width: 479px) 
+            {
+            .innerdiv-3{margin:auto;color:#fff; border-radius:50%; width:42px; height:42px; line-height:42px;overflow:hidden;}
+            .innerdiv-2{margin:auto;color:#fff;width:42px; height:42px; line-height:42px;border-radius:50%;overflow:hidden;}
+            .innerdiv-1{margin:auto;color:#fff; border-radius: 50%; width:42px; height:42px; line-height: 42px; overflow:hidden;}
+            .innerdiv-3, .innerdiv-2, .innerdiv-1{ font-size: 13px;} 
+            .slds-grid .slds-popover{width: 190px;}
+            .slds-nubbin--top-left:after{ left: 20px;}
+            .slds-nubbin--top-left:before { left: 20px;}
+            .slds-grid .slds-popover {width: 130px !important;}
+           }
+           .POCItemRounded{border-radius: 10px; background-image: linear-gradient(black,black); color: white !important;}
+            
+           .confirmButton{color: white; padding-left: 3px; padding-right: 3px; font-weight: bold;}   
+        </style>
+        <script type="text/javascript">
+            var objAccountdata = new Object();
+            var namelist=[];
+            var userMainlat;
+            var userMainlng;
+            var navLog=0;
+            var navlat=0;
+            var glat;
+            var glong;
+            var NoRecords = 'false';
+            var isPocMap = 'false';
+            var curCtrl = 'list';
+            function resizePage()
+            {
+                switch(curCtrl) {
+                case "map":
+                    var h = window.innerHeight -100;
+                    $('.mapping').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.mapping').css({'height': h +'px'});
+                    });
+                    break;
+                case "list":
+                    var h = window.innerHeight -151;
+                        $('.scrollable').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.scrollable').css({'height': h +'px'});
+                        });
+                    break;
+                case "filter":
+                    var h = window.innerHeight - 105;
+                                    $('.Filterhg ').css({'height':h + 'px'});
+                                    $(window).resize(function()
+                                    {
+                                        $('.Filterhg').css({'height': h +'px'});
+                                    });
+                                
+                    break;  
+                case "poc":
+                    var h = window.innerHeight -105;
+                        $('.pocPagePanel1').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.pocPagePanel1').css({'height': h +'px'});
+                        });  
+                    break;
+                 case "mappoc":
+                     var h = window.innerHeight -100;
+                        $('.mapping_poc').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.mapping_poc').css({'height': h +'px'});
+                        });    
+                 break;
+                 default:
+                 var h = window.innerHeight -151;
+                        $('.scrollable').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.scrollable').css({'height': h +'px'});
+                        });
+                    break;
+                            
+                }
+            }
+            
+            window.addEventListener("orientationchange", function() {
+               // Announce the new orientation number
+               //document.location.reload(true);
+                resizePage();
+            }, false);
+            $(function()
+            {
+           // alert(window.innerHeight);
+                var h = window.innerHeight -151;
+                $('.scrollable').css({'height':h + 'px'});
+                $(window).resize(function(){
+                    $('.scrollable').css({'height': h +'px'});
+                });
+            });
+            
+            function myfiltersVal()
+            {
+                var myRetailer='{!viewByProfile}'
+                var retailersTeam='{!$currentPage.parameters.retailersTeam}';
+                //alert(retailersTeam);
+                //alert(myRetailer);
+                if((myRetailer == 'true' && retailersTeam !='undefined' ) || retailersTeam == 'true' )
+                {
+                    //alert('Entered');
+                    document.getElementById('wholePage:filtersform:isinstance1').checked=true;
+                }else{
+                
+                    document.getElementById('wholePage:filtersform:isinstance1').checked=false;
+                }
+            }
+            
+            function LargeFormat(core,highEnd,FMb,FeatDisplay,prompoti,Accountid,ColorCore,colorHighEnd,colorFmb,colorFeatDisplay,ColorPrompti,pgmIdcore,pgmIdHe,pgmIdfmb)
+            {
+                core == undefined ? core='0/0':core;
+                highEnd == undefined ? highEnd='0/0':highEnd;
+                FMb == undefined? FMb='0/0':FMb;
+                ColorCore == undefined ? ColorCore='Redcircle' : ColorCore;
+                colorHighEnd == undefined ? colorHighEnd='Redcircle' : colorHighEnd;
+                colorFmb == undefined ? colorFmb='Redcircle':colorFmb;
+                FeatDisplay == undefined ?FeatDisplay='0%':FeatDisplay;
+                colorFeatDisplay == undefined ? colorFeatDisplay='Redcircle':colorFeatDisplay; 
+                prompoti== undefined ?prompoti='0%':prompoti;
+                ColorPrompti == undefined ? ColorPrompti='Redcircle':ColorPrompti;
+                var appendStr ='<div class="slds-grid slds-grid--vertical-stretch pd1 slds-size--1-of-1"><div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center"><b>SAP Assortment</b><div class="slds-grid slds-grid--vertical-stretch lef-bor"><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3"><div class="'+ColorCore+' innerdiv-3" Id="'+Accountid+'Core" onclick="openPopUp(this)" style="cursor: pointer;" >'+core+'</div><h5>Core</h5><div id="'+Accountid+'CoreOpen" class="slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1" aria-hidden="false" aria-describedby="'+Accountid+'ALNR"><div class="slds-popover__header"><div class="slds-text-align--right"><a onclick="closePopup(this)">X</a></div></div><div class="slds-popover__body"><p>Program</p><p>Target</p><p>'+pgmIdcore+'</p></div></div></div><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3"><div class="'+colorHighEnd+' innerdiv-3" Id="'+Accountid+'high"  onclick="openPopUp(this)" style="cursor: pointer;">'+highEnd+'</div><h5>High End</h5><div id="'+Accountid+'HighEnd" class="slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1" aria-hidden="false" aria-describedby="'+Accountid+'ALNR"><div class="slds-popover__header"><div class="slds-text-align--right"><a onclick="closePopup(this)">X</a></div></div><div class="slds-popover__body"><p>Program</p><p>Target</p><p>'+pgmIdHe+'</p></div></div></div><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3"><div class=" '+colorFmb+' innerdiv-3" Id="'+Accountid+'fmb" onclick="openPopUp(this)" style="cursor: pointer;"> '+FMb+'</div><h5>FMB</h5><div id="'+Accountid+'accIdFMB" class="slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1" aria-hidden="false" aria-describedby="'+Accountid+'ALNR"><div class="slds-popover__header"><div class="slds-text-align--right"><a onclick="closePopup(this)">X</a></div></div><div class="slds-popover__body"><p>Program</p><p>Target</p><p>'+pgmIdfmb+'</p></div></div></div></div></div></div><div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center"><b>Trade Execution</b><div class="slds-grid slds-grid--vertical-stretch"><div class="slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="'+colorFeatDisplay+' innerdiv-2">'+FeatDisplay+'</div><h5>Feat+Disp</h5></div><div class="slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="'+ColorPrompti+' innerdiv-2">'+prompoti+'</div><h5>PromOpt</h5></div></div></div></div></div>';
+                return appendStr;
+            }
+            function SmallFormat(core,highEnd,FMb,budlight,prompoti,Accountid,ColorCore,colorHighEnd,colorFmb,colorbudlight,ColorPrompti,pgmIdcore,pgmIdHe,pgmIdfmb)
+            {
+                core == undefined ? core='0/0':core;
+                highEnd == undefined ? highEnd='0/0':highEnd;
+                FMb == undefined? FMb='0/0':FMb;
+                ColorCore == undefined ? ColorCore='Redcircle' : ColorCore;
+                colorHighEnd == undefined ? colorHighEnd='Redcircle' : colorHighEnd;
+                colorFmb == undefined ? colorFmb='Redcircle':colorFmb;
+                budlight== undefined ? budlight='0/0' :budlight;
+                colorbudlight== undefined ?colorbudlight='Redcircle' :colorbudlight;
+                prompoti== undefined ? prompoti='0%':prompoti;
+                ColorPrompti == undefined ? ColorPrompti='Redcircle' :ColorPrompti ;
+                var appendStr ='';
+                var appendStr ='<div class="slds-grid slds-grid--vertical-stretch pd1 slds-size--1-of-1"><div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center"><b>SAP Assortment</b><div class="slds-grid slds-grid--vertical-stretch lef-bor"><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3"><div class="'+ColorCore+' innerdiv-3" Id="'+Accountid+'Core" onclick="openPopUp(this)" style="cursor: pointer;" >'+core+'</div><h5>Core</h5><div id="'+Accountid+'CoreOpen" class="slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1" aria-hidden="false" aria-describedby="'+Accountid+'ALNR"><div class="slds-popover__header"><div class="slds-text-align--right"><a onclick="closePopup(this)">X</a></div></div><div class="slds-popover__body"><p>Program</p><p>Target</p><p>'+pgmIdcore+'</p></div></div></div><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3"><div class="'+colorHighEnd+' innerdiv-3" Id="'+Accountid+'high" onclick="openPopUp(this)" style="cursor: pointer;" >'+highEnd+'</div><h5>High End</h5><div id="'+Accountid+'HighEnd" class="slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1" aria-hidden="false" aria-describedby="'+Accountid+'ALNR"><div class="slds-popover__header"><div class="slds-text-align--right"><a onclick="closePopup(this)">X</a></div></div><div class="slds-popover__body"><p>Program</p><p>Target</p><p>'+pgmIdHe+'</p></div></div></div><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3"><div class=" '+colorFmb+' innerdiv-3" Id="'+Accountid+'fmb" onclick="openPopUp(this)" style="cursor: pointer;"> '+FMb+'</div><h5>FMB</h5><div id="'+Accountid+'accIdFMB" class="slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1" aria-hidden="false" aria-describedby="'+Accountid+'ALNR"><div class="slds-popover__header"><div class="slds-text-align--right"><a onclick="closePopup(this)">X</a></div></div><div class="slds-popover__body"><p>Program</p><p>Target</p><p>'+pgmIdfmb+'</p></div></div></div></div></div></div><div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center"><b>Trade Execution</b><div class="slds-grid slds-grid--vertical-stretch"><div class="slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="'+colorbudlight+' innerdiv-2">'+budlight+'</div><h5>Bud Light</h5></div><div class="slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="'+ColorPrompti+' innerdiv-2">'+prompoti+'</div><h5>PromOpt</h5></div></div></div></div></div>';
+                return appendStr;
+            }
+            function onPremise(core,ColorCore,pgmIdcore,three,colorThree,Accountid)
+            {
+                core == undefined ? core='0/0':core;
+                ColorCore == undefined ? ColorCore='Redcircle' : ColorCore;
+                three == undefined ?three ='0/0':three;
+                colorThree == undefined ? colorThree ='Redcircle':colorThree;
+                var appendStr ='';
+                //appendStr = '<div class="slds-grid slds-grid--vertical-stretch pd1 slds-size--1-of-1"><div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center"><b>SAP Assortment</b><div class="slds-grid slds-grid--vertical-stretch lef-bor"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1"><div class="'+ColorCore+' innerdiv-1" Id="'+Accountid+'Core" onclick="openPopUp(this)" style="cursor: pointer;">'+core+'</div><h5>Core</h5><div id="'+Accountid+'CoreOpen" class="slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1" aria-hidden="false" aria-describedby="'+Accountid+'ALNR"><div class="slds-popover__header"><div class="slds-text-align--right"><a onclick="closePopup(this)">X</a></div></div><div class="slds-popover__body"><p>Program</p><p>Target</p><p>'+pgmIdcore+'</p></div></div></div></div></div></div><div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center"><b>Trade Execution</b><div class="slds-grid slds-grid--vertical-stretch"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1"><div class="  '+colorThree+' innerdiv-1">'+three+'</div><h5>3D</h5></div></div></div></div></div>';
+                var appendStr ='<div class="slds-grid slds-grid--vertical-stretch pd1 slds-size--1-of-1"><div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center"><b>SAP Assortment</b><div class="slds-grid slds-grid--vertical-stretch lef-bor"><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3" style=\"visibility:hidden\"  ><div class="innerdiv-3">xys</div><h5>Core</h5></div><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3"><div class="'+ColorCore+' innerdiv-3" Id="'+Accountid+'Core" Id="'+Accountid+'Core" onclick="openPopUp(this)" style="cursor: pointer;" >'+core+'</div><h5>Core</h5><div id="'+Accountid+'CoreOpen" class="slds-popover slds-nubbin--top-left slds-hide slds-size--1-of-1" aria-hidden="false" aria-describedby="'+Accountid+'ALNR"><div class="slds-popover__header"><div class="slds-text-align--right"><a onclick="closePopup(this)">X</a></div></div><div class="slds-popover__body"><p>Program</p><p>Target</p><p>'+pgmIdcore+'</p></div></div></div><div class="slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3" style=\"visibility:hidden\" ><div class="innerdiv-3">sss</div><h5>FMB</h5></div></div></div></div><div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center"><b>Trade Execution</b><div class="slds-grid slds-grid--vertical-stretch"><div class="slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1"><div class="  '+colorThree+' innerdiv-1">'+three+'</div><h5>3D</h5></div></div></div></div></div>';
+                
+                return appendStr;
+            }
+        
+            function loadPocs(lat,long) 
+            {
+                console.log(lat);
+                console.log(long);
+                document.getElementById('sldsSpinner').style.display='block';
+                var recSize='{!$currentPage.parameters.size}';
+                var recmiles='{!$currentPage.parameters.miles}';
+                var retailersTeam;
+                var OnPremise;
+                var OffPremise;
+                var Channel;
+                var targetAchievement;
+                var isFilteradded;
+                retailersTeam='{!$currentPage.parameters.retailersTeam}';
+                OnPremise='{!$currentPage.parameters.OnPremise}';
+                OffPremise='{!$currentPage.parameters.OffPremise}';
+                Channel='{!$currentPage.parameters.Channel}';
+                targetAchievement='{!$currentPage.parameters.ClosetoTargetAchievement}';
+                isFilteradded='{!$currentPage.parameters.isFilteradded}'
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.ABS_WholesalerAccountDetail.findPocs}',lat,long,retailersTeam,OnPremise,OffPremise,Channel,recSize,targetAchievement,isFilteradded,recmiles,
+                function(result, event)
+                {
+                    //console.log(result);
+                    if(event.status)
+                    {
+                        if(result.length==0)
+                        {
+                            document.getElementById('em').innerHTML  = "&nbsp;&nbsp;&nbsp;&nbsp;No records found";  
+                            document.getElementById('sldsSpinner').style.display='none';
+                            myfiltersVal();
+                            NoRecords  = 'true';
+                        }
+                        //scrollpannel div start
+                        var strTable = "<div id=\"scrollpannel\">";
+                        //wholePage:wholeSalerForm:pocPanel span start
+                        strTable += "<span id=\"wholePage:wholeSalerForm:pocPanel\">";
+                        //wholePage:wholeSalerForm:j_id28 span start
+                        strTable += "<span id=\"wholePage:wholeSalerForm:j_id28\">";
+                        for (var i=0; i<result.length; i++) 
+                        {
+                            //NoRecords  = 'false';
+                            //alert(result[0].Filter);
+                            if(result[0].Filter =='All Retailers')
+                            {
+                                document.getElementById('retName').style.display='block';
+                                document.getElementById('wholePage:filtersform:isinstance1').checked=false;
+
+                            }else{
+                                document.getElementById('myretName').style.display='block';
+                                document.getElementById('wholePage:filtersform:isinstance1').checked=true;
+                            }
+                            objAccountdata[result[i].id] = result[i];
+                            var accname=result[i].pocAccount.Name
+                            var varTitle = $('<textarea />').html(accname).text();
+                            namelist.push(varTitle); 
+                            var divIdIs = "div-"+result[i].id;
+                            //slds-card div start
+                            strTable += "<div id=\""+divIdIs;
+                            strTable += "\" class=\"slds-card Accountgrdbg\">";
+                            //slds-grid div start
+                            strTable += "<div class=\"slds-grid slds-card__header slds-wrap slds-p-left--large slds-p-top--small\">";
+                            //slds-media div start
+                            strTable += "<div class=\"slds-media slds-media--center slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-p-top--x-small\">";
+                            //slds-tile tile div start
+                            strTable += "<div class=\"slds-tile slds-media\">";
+                            
+                            //slds-media__body div start
+                            strTable += "<div class=\"slds-media__body\">";
+                            //slds-grid slds- div start
+                            strTable += "<div class=\"slds-grid slds-grid--align-spread slds-has-flexi-truncate\">";
+                              strTable += "<p class=\"slds-text-heading--medium bold_text \">";
+                            //strTable += "<a id=\"rnames\" onclick=\"navigatePage(\""+objpocAccounts[i].Id+"\");\" target=\"_blank\">";
+                            strTable += "<a id=\"rnames\" class= \"Channel_heading_color\" onclick=\"javascript:return navigatePage('"+result[i].id + "');\" target=\"_blank\">";
+                            strTable += result[i].pocAccount.Name;
+                            strTable += "</a>";
+                            strTable += "</p>";
+                            //slds-grid slds- div end
+                            strTable += "</div>";
+                            //slds-tile__detail div start
+                            strTable += "<div class=\"slds-tile__detail slds-text-body--small\">";
+                            strTable += "<ul class=\"slds-list--horizontal\">";
+                            strTable += "<li class=\"slds-item\">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            strTable += ((result[i].pocAccount.SAP_Channel__c==undefined)?"":result[i].pocAccount.SAP_Channel__c);
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "</ul>";
+                            strTable += "<ul class=\"slds-list--horizontal\">";
+                            strTable += "<li class=\"slds-item slds-p-right--x-small\">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            strTable += "Channel : ";
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "<li class=\"slds-item \">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            if(result[i].pocAccount.RTL_SEG_NM_US__c == undefined)
+                            {
+                                strTable += " ";
+                            }
+                            else
+                            {  
+                                //strTable += result[i].pocAccount.RTL_SEG_NM_US__c;
+                                strTable += toTitleCase(result[i].pocAccount.RTL_SEG_NM_US__c);
+                            }
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "</ul>";
+                            //slds-tile__detail div end
+                            strTable += "</div>";
+                            //slds-media__body div end
+                            strTable += "</div>";
+                            //slds-tile tile div end
+                            strTable += "</div>";
+                            //slds-media div end
+                            strTable += "</div>";
+                            if(result[i].pocAccount.SAP_Channel__c=='Large Format')
+                            {
+                                var returnStr='';
+                                returnStr = LargeFormat(result[i].Core,result[i].HighEnd,result[i].FMB,result[i].featureDisplay,result[i].promOpti,result[i].id,result[i].colorCore,result[i].colorHighEnd,result[i].colorFmb,result[i].colorFeatureDisplay,result[i].colorPromOpti,result[i].pgmCore,result[i].pgmHighEnd,result[i].pgmFmb);
+                                strTable +=returnStr ;
+                                
+                            }
+                            else if(result[i].pocAccount.SAP_Channel__c=='Small Format')
+                            {
+                                var accIdCore = ''+result[i].id+'Core';
+                                var accIdALNR = ""+result[i].id+"ALNR";
+                                var returnStr='';
+                                returnStr =SmallFormat(result[i].Core,result[i].HighEnd,result[i].FMB,result[i].budlight,result[i].promOpti,result[i].id,result[i].colorCore,result[i].colorHighEnd,result[i].colorFmb,result[i].colorBudlight,result[i].colorPromOpti,result[i].pgmCore,result[i].pgmHighEnd,result[i].pgmFmb);
+                                strTable +=returnStr ;
+                            }
+                            else if(result[i].pocAccount.SAP_Channel__c=='On Premise')
+                            {
+                                var returnStr='';
+                                returnStr = onPremise(result[i].Core,result[i].colorCore,result[i].pgmCore,result[i].three,result[i].colorThree,result[i].id);
+                                strTable +=returnStr ;
+                            }
+                            console.log(result[i].pocAccount.SAP_Channel__c);
+                            //slds-col div start
+                            strTable += "<div class=\"slds-col slds-size--1-of-1 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-p-top--xx-small\">";
+                            strTable += "<span id=\"wholePage:wholeSalerForm:j_id29:0:j_id33\">";
+                            strTable += "<span id=\"wholePage:wholeSalerForm:j_id29:0:j_id34\">";
+                            //slds-grid div start
+                            //slds-grid div start
+                            strTable +="<div class=\"slds-grid\">";                       
+                            //slds-grid close
+                            strTable += "</div>";
+                            strTable += "</span>";
+                            strTable += "</span>";
+                            //slds-col div end
+                            strTable += "</div>";
+                            //slds-grid div end
+                            strTable += "</div>";                        
+                            //slds-card div end
+                            strTable += "</div>";
+                        }
+                        //wholePage:wholeSalerForm:j_id28 span end
+                        strTable += "</span>";
+                        //wholePage:wholeSalerForm:pocPanel span end
+                        strTable += "</span>";
+                        //scrollpannel div end
+                        strTable += "</div>";                    
+                        //console.log(strTable);
+                        document.getElementById('division').innerHTML=strTable;
+                        document.getElementById('sldsSpinner').style.display='none';
+                    }else {
+                        //alert(event.message);
+                        document.getElementById('em').innerHTML  = "No Records found";  
+                        document.getElementById('sldsSpinner').style.display='none';
+                        NoRecords  = 'true';
+                        myfiltersVal();
+                    }
+                },
+                {escape: true});
+                
+                
+            }
+            
+            function toTitleCase(str)
+            {
+                    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+            }
+        
+            //fuction which loads on page load pull geo loacation values
+            function callbackSuccess()
+            {
+                if(navigator.geolocation)
+                {
+                    navigator.geolocation.getCurrentPosition(jsfind,showError,{timeout: 5000});
+                }
+                else{
+                    console.log('navigator not supported');
+                }
+            }
+        
+            // fuction is called if geolocation is not pulled
+            function showError(error)
+            {
+                glat=0;
+                glong=0;
+                loadPocs(0,0);
+            }
+              
+            //fuction which send geolocation is to action function
+            function jsfind(position)
+            {
+                //get latitude and longitude
+                var pos = {};
+                pos = position.coords;
+                console.log(pos);
+                var lat = pos.latitude;
+                var lon = pos.longitude;
+                glat=pos.latitude;
+                glong=pos.longitude;
+                loadPocs(lat,lon);
+            }
+        
+            //function to implement search
+            function search()
+            {
+                suggest();
+                var temp= document.getElementById('searchName').value;           
+                //alert('Search string is :'+ temp);
+                for (var property in objAccountdata) 
+                {               
+                    var tempAcc = objAccountdata[property];
+                    //var name = tempAcc.pocAccount.Name;
+                    var name=$('<textarea />').html(tempAcc.pocAccount.Name).text()
+                    var sapchannel = tempAcc.pocAccount.SAP_Channel__c;
+                    var channel = tempAcc.pocAccount.RTL_SEG_NM_US__c; 
+                    var divIdIs = "div-"+property;
+                    //alert(temp.indexOf(searchString));
+                    if(name.indexOf(temp) != -1)
+                    {   
+                       //console.log(document.getElementById(divIdIs).style.display);
+                       if(document.getElementById(divIdIs).style.display=== 'none')
+                       {
+                           document.getElementById(divIdIs).style.display= ""; 
+                       }                  
+                    }else{
+                   
+                       document.getElementById(divIdIs).style.display= "none";
+                    }
+                
+                }          
+           
+            }
+            function openPopUp(thisPtr)
+            {  
+                $('.slds-popover').hide();              
+                $(thisPtr).siblings('.slds-popover').show();
+            }
+            
+            function closePopup(thisPtr)
+            {
+                $(thisPtr).parents('.slds-popover').hide();
+            }
+            function navigatePage(accountid)
+            {
+                var id=accountid;
+                pocAccount(accountid,glat,glong);
+              
+            }
+            function closePocPanel()
+            {
+                curCtrl='list';
+                document.getElementById('MainPage').style.display='block';
+                document.getElementById('pocPagePanel').style.display='none';
+                var h = window.innerHeight -151;
+                $('.scrollable').css({'height':h + 'px'});
+                $(window).resize(function(){
+                $('.scrollable').css({'height': h +'px'});
+                });
+            }
+            function displayPocPannel()
+            {
+                curCtrl='poc';
+                isPocMap = 'true';
+                document.getElementById("pocPagePanel").className = 'slds-hide';
+                document.getElementById("scrollpannel1").className = 'scrollable slds-hide'; 
+                document.getElementById("pocPagePanel").className = 'slds-show';
+                document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                document.getElementById("lineSeparatorPoc").className="slds-grid slds-p-around--xxx-small";
+                document.getElementById("span_Filter").innerText = 'Close';
+                document.getElementById("scrollpannel1").style.dispaly = "none";
+                document.getElementById("scrollpannel1").style.height = "0px";
+                document.getElementById("dvFilter").className = 'slds-hide';
+                
+                var h = window.innerHeight -105;
+                $('.pocPagePanel1').css({'height':h + 'px'});
+                $(window).resize(function(){
+                $('.pocPagePanel1').css({'height': h +'px'});
+                });
+            }
+            
+             /* For POC   This Method is written to Make the div collpaseable*/
+        function change_autorefreshdiv_poc()
+        {
+         
+            var NAME = document.getElementById("collpased_poc");
+            var currentClass = NAME.className;
+             
+            if(currentClass == "slds-is-collapsed") { // Check the current class name
+                NAME.className = "slds-is-expanded";   // Set other class name
+                //document.getElementById("accord_Poc").innerHTML = "-";
+                document.getElementById("pocPagePanel").className = 'slds-hide';
+                document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                document.getElementById("lineSeparatorPoc").className="slds-grid slds-p-around--xxx-small";
+                document.getElementById("accord").innerHTML = "List";
+                document.getElementById("scrollpannel1").style.dispaly = "none"; 
+                document.getElementById("scrollpannel1").style.height = "0px";
+                document.getElementById("dvFilter").className = 'slds-hide';
+                document.getElementById("scrollpannel1").className = 'scrollable slds-hide'; 
+                curCtrl='mappoc';
+                var h = window.innerHeight -100;
+                    $('.mapping_poc').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.mapping_poc').css({'height': h +'px'});
+                    });
+                
+            }else{
+            
+                NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
+                               
+                document.getElementById("pocPagePanel").className = 'slds-hide';
+                document.getElementById("scrollpannel1").className = 'scrollable slds-hide'; 
+                document.getElementById("pocPagePanel").className = 'slds-show';
+                document.getElementById("lineSeparatorPoc").className="slds-grid slds-p-around--xxx-small";
+                document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                document.getElementById("scrollpannel1").style.dispaly = "none";
+                document.getElementById("scrollpannel1").style.height = "0px";
+                document.getElementById("dvFilter").className = 'slds-hide';
+                curCtrl='poc';
+                var h = window.innerHeight -105;
+                $('.pocPagePanel1').css({'height':h + 'px'});
+                $(window).resize(function(){
+                $('.pocPagePanel1').css({'height': h +'px'});
+                });
+               // document.getElementById("accord_Poc").innerHTML = "+";
+            }
+            initialize_poc();
+            
+        } 
+            
+ 
+            //fuction to collpase and expanding
+            function change_autorefreshdiv()
+            {
+                if (isPocMap == 'true')
+                 {
+                    
+                    change_autorefreshdiv_poc();                    
+                    return;
+                 }
+                
+               if (NoRecords == 'true')
+                {
+                    document.getElementById('em').innerHTML  = "No Records found";
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                }
+                var NAME = document.getElementById("collpased");
+                var currentClass = NAME.className;
+                document.getElementById('searchName').value= "";
+                if (currentClass == "slds-is-collapsed") 
+                {
+                     curCtrl='map';
+                    // Check the current class name
+                    document.getElementById('em').innerHTML = "";
+                    NAME.className = "slds-is-expanded";   // Set other class name
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                    document.getElementById("accord").innerHTML = "List";
+                    document.getElementById("span_Filter").innerText = 'Filter';
+                    document.getElementById("scrollpannel1").style.dispaly = "none";
+                    document.getElementById("scrollpannel1").style.height = "0px";
+                    document.getElementById("dvFilter").className = 'slds-hide';
+                    document.getElementById("scrollpannel1").className = 'scrollable slds-hide'; 
+                     var h = window.innerHeight -100;
+                    $('.mapping').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.mapping').css({'height': h +'px'});
+                    });
+                    
+                    
+                    initialize() ;
+                }else
+                {
+                   // if (NoRecords = 'false')
+                    //{
+                        curCtrl='list';
+                        NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
+                        document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar";
+                        document.getElementById("lineSeparator").className="line-separator";
+                        document.getElementById("accord").innerHTML = "Map";
+                        document.getElementById("span_Filter").innerText = 'Filter';
+                        document.getElementById("scrollpannel1").style.dispaly = "inline";
+                        document.getElementById("dvFilter").className = 'slds-hide';
+                        document.getElementById("scrollpannel1").className = 'scrollable slds-show'; 
+                        var h = window.innerHeight -151;
+                        $('.scrollable').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.scrollable').css({'height': h +'px'});
+                        });
+                      //}
+                      //else
+                      //{
+                      // TODO: No Records
+                      //document.getElementById('em').innerHTML  = "No Records found";  
+                      //}
+                      
+
+                }
+            }
+            
+            // function which diplays wholesaler pointer
+            function initialize() 
+            { 
+                var userName;
+                for (var propt in objAccountdata)
+                {
+                    var temp = objAccountdata[propt];
+                    userMainlat=temp.userlat;
+                    userMainlng=temp.userlong;
+                    userName=temp.userName;
+                    break;
+                }
+                var pinColor = 'blue-dot.png';
+                var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+pinColor;
+                var myLatlng = new google.maps.LatLng(userMainlat,userMainlng);
+                var mapOptions = {center: myLatlng,
+                                  mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                  zoom: 15,
+                                  };
+                var markers = new google.maps.Marker({
+                              position: myLatlng,
+                              icon: pinsImage,
+                              zoom: 15,
+                                   
+                });
+                  
+                map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
+                markers.setMap(map);
+                var mapBoundary = new google.maps.LatLngBounds();
+                mapBoundary.extend(myLatlng );
+                map.fitBounds(mapBoundary);
+              
+                // Variable to define the HTML content to be inserted in the infowindow
+                var iwContent = '<div id="con">' +
+                                '<div class="ti">' + userName + '</div>' +
+                                '</div>';
+                
+                var infowindow = new google.maps.InfoWindow({
+                                 content: iwContent 
+                });
+                  
+                // Event that opens the InfoWindow with a click on the map
+                google.maps.event.addListener(markers, 'click', function() {
+                                              infowindow.open(map, markers); 
+                });
+              
+                // Event that closes the InfoWindow with a click on the map
+                google.maps.event.addListener(map, 'click', function() { infoWindow.close(); });
+               
+              
+                // Finally displayMarkers() function is called to begin the markers creation
+                displayMarkers();
+            }
+              
+            // function which send data to create Poc markers
+            function displayMarkers()
+            {
+                var bounds = new google.maps.LatLngBounds();
+                for (var propt in objAccountdata)
+                {
+                    var temp = objAccountdata[propt];
+                    var latlng = new google.maps.LatLng(temp.pocAccount.BillingLatitude, temp.pocAccount.BillingLongitude);
+                    var urls=temp.mapUrl;
+                    var RecordIds=temp.id;
+                    var name=temp.pocAccount.Name;
+                    var iscore=temp.isCore;
+                    var isfmb=(temp.isFMB==undefined?false:temp.isFMB);
+                    var ishighend=(temp.isHighEnd==undefined?false:temp.isHighEnd);
+                    var core=temp.Core;
+                    var highEnd=(temp.HighEnd==undefined?"":temp.HighEnd);
+                    var fmb=(temp.FMB==undefined?"":temp.FMB);
+                    var mapPinColor=temp.mappinColor;
+                    createMarker(latlng, urls, RecordIds,name,iscore,isfmb,ishighend,core,highEnd,fmb,mapPinColor);
+                    bounds.extend(latlng);
+                }
+                map.fitBounds(bounds);
+            }
+            
+            // function which creates map pointers
+            function createMarker(latlng, urls, RecordIds,name,iscore,isfmb,ishighend,core,highEnd,fmb,mapPinColor)
+            {
+                var value = RecordIds;
+                var isCore;
+                var isAllcore;
+                var DRFT;
+                var ALNR;             
+                console.log(value);
+                if(iscore === true && ishighend === false && isfmb === false)
+                {
+                    isCore=true;
+                }else 
+                {
+                    isAllcore=true;
+                }
+                //var pinColor = colormap;
+                var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+mapPinColor;
+                name = name.replace("\\","");
+                var marker = new google.maps.Marker({
+                             map: map,
+                             position: latlng,
+                             title: name,
+                             icon: pinsImage,
+                             url: urls
+                             });
+              
+                // Variable to define the HTML content to be inserted in the infowindow
+                var iwContent='';
+                var nodata='';
+                if(isCore === true)
+                {
+                    iwContent = '<div id="iw_container">' +
+                    '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font>'+'</div>'+
+                    '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+core+ '</font>'+ '</div>' +
+                    '<div class="iw_content">' +'<font color="Green",weight="bold">'+'</font>'+'<br />'+ 
+                    '</div></div>';
+                      
+                }else if(isAllcore  === true)
+                {
+                    iwContent = '<div id="iw_container">' +
+                    '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font>'+'</div>'+
+                    '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+core + '</font>'+ '</div>' +
+                    '<div class="iw_content">' +'<font color="Green",weight="bold">'+'High End:'+highEnd+ '</font>'+'<br />' 
+                    +'<font color="Green",weight="bold">'+'FMB:'+fmb+ '</font>'+'<br />'+'</div></div>';
+                }
+                else
+                {
+                    iwContent =iwContent = '<div id="iw_container">' +
+                    '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font>'+'</div></div>'
+                }
+                var infowindow = new google.maps.InfoWindow({content: iwContent}); 
+                      
+                marker.addListener('click', function(){infowindow.open(map, this);});
+                    
+                google.maps.event.addListener(marker, 'dblclick', function() 
+                {
+                    try
+                    {
+                        sforce.one.navigateToURL(marker.url);
+                    }
+                    catch(e)
+                    {
+                        window.location.href = marker.url;
+                    }
+                              
+                });
+                map.setCenter(new google.maps.LatLng(userMainlat,userMainlng));
+            }
+            function suggest()
+            {
+                var j$=jQuery.noConflict(); 
+                j$('[id$=searchName]').autocomplete({
+                   source:namelist
+                });           
+            }
+            
+            
+            
+           function ClosePocPage()
+           {
+           
+                        if (NoRecords == 'true')
+                        {
+                            document.getElementById('em').innerHTML  = "No Records found";
+                            document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                            document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                        }
+                        isPocMap = 'false';
+                        document.getElementById("collpased_poc").className =  "slds-is-collapsed";
+                        curCtrl = 'list';
+                        document.getElementById("pocPagePanel").className = 'slds-hide';
+                        document.getElementById("span_Filter").innerText = 'Filter';
+                        document.getElementById("dvFilter").className = 'slds-hide';
+                        document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar";
+                        document.getElementById("lineSeparator").className="line-separator";
+                        document.getElementById("accord").innerHTML = "Map";
+                        document.getElementById("scrollpannel1").style.height = "100%";
+                        document.getElementById("scrollpannel1").style.dispaly = "inline";
+                        document.getElementById("scrollpannel1").className = 'scrollable slds-show';
+                         var h = window.innerHeight -151;
+                        $('.scrollable').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.scrollable').css({'height': h +'px'});
+                        });
+           } 
+            
+        
+           function navigateFilterPage()
+           {
+            
+                if (document.getElementById("span_Filter").innerText == 'Close')
+                {
+                        document.getElementById("span_Filter").innerText = 'Filter';
+                        if (NoRecords == 'true')
+                            {
+                                document.getElementById('em').innerHTML  = "No Records found";
+                                document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                                document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                            }
+                            curCtrl = 'list';
+                            isPocMap = 'false';
+                            document.getElementById("collpased_poc").className =  'slds-is-collapsed';
+                            document.getElementById("pocPagePanel").className = 'slds-hide';
+                            document.getElementById("span_Filter").innerText = 'Filter';
+                            document.getElementById("dvFilter").className = 'slds-hide';
+                            document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar";
+                            document.getElementById("lineSeparator").className="line-separator";
+                            document.getElementById("accord").innerHTML = "Map";
+                            document.getElementById("scrollpannel1").style.height = "100%";
+                            document.getElementById("scrollpannel1").style.dispaly = "inline";
+                            document.getElementById("scrollpannel1").className = 'scrollable slds-show';
+                             var h = window.innerHeight -151;
+                            $('.scrollable').css({'height':h + 'px'});
+                            $(window).resize(function(){
+                            $('.scrollable').css({'height': h +'px'});
+                            });
+                        return;
+                }
+                
+            var NAME = document.getElementById("collpased");
+            NAME.className = "slds-is-collapsed";
+            document.getElementById('searchName').value= "";
+            document.getElementById('em').innerHTML  = "";
+            if(document.getElementById("span_Filter").innerText == 'Filter')
+            {
+                    curCtrl = 'filter';
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                    document.getElementById("span_Filter").innerText = 'Cancel';
+                    document.getElementById("scrollpannel1").style.dispaly = "none";
+                    document.getElementById("scrollpannel1").style.height = "0px";
+                    document.getElementById("dvFilter").className = 'slds-show';
+                    document.getElementById("scrollpannel1").className = 'scrollable slds-hide';
+                    var h = window.innerHeight - 105;
+                        $('.Filterhg ').css({'height':h + 'px'});
+                        $(window).resize(function()
+                        {
+                            $('.Filterhg').css({'height': h +'px'});
+                        });
+                    
+                   
+                }
+            else{
+                    if (NoRecords == 'true')
+                        {
+                            document.getElementById('em').innerHTML  = "No Records found";
+                            document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                            document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                        }
+                        curCtrl = 'list';
+                        document.getElementById("span_Filter").innerText = 'Filter';
+                        document.getElementById("dvFilter").className = 'slds-hide';
+                        document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar";
+                        document.getElementById("lineSeparator").className="line-separator";
+                        document.getElementById("accord").innerHTML = "Map";
+                        document.getElementById("scrollpannel1").style.height = "100%";
+                        document.getElementById("scrollpannel1").style.dispaly = "inline";
+                        document.getElementById("scrollpannel1").className = 'scrollable slds-show';
+                         var h = window.innerHeight -151;
+                        $('.scrollable').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.scrollable').css({'height': h +'px'});
+                        });
+                     
+                //alert(url);
+               // url=window.location.href;
+               }
+            
+                /*var res;
+                var currentLocation = window.location.toString();
+                //alert(currentLocation +'currentLocation');
+                if(currentLocation.includes("?"))
+                {
+                    var pos = currentLocation.lastIndexOf("?");
+                    res = currentLocation.substring(pos);
+                }
+                //alert(res)
+                if(res === undefined)
+                {
+                    try
+                    {
+                        sforce.one.navigateToURL('/apex/ABS_MyFilters');
+                    }
+                    catch(e)
+                    {
+                        window.location.href = '/apex/ABS_MyFilters';
+        
+                    }
+                 }else{
+                    try
+                    {
+                        sforce.one.navigateToURL('/apex/ABS_MyFilters'+res);
+                    }
+                    catch(e)
+                    {
+                        window.location.href = '/apex/ABS_MyFilters'+res;
+                    }
+                    
+                 }*/
+            }
+         
+            $(function()
+            {
+                var h = window.innerHeight - 108 ;
+                $('.Filterhg ').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                        $('.Filterhg').css({'height': h +'px'});
+                    });
+            });
+            function loadNewData()
+            {
+                setTimeout(function () {
+                    //list.innerHTML = '<li>new user</li><li>new user 2</li>' + list.innerHTML;
+                    url='/apex/ABS_WholesalerAccountDetail';
+                    url=window.location.href;
+                    //alert(url);
+                    try
+                    {
+                        sforce.one.navigateToURL(url);
+                    }
+                    catch(e)
+                    {
+                        window.location.href = url;
+                    }
+                    loader.style.display = "none";
+                }, 1000);
+            }
+            function navigateFaqPage()
+            {
+                var url='';
+                var currentUrl=window.location.href;
+                var nIndex = currentUrl.indexOf("?");
+                if(nIndex > 0) {
+                    url =currentUrl.substring(nIndex);
+                }
+                try
+
+                {
+                    sforce.one.navigateToURL('/apex/ABS_FAQs'+url);
+                }
+                catch(e)
+                {
+                    window.location.href = '/apex/ABS_FAQs'+url;                
+                }
+        
+            }
+            var iosVer=0;
+            var ua=navigator.userAgent;              
+            window.onload = function() 
+            {
+                try
+                {
+                    if (/iP(hone|od|ad)/.test(navigator.platform))
+                    {
+                        var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+                        var ver=[parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+                        iosVer=ver[0];
+                     }
+                     var a=navigator.userAgent; 
+                     if((a.indexOf('Salesforce')!=-1)&&(a.indexOf('iPhone')!=-1||a.indexOf('iPad')!=-1)&&(a.indexOf('OS/'+iosVer)!=-1||a.indexOf('OS '+iosVer)!=-1)&&(a.indexOf('Safari')==-1))
+                     {
+                         var s=document.createElement('style'); 
+                         s.innerHTML="html,html body{overflow: auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}"; 
+                         document.getElementsByTagName('head')[0].appendChild(s);
+                     }
+                 }catch(e){}
+            };
+         
+            if((ua.indexOf('Salesforce')!=-1)&&(ua.indexOf('iPhone')!=-1||ua.indexOf('iPad')!=-1)&&(ua.indexOf('OS/'+iosVer)!=-1||ua.indexOf('OS '+iosVer)!=-1)&&(ua.indexOf('Safari')==-1))
+            { 
+                function IOS_SCROLL_BOOTSTRAP() 
+                { 
+                    var children = Array.prototype.slice.call(document.body.children), 
+                    placeholder = document.createElement('section'), 
+                    fragment = document.createDocumentFragment(), 
+                    styles, 
+                    width, 
+                    height; 
+                    children.forEach(function(c){fragment.appendChild(c);}); 
+                    placeholder.appendChild(fragment); 
+                    styles = [ 
+                    'width:100%;', 
+                    'height:', (window.screen.height - 42), 'px;', 
+                    'position: absolute; overflow: auto; -webkit-overflow-scrolling: touch' 
+                    ].join(''); 
+                    placeholder.style.cssText = styles; 
+                    document.body.appendChild(placeholder); 
+                } 
+                window.addEventListener('load',function (e) { 
+                IOS_SCROLL_BOOTSTRAP(); 
+                }); 
+            } 
+            
+            function navigatemainPage()
+            {
+                var sizerec=document.getElementById('wholePage:filtersform:size1').value;
+                var url='/apex/ABS_WholesalerAccountDetail?size='+sizerec;
+                if(document.getElementById('wholePage:filtersform:channel1').value != null)
+                {
+                    var Channel=document.getElementById('wholePage:filtersform:channel1').value;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel;
+                }
+                if(document.getElementById('wholePage:filtersform:isinstance1').checked)
+                {
+                    var retailersTeam=true;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam;
+
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&retailersTeam='+retailersTeam;
+                }
+                if(document.getElementById('wholePage:filtersform:isinstance2').checked)
+                {
+                    var OnPremise=true;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise;
+                }
+                if(document.getElementById('wholePage:filtersform:isinstance3').checked)
+                {
+                    var OffPremise=true;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise+'&OffPremise='+OffPremise;
+                }
+                if(document.getElementById('wholePage:filtersform:ClosetoTarget1').value != null)
+                {
+                    var ClosetoTargetAchievement=document.getElementById('wholePage:filtersform:ClosetoTarget1').value;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise+'&OffPremise='+OffPremise+'&ClosetoTargetAchievement='+ClosetoTargetAchievement+'&isFilteradded=true';
+                }
+                if(document.getElementById('wholePage:filtersform:miles').value != null)
+                {
+                    var milesdisplay=document.getElementById('wholePage:filtersform:miles').value;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise+'&OffPremise='+OffPremise+'&ClosetoTargetAchievement='+ClosetoTargetAchievement+'&isFilteradded=true'+'&miles='+milesdisplay;
+                }
+                //alert(url);
+                try
+                {
+                    sforce.one.navigateToURL(url);
+                }
+                catch(e)
+                {
+                    window.location.href = url;
+                }
+            }
+            
+            // Called on page load
+            google.maps.event.addDomListener(window, 'load',callbackSuccess);
+            
+            function LoadSurvey()
+            {
+                var gospotCheck='gospotcheck://places/11771835/missions/77923?user_id=143189';
+                try
+                {
+                    sforce.one.navigateToURL(gospotCheck);
+                }
+                catch(e)
+                {
+                    window.location.href = gospotCheck;
+                }
+            }
+        </script>   
+    </head>
+    <body>
+    <!--<apex:form id="filtersform" onSubmit="return false;">-->
+    <div id="MainPage">
+    <apex:outputPanel id="recordsmainPanel">
+        <!-- start of slds -->
+        <div class="slds " i="sldsclass">
+             <!-- start of slds conatiner-->
+            <div  id="sldscontainer" class="slds-container--center FilterBg slds-container--small slds-container--medium slds-container--large ">
+                <!-- freeze pannel start -->
+                <div id="freezepan">
+                    <!--Start of  slds grid -->
+                    <div class="slds-grid collBar">
+                    
+                        <!--Star: Header changes -->
+                        <div class='slds-m-top--small slds-size--2-of-8 slds-small-size--6-of-10 slds-medium-size--1-of-12 slds-text-align--center'>
+                            <!--<span class='slds-avatar slds-avatar--large'>
+                            <img src="{!URLFOR($Resource.LDS, '/assets/images/headlogo.png')}" alt='Header logo' />
+                            </span>-->
+
+                            <span class="slds-text-heading--medium account_heading_color textcur" style="cursor: pointer;" id="span_Filter" onclick="navigateFilterPage();" >Filter </span>
+                        </div>
+                        <!--End: Header changes -->
+                        <div class="slds-global-header__item slds-global-header__item--search slds-m-top--small slds-size--4-of-6 slds-small-size--6-of-8 slds-medium-size--10-of-12 slds-text-align--center">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                                    <label class="slds-assistive-text" for="searchName">Search</label>
+                                    <c:ABS_Component styleClass="slds-input__icon slds-icon-text-default" path="/assets/icons/utility-sprite/svg/symbols.svg#search" />
+                                    <input  id="searchName" onsubmit="return false;" onkeydown="search();"   class="slds-input slds-lookup__search-input" type="search" placeholder="Search" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class='slds-m-top--small slds-size--1-of-6 slds-small-size--1-of-8 slds-medium-size--1-of-12 slds-text-align--center '>
+                            <!--<span class='slds-avatar slds-avatar--medium slds-m-top--x-small'>
+                            <img src="{!URLFOR($Resource.LDS, '/assets/images/search-close-icons.png')}" alt='Header logo' id = "CloseClear" onclick="javascript:return SearchClear();" />
+                            </span> -->
+                            <span id="accord" class="slds-text-heading--medium account_heading_color textcur" style="cursor: pointer;" onclick="change_autorefreshdiv();" >Map</span>
+                        </div>
+  
+                    </div>
+                    <!--ENd of  slds grid -->
+                  
+                    <!-- Map -->
+                    <apex:outputPanel id="mapPanel">
+                        <div id="collpased" class="slds-is-collapsed" >
+                            <div id="map_wrapper">
+                                <div id="map_canvas" class="mapping">
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <!-- Map Pannel End-->                        
+                    
+                    <!--Retailers Header Start slds grid start-->     
+                    <div id="retailerHeader" class="slds-grid slds-p-around--x-small retailerBar">                            
+                        <div class='slds-size--1-of-1 slds-col slds-has-flexi-truncate' id='Retailers' >
+                            <span id="retName" style="display:none" class="slds-section__title">Retailers Nearby</span>
+                            <span id="myretName" style="display:none" class="slds-section__title">My Retailers</span>
+                        </div>
+                        <div class="slds-text-align--right slds-col slds-no-flex">
+                            Data Upload &nbsp;
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!dataloaderDate}" /> 
+                            </apex:outputText>
+                        </div>
+                    </div>
+                    <!--Retailers Header End slds grid start--> 
+                    <div id="lineSeparator" class='line-separator' ></div>
+               
+                <!-- My Filter Pannel start-->
+                <apex:form id="filtersform">
+                   <div id="dvFilter" class = "slds-hide" >                   
+                        <!--<div class="slds-grid slds-wrap slds-grid--pull-padded FilterBg Filterhg">-->
+                        <div class="slds FilterBg Filterhg" id="sldsclass1">
+                         <!-- start of slds conatiner-->
+                        <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12">
+                            <div class="slds-col--padded slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12 slds-m-top--large slds-text-align--center">
+                                <div class="slds-text-heading--large bold_text">Filters</div>
+                            </div>             
+                            <apex:actionRegion >
+                                <div class="slds-col--padded slds-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--6-of-12  slds-p-left--xx-large slds-m-top--x-large">
+                                    <div class="slds-grid  slds-grid--vertical-align-center">
+                                        <label class="slds-form-element__label bolder_text color_black" for="text-input-01">Display</label>
+                                        <div class="slds-select_container slds-size--1-of-3 slds-medium-size--3-of-6 slds-large-size--4-of-12">
+                                            <apex:selectList value="{!size}" multiselect="false" id="size1" size="1" styleClass="slds-select bold_text color_black">
+                                                <apex:selectOptions value="{!paginationSizeOptions}"/>
+                                            </apex:selectList>
+                                        </div>
+                                        <label class="slds-form-element__label bolder_text color_black" for="text-input-01">&nbsp;retailers</label> 
+                                   </div>
+                                </div> 
+                                <div class="slds-col--padded slds-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--6-of-12 slds-m-top--large slds-p-left--xx-large slds-m-top--x-large">
+                                    <div class="slds-grid slds-grid--vertical-align-top">                                    
+                                        <div>         
+                                            <label class="slds-form-element__label bolder_text color_black slds-m-top--xx-small" for="text-input-01 bold_text">Show only:</label>
+                                        </div>
+                                        <div>
+                                            <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                <apex:inputcheckbox id="isinstance1" value="{!MyRetailersTeam}"/>
+                                                <span class="slds-checkbox--faux"></span>
+                                                <span class="slds-form-element__label bolder_text color_black">&nbsp;My retailers</span>                                               
+                                            </div>
+                                            <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                <apex:inputcheckbox id="isinstance2" value="{!OnPremise}" />
+                                                <span class="slds-checkbox--faux"></span>
+                                                <span class="slds-form-element__label bolder_text color_black">&nbsp;On Premise</span>
+                                            </div>  
+                                            <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                <apex:inputcheckbox id="isinstance3" value="{!OffPremise}"  />
+                                                <span class="slds-checkbox--faux"></span>
+                                                <span class="slds-form-element__label bolder_text color_black">&nbsp;Small Format</span>
+                                            </div> 
+                                        </div>
+                                    </div>
+                               </div> 
+                               <div class="slds-col--padded slds-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--6-of-12 slds-m-top--large slds-p-left--xx-large">
+                                   <div class="slds-grid slds-grid--vertical-align-center">
+                                       <label class="slds-form-element__label bolder_text color_black" for="text-input-01">Channel</label>
+                                       <div class="slds-select_container slds-size--1-of-2 slds-medium-size--4-of-6 slds-large-size--5-of-12"> 
+                                            <apex:selectList value="{!channel}" multiselect="false" size="1" id="channel1" styleClass="slds-select bold_text color_black">
+                                                <apex:selectOptions value="{!ChannelOptions}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                </div>
+                              <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-m-top--large slds-p-left--xx-large">
+                                   <div class="slds-grid slds-wrap slds-grid--vertical-align-center slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">                                                                            
+                                        <div class="bolder_text color_black">Accounts</div><div class="bolder_text color_black">&nbsp;within</div>  
+                                        <div class="slds-select_container">
+                                            <apex:selectList value="{!ClosetoTargetAchievement}" multiselect="false" size="1" id="ClosetoTarget1" styleClass="slds-select bold_text color_black">
+                                                <apex:selectOptions value="{!ClosetoTarget}"/>
+                                            </apex:selectList>
+                                        </div>  
+                                                                                  
+                                             <div class="bolder_text color_black">of</div>
+                                             <div class="bolder_text color_black">&nbsp;target</div>                                         
+                                             <div class="bolder_text color_black">&nbsp;achievement</div>
+                                        
+                                    </div>
+                                </div>  
+                                 <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-m-top--large slds-p-left--xx-large">
+                                   <div class="slds-grid slds-wrap slds-grid--vertical-align-center slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">                                                                            
+                                        <div class="bolder_text color_black">Accounts</div><div class="bolder_text color_black">&nbsp;within</div>  
+                                        <div class="slds-select_container">
+                                            <apex:selectList value="{!miles}" multiselect="false" size="1" id="miles" styleClass="slds-select bold_text color_black">
+                                                <apex:selectOptions value="{!milesOptions}"/>
+                                            </apex:selectList>
+                                        </div>  
+                                                                                  
+                                             <div class="bolder_text color_black">of my</div>
+                                             <div class="bolder_text color_black">&nbsp;Current</div>                                         
+                                             <div class="bolder_text color_black">&nbsp;location</div>
+                                        
+                                    </div>
+                                </div>                                                        
+                                <div class="slds-col--padded slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12 slds-m-top--large slds-text-align--center">                                     
+                                    <button type="button" class="slds-button slds-button--brand" onclick="navigatemainPage({!size},'{!retailer}','{!Premise}','{!channel}');">Apply</button>
+                                </div>
+                            </apex:actionRegion>
+                             </div>
+                        </div>
+                        </div>  
+                   
+                </apex:form>
+                <!-- My Filter Pannel End -->
+                
+                
+                <!-- Strat : POC details -->
+                 <!-- start Of Poc Page -->
+               <apex:outputPanel id="pocPanel">
+                <apex:outputPanel > 
+                
+                <!-- Map Start-->
+                             <apex:outputPanel id="mapPanel_Poc">
+                             <div id="collpased_poc" class="slds-is-collapsed" >
+                                <div id="map_wrapper_poc">
+                                    <div id="map_canvas_poc" class="mapping_poc"></div>
+                                </div>
+                            </div>
+                            </apex:outputPanel>
+                            <!-- Map End-->
+                <div id="lineSeparatorPoc" class='line-separator' ></div>
+                
+                <div id="pocPagePanel" class = "slds-hide ">
+                <div class = "pocPagePanel1">
+                    <!-- start of slds div-->
+                    <div class="slds">
+                         <!-- start of slds conatiner-->
+                         <div class="slds-container--center slds-container--large">
+                             <!-- Head Pannel Start -->
+                            
+                            
+                             <!-- Head End Start -->
+                             <!-- Collapse Pannel Start -->
+                             <div class="slds-m-top--xx-small"></div>
+                            <!-- <div class="slds-grid  collBar ">
+                                 <div class='slds-size--1-of-6 slds-small-size--1-of-8 slds-medium-size--1-of-12 slds-text-align--center slds-p-top--xx-small'>
+                                     <span class="slds-p-around--small slds-text-heading--large plus_symbol_poc text_bold1_poc" id="accord_Poc" onclick="change_autorefreshdiv_poc();">
+                                         +
+                                     </span>
+                                 </div>
+                                 <div class='slds-size--11-of-12  slds-small-size--6-of-12 slds-medium-size--4-of-12 slds-p-top--x-small'>
+                                     <span class="slds-text-heading--medium account_heading_color textu" >Account Map </span>
+                                 </div> 
+                             </div> -->
+                             <!--ENd of  slds grid -->
+                             <!-- Collapse Pannel End -->
+                             <!--  Map -->
+                            <div class="slds-m-top--xx-small"></div>
+                            <div class="slds-grid slds-p-left--medium slds-text-heading--medium bold_text " id='wholesalers'>
+                                Wholesaler-{!pocWrap.objPocAccount.Wholesaler__r.name}
+                            </div> 
+                             <div class="slds-size--1-of-1">
+                              <div class="slds-grid slds-p-bottom--medium slds-p-left--small slds-size--1-of-1" >
+                                        <div class="slds-text-align--left slds-col slds-has-flexi-truncate bold_text">{!pocWrap.objPocAccount.name}</div>
+                                        
+                                      <!--  <div class="slds-text-align--right slds-col slds-no-flex">
+                                            <span class="slds-text-heading--medium " style="cursor: pointer;"  onclick="ClosePocPage();" >Close</span>
+                                        </div> --> 
+                                    </div>
+                             
+                             
+                             
+                                 
+                             
+                                 <!--<div class='slds-size--1-of-2' id='wholesalers'>
+                                 <span class="slds-text-heading--medium ">{!pocWrap.objPocAccount.name}</span>
+                                 
+                                 </div>
+                                 <div class='slds-size--2-of-2' id='wholesalers1'>
+                                 <span class="slds-text-heading--medium ">Close</span>
+                                 </div> -->
+                             </div>
+                            <div class="broderClass"></div>
+                            
+                            <!-- No Records to Display Pannel start-->
+                            <apex:outputPanel rendered="{!IF((pocWrap.isPocCore==false && pocWrap.isPocHighEnd==false && pocWrap.isPocFmb==false),true,false)}">
+                            <div class="slds-grid slds-p-around--x-large retailerBar_poc slds-text-align--center" >
+                                 <div class='slds-size--1-of-1' id='wholesalers'>
+                                     <span class="slds-text-heading--large slds-text-align--center">
+                                     No Records to display
+                                     </span>
+                                 </div>
+                            </div>
+                            </apex:outputPanel>
+                            <!-- No Records pannel end -->
+                            <!-- Core/he/fmb Pannel Start-->
+                            <!-- Main Pannel Start outer three-->
+                            <div id="allPannels">
+                            <apex:outputPanel rendered="{!IF((pocWrap.isPocCore == true && pocWrap.isPocHighEnd == true && pocWrap.isPocFmb ==true),true,false)}">
+                            <!-- outer Div start -->
+                            <div id="{!mapdiv['CORE']}" class="sortdiv" >
+                            <div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">
+                                <!-- Core Pannel start -->
+                                <div class="slds-grid slds-size--1-of-1" >
+                                    <div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>Core</b></div>
+                                        <div class="slds-text-align--left slds-col slds-size--1-of-12" >
+                                        <span class="slds-text-align--left ">
+                                        <b>{!if(OR(pocWrap.pocCore !=null,pocWrap.pocCore !=''),pocWrap.pocCore,'0/0')}</b>
+                                        </span>
+                                        </div>
+                                        <div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">                            
+                                        <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="core" onclick="change_Pannel('core','corePanel');">
+                                           +
+                                        </button>
+                                    </div> 
+                                </div>
+                            </div>
+                            <apex:outputPanel > 
+                                <div id="corePanel" class="slds-is-collapsed" >
+                                    <div>
+                                    <!-- core start -->
+                                    <apex:outputPanel rendered="{!BrandSize['CORE']==0}">
+                                        <span class="textcenterpoc">
+                                        No Records to display
+                                        </span>
+                                    </apex:outputPanel>
+                                    <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                                        <apex:outputPanel rendered="{!actarget.Brand_Category__c=='CORE'}">
+                                            <div class="slds-grid Accountgrdbg">
+                                            <!-- Product Image -->
+                                                <div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 "> 
+                                                    <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,actarget.SKU__c),true,false)}" >
+                                                    <!--<span class="slds-avatar slds-avatar-medium ">                   
+                                                        <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}" width="200" height="50" > </apex:image>   
+                                                    </span>-->
+                                                    <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                   
+                                                    <!--<apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}" width="200" height="50" > </apex:image>  -->                                         
+                                                    <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}"> </apex:image>                                                           
+                                                    </span>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            <!-- Product Image -->
+                                           
+                                            <!-- Product Info -->
+                                            <div class="sslds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center">{!actarget.Brand_Package__c} </div>
+                                            <!-- Product Info -->
+                                          
+                                            <!-- Product Status Color -->
+                                            <div class="slds-col--padded slds-size--1-of-5 slds-small-size--1-of-5 slds-medium-size--1-of-5  slds-text-align--right slds-media slds-media--center">
+                                                <apex:outputPanel rendered="{!actarget.Acheivement_Score__c = 1 }" >
+                                                <p class="green-circle_poc"></p>
+                                                </apex:outputPanel>             
+                                                
+                                                <apex:outputPanel rendered="{!actarget.Acheivement_Score__c != 1 }" >
+                                                <p class="red-circle_poc"></p>
+                                                </apex:outputPanel></div>
+                                            </div>
+                                            <!-- Product Status Color -->
+                                        <!-- For Bootm Line -->
+                                        <div class="broderClass_poc"></div>    
+                                        </apex:outputPanel>
+                                    </apex:repeat>
+                                    <!-- core End -->
+                                    </div>
+
+                                </div>
+
+                                </apex:outputPanel>
+                                <!-- Core Pannel End-->
+                                 <div class="slds-m-top--xx-small"></div> 
+
+                                </div>
+                                <div id="{!mapdiv['High End']}" class="sortdiv">
+                                <!-- HE Pannel start-->
+                                <div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">
+                                    <div class="slds-grid slds-size--1-of-1" >
+                                        <div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>High End</b></div>
+                                        <div class="slds-text-align--left slds-col slds-size--1-of-12" >
+                                        <span class="slds-text-align--left ">
+                                        <b>{!if(OR(pocWrap.pocHighEnd !=null,pocWrap.pocHighEnd !=''),pocWrap.pocHighEnd,'0/0')}</b>
+                                        </span>
+                                        </div>
+                                        <div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12 ">
+                                       
+                                            <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="highEnd" onclick="change_Pannel('highEnd','highEndPanel');">
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:outputPanel > 
+                                    <div id="highEndPanel" class="slds-is-collapsed" >
+                                          <div >
+                                          <!-- highEnd start -->
+                                          <apex:outputPanel rendered="{!AND(BrandSize['High End']==0,BrandSize['HE']==0)}">
+                                              <span class="textcenterpoc">
+                                                  No Records to display
+                                              </span>
+                                          </apex:outputPanel>
+                                          <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                                              <apex:outputPanel rendered="{!OR(actarget.Brand_Category__c=='High End',actarget.Brand_Category__c=='HE')}">
+                                                  <div class="slds-grid Accountgrdbg">
+                                                      <!-- Product Image -->
+                                                      <div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 "> 
+                                                          <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,actarget.SKU__c),true,false)}" >
+                                                              <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                     
+                                                                  <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}"> </apex:image>                      
+                                                              </span>
+                                                          </apex:outputPanel>
+                                                       </div>
+                                                       <!-- Product Image -->
+                                           
+                                                       <!-- Product Info -->
+                                                       <div class="sslds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center">{!actarget.Brand_Package__c} </div>
+                                                       <!-- Product Info -->
+                                          
+                                                       <!-- Product Status Color -->
+                                                       <div class="slds-col--padded slds-size--1-of-5 slds-small-size--1-of-5 slds-medium-size--1-of-5  slds-text-align--right slds-media slds-media--center">
+                                                           <apex:outputPanel rendered="{!actarget.Acheivement_Score__c = 1 }" >
+                                                           <p class="green-circle_poc"></p>
+                                                           </apex:outputPanel>             
+                                                           <apex:outputPanel rendered="{!actarget.Acheivement_Score__c != 1 }" >
+                                                           <p class="red-circle_poc"></p>
+                                                           </apex:outputPanel></div>
+                                                       </div>
+                                                       <!-- Product Status Color -->
+                                                       <!-- For Bootm Line -->
+                                                       <div class="broderClass_poc"></div>    
+                                              </apex:outputPanel>
+                                          </apex:repeat>
+                                          <!-- highEnd start -->
+                                          </div>
+                                     </div>
+                                </apex:outputPanel>
+                                <!-- HE Pannel End-->
+                                <div class="slds-m-top--xx-small"></div>
+                                </div>
+                                <div id="{!mapdiv['FMB']}" class="sortdiv">
+
+                                <!-- fmb start -->
+                                <div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">
+                                    <div class="slds-grid slds-size--1-of-1" >
+                                        <div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>FMB</b></div>
+                                        <div class="slds-text-align--left slds-col slds-size--1-of-12" >
+                                        <span class="slds-text-align--left ">
+                                        <b>{!if(OR(pocWrap.pocFmb !=null,pocWrap.pocFmb !=''),pocWrap.pocFmb,'0/0')}</b>
+                                        </span>
+                                        </div>
+                                        <div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">
+                                         <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="fmb" onclick="change_Pannel('fmb','fmbPanel');">
+                                               +
+                                            </button>
+                                       </div>
+                                   </div> 
+                                </div>
+                                <apex:outputPanel > 
+                                    <div id="fmbPanel" class="slds-is-collapsed" >
+                                    <div >
+                                    <!-- fmb start -->
+                                    <apex:outputPanel rendered="{!BrandSize['FMB']==0}">
+                                       <span class="textcenterpoc">
+                                           No Records to display
+                                       </span>
+                                      </apex:outputPanel>
+                                      <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                                          <apex:outputPanel rendered="{!actarget.Brand_Category__c=='FMB'}">
+                                              <!-- slds grid start -->
+                                              <div class="slds-grid Accountgrdbg">
+                                                  <!-- Product Image -->
+                                                  <div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 "> 
+                                                      <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,actarget.SKU__c),true,false)}" >
+                                                      <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                   
+                                                      <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}"> </apex:image>                      
+                                                      </span>
+                                                      </apex:outputPanel>
+                                                  </div>
+                                                  <!-- Product Image -->
+                                               
+                                                  <!-- Product Info -->
+                                                  <div class="sslds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center">{!actarget.Brand_Package__c} </div>
+                                                  <!-- Product Info -->
+                                              
+                                                  <!-- Product Status Color -->
+                                                  <div class="slds-col--padded slds-size--1-of-5 slds-small-size--1-of-5 slds-medium-size--1-of-5  slds-text-align--right slds-media slds-media--center">
+                                                      <apex:outputPanel rendered="{!actarget.Acheivement_Score__c = 1 }" >
+                                                          <p class="green-circle_poc"></p>
+                                                          </apex:outputPanel>             
+                                                         
+                                                          <apex:outputPanel rendered="{!actarget.Acheivement_Score__c != 1 }" >
+                                                          <p class="red-circle_poc"></p>
+                                                      </apex:outputPanel>
+                                                 </div>
+                                                 <!-- Product Status Color -->
+                                              </div>
+                                              <!-- slds grid End-->
+                                              <!-- For Bootm Line -->
+                                              <div class="broderClass_poc"></div>    
+                                          </apex:outputPanel>
+                                      </apex:repeat>
+                                      <!-- fmb end -->
+                                    </div>
+                                    </div>
+                                </apex:outputPanel>
+                                <div class="slds-m-top--xx-small"></div>
+                                </div>
+                                <!-- fmb End -->
+                                <div id="{!mapdiv['PromOpti']}"  class="sortdiv">
+
+                                <!-- Prom Opti Pannel Start-->
+                                <div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">
+                                    <div class="slds-grid slds-size--1-of-1" >
+                                        <div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>PromOpti</b></div>
+                                        <div class="slds-text-align--left slds-col slds-size--1-of-12" >
+                                        <span class="slds-text-align--left ">
+                                        <b>{!if(OR(pocWrap.pocpromOpti !=null,pocWrap.pocpromOpti !=''),pocWrap.pocpromOpti,'0%')}</b>
+                                        </span>
+                                        </div>
+                                        <div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">
+                                            <apex:outputPanel rendered="{!if(pocWrap.gscLinkpromopt==true,true,false)}">
+                                              <a class="slds-button slds-button--brand confirmButton" type="button" href="{!pocWrap.gscurlpromopt}">Confirm</a>
+                                            </apex:outputPanel>
+                                            <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="promOpti" onclick="change_Pannel('promOpti','promOptiPanel');">
+                                               +
+                                            </button>
+                                       </div>
+                                   </div> 
+                                </div>
+                                 <apex:outputPanel > 
+                                    <div id="promOptiPanel" class="slds-is-collapsed" >
+                                    <div >
+                                    <apex:outputPanel rendered="{!BrandSize['PromOpti']==0}">
+                                       <span class="textcenterpoc">
+                                           No Records to display
+                                       </span>
+                                    </apex:outputPanel>
+                                    <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                                          <apex:outputPanel rendered="{!actarget.Brand_Category__c=='PromOpti'}">
+                                              <!-- slds grid start -->
+                                              <div class="slds-grid Accountgrdbg">
+                                                  <!-- Product Image -->
+                                                  <div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 "> 
+                                                      <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,actarget.SKU__c),true,false)}" >
+                                                      <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                   
+                                                      <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}"> </apex:image>                      
+                                                      </span>
+                                                      </apex:outputPanel>
+                                                  </div>
+                                                  <!-- Product Image -->
+                                               
+                                                  <!-- Product Info -->
+                                                  <div class="slds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small">
+                                                    <div>
+                                                        <div class="BlackCircle">
+                                                        {!actarget.Num__c}
+                                                        </div>
+                                                        <h5>Display</h5>
+                                                    </div>
+                                                  </div>
+                                                  <div class="slds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small">
+                                                    <div>
+                                                        <div class="BlackCircle">
+                                                        {!actarget.Denom__c}
+                                                        </div>
+                                                        <h5>Features</h5>
+                                                    </div>
+                                                  </div>
+                                                  <!-- Product Info -->
+                                              
+                                                 
+                                              </div>
+                                              <!-- slds grid End-->
+                                              <!-- For Bootm Line -->
+                                              <div class="broderClass_poc"></div>    
+                                          </apex:outputPanel>
+                                      </apex:repeat>
+                                    </div>
+                                    </div>
+                                </apex:outputPanel>
+                                <div class="slds-m-top--xx-small"></div>
+
+                                </div>
+                                <!-- prom Opti Pannel End -->
+                            <!-- outer Div End -->
+                            <!--  Feat+Display Pannel start-->
+                                                          
+                            <div id="{!mapdiv['FeaturesDisplays']}" class="sortdiv">
+
+                            <apex:outputPanel rendered="{!IF(pocWrap.objPocAccount.SAP_Channel__c=='Large Format',true,false)}">
+                                <div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">
+                                    <div class="slds-grid slds-size--1-of-1" >
+                                        <div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>Features + Display</b></div>
+                                        <div class="slds-text-align--left slds-col slds-size--1-of-12" >
+                                         <span class="slds-text-align--left ">
+                                        <b>{!if(OR(pocWrap.pocfeatureDisplay !=null,pocWrap.pocfeatureDisplay !=''),pocWrap.pocfeatureDisplay,'0%')}</b>
+                                        </span>                                                                                                                                                        
+                                        </div>
+                                        <!--"gospotcheck://places/11771835/missions/77923?user_id=143189" style= "color:white -->
+                                        <div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12 ">
+                                       <apex:outputPanel rendered="{!if(pocWrap.gscLinkfeat==true,true,false)}">
+                                           <a class="slds-button slds-button--brand confirmButton" type="button" href="{!pocWrap.gscurlfeat}">Confirm</a>
+                                    </apex:outputPanel>
+                                            <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="FeaturesDisplays" onclick="change_Pannel('FeaturesDisplays','FeaturesDisplaysPanel');">
+                                               +
+                                            </button>
+                                       </div>
+                                   </div> 
+                                </div>
+                                 <apex:outputPanel > 
+                                    <div id="FeaturesDisplaysPanel" class="slds-is-collapsed" >
+                                    <div >
+                                    <apex:outputPanel rendered="{!BrandSize['FeaturesDisplays']==0}">
+                                       <span class="textcenterpoc">
+                                           No Records to display
+                                       </span>
+                                    </apex:outputPanel>
+                                    <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                                          <apex:outputPanel rendered="{!actarget.Brand_Category__c=='FeaturesDisplays'}">
+                                              <!-- slds grid start -->
+                                              <div class="slds-grid Accountgrdbg">
+                                                  <!-- Product Image -->
+                                                  <div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 "> 
+                                                      <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,actarget.SKU__c),true,false)}" >
+                                                      <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                   
+                                                      <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}"> </apex:image>                      
+                                                      </span>
+                                                      </apex:outputPanel>
+                                                  </div>
+                                                  <!-- Product Image -->
+                                               
+                                                  <!-- Product Info -->
+                                                  <div class="slds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small">
+                                                    <div>
+                                                        <div class="BlackCircle">
+                                                        {!actarget.Num__c}
+                                                        </div>
+                                                        <h5>Display</h5>
+                                                    </div>
+                                                  </div>
+                                                  <div class="slds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small">
+                                                    <div>
+                                                        <div class="BlackCircle">
+                                                        {!actarget.Denom__c}
+                                                        </div>
+                                                        <h5>Features</h5>
+                                                    </div>
+                                                  </div>
+                                                  <!-- Product Info -->
+                                              
+                                                 
+                                              </div>
+                                              <!-- slds grid End-->
+                                              <!-- For Bootm Line -->
+                                              <div class="broderClass_poc"></div>    
+                                          </apex:outputPanel>
+                                      </apex:repeat>
+                                    </div>
+                                    </div>
+                                </apex:outputPanel> 
+                                <div class="slds-m-top--xx-small"></div>
+
+                            </apex:outputPanel>
+                            </div>
+                            <!-- Feat+Display Pannel End -->
+                            <!--  Bud Light Pannel start -->
+                             <div id="{!mapdiv['Bud Club']}" class="sortdiv">
+
+                            <apex:outputPanel rendered="{!IF(pocWrap.objPocAccount.SAP_Channel__c=='Small Format',true,false)}">
+                                <div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">
+                                    <div class="slds-grid slds-size--1-of-1" >
+                                        <div class="sslds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>Bud Light</b></div>
+                                        <div class="slds-text-align--left slds-col slds-size--1-of-12" >
+                                        <span class="slds-text-align--left ">
+                                        <b>{!if(OR(pocWrap.pocbudlight != null,pocWrap.pocbudlight != ''),pocWrap.pocbudlight,'0/0' )}</b>
+                                        </span>
+                                        </div>
+                                        <div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">
+                                           <apex:outputPanel rendered="{!if(pocWrap.gscLinkbud==true,true,false)}">
+                                           <a class="slds-button slds-button--brand confirmButton" type="button" href="{!pocWrap.gscurlbud}" style= "color:white">Confirm</a>
+                                          </apex:outputPanel>
+                                            <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="budlight" onclick="change_Pannel('budlight','budlightPanel');">
+                                               +
+                                            </button>
+                                       </div>
+                                   </div> 
+                                </div>
+                                 <apex:outputPanel > 
+                                    <div id="budlightPanel" class="slds-is-collapsed" >
+                                    <div>
+                                    <apex:outputPanel rendered="{!BrandSize['Bud Club']==0}">
+                                       <span class="textcenterpoc">
+                                           No Records to display
+                                       </span>
+                                    </apex:outputPanel>
+                                    <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                                          <apex:outputPanel rendered="{!actarget.Brand_Category__c=='Bud Club'}">
+                                              <!-- slds grid start -->
+                                              <div class="slds-grid Accountgrdbg">
+                                               
+                                                  <!-- Product Info -->
+                                                  <div class="slds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small">
+                                                  {!actarget.FULL_TXT__c}
+                                                  </div>
+                                                  <div class="slds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small">
+                                                                
+                                                        <apex:outputPanel rendered="{!actarget.Acheivement_Score__c = 1 }" >
+                                                        <p class="green-circle_poc"></p>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel rendered="{!actarget.Acheivement_Score__c != 1 }" >
+                                                        <p class="red-circle_poc"></p>
+                                                    </apex:outputPanel>
+                                                  </div>
+                                                  <!-- Product Info -->
+                                              
+                                                 
+                                              </div>
+                                              <!-- slds grid End-->
+                                              <!-- For Bootm Line -->
+                                              <div class="broderClass_poc"></div>    
+                                          </apex:outputPanel>
+                                      </apex:repeat>
+                                    </div>
+                                                                    </div>
+
+                                </apex:outputPanel> 
+                            </apex:outputPanel>
+                            <div class="slds-m-top--xx-small"></div>
+
+                            </div>
+                            <!--  Bud Light Pannel End -->
+                            </apex:outputPanel>
+                            </div>
+                            <!--Main Pannel End outer three -->
+                            <!-- Core/he/fmb Pannel End -->
+                            
+                            
+                            <!-- only core start -->
+                            <apex:outputPanel rendered="{!IF((pocWrap.isPocCore==true && pocWrap.ispocthree==true),true,false)}">
+                                <div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">
+                                    <div class="slds-grid slds-size--1-of-1" >
+                                        <div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>Core</b></div>
+                                        <div class="slds-text-align--left slds-col slds-size--1-of-12" >
+                                        <span class="slds-text-align--left ">
+                                        <b>{!if(OR(pocWrap.pocCore != null,pocWrap.pocCore != ''),pocWrap.pocCore,'0/0' )}</b>
+                                        </span>
+                                        </div>
+                                        <div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">
+                                            <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="ALNR" onclick="change_Pannel('ALNR','ALNRPanel');">
+                                               +
+                                            </button>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <apex:outputPanel >
+                                    <div id="ALNRPanel" class="slds-is-collapsed" >
+                                    <div>
+                                    <!-- core start -->
+                                    <apex:outputPanel rendered="{!BrandSize['CORE']==0}">
+                                        <span class="textcenterpoc">
+                                            No Records to display
+                                        </span>
+                                    </apex:outputPanel>
+                                    <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                                        <apex:outputPanel rendered="{!actarget.Brand_Category__c=='CORE'}">
+                                            <div class="slds-grid Accountgrdbg">
+                                                <!-- Product Image -->
+                                                <div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 "> 
+                                                    <apex:outputPanel rendered="{!IF(CONTAINS(ChkMapKey,actarget.SKU__c),true,false)}" >
+                                                    <span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-small-size--1-of-3">                   
+                                                        <apex:image styleclass="imageWidth" url="{!mapImages[actarget.SKU__c]}"> </apex:image>                                                           
+                                                    </span>
+                                                    </apex:outputPanel>
+                                                </div>
+                                                <!-- Product Image -->
+                                           
+                                                <!-- Product Info -->
+                                                <div class="sslds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center">{!actarget.Brand_Package__c} </div>
+                                                <!-- Product Info -->
+                                          
+                                                <!-- Product Status Color -->
+                                                <div class="slds-col--padded slds-size--1-of-5 slds-small-size--1-of-5 slds-medium-size--1-of-5  slds-text-align--right slds-media slds-media--center">
+                                                    <apex:outputPanel rendered="{!actarget.Acheivement_Score__c = 1 }" >
+                                                        <p class="green-circle_poc"></p>
+                                                        </apex:outputPanel>             
+                                                        
+                                                        <apex:outputPanel rendered="{!actarget.Acheivement_Score__c != 1 }" >
+                                                        <p class="red-circle_poc"></p>
+                                                    </apex:outputPanel>
+                                                </div>
+                                                <!-- Product Status Color -->
+                                            </div>
+                                        
+                                            <!-- For Bootm Line -->
+                                            <div class="broderClass_poc"></div>    
+                                        </apex:outputPanel>
+                                    </apex:repeat>
+                                    <!-- core End -->
+                                    </div>
+                                    </div>
+                                     <!-- 3d Pannel start -->
+                                      <div class="slds-m-top--xx-small"></div>
+            
+                            <apex:outputPanel rendered="{!IF(pocWrap.objPocAccount.SAP_Channel__c=='On Premise',true,false)}">
+                                <div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">
+                                    <div class="slds-grid slds-size--1-of-1" >
+                                        <div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>3D</b></div>
+                                        <div class="slds-text-align--left slds-col slds-size--1-of-12" >
+                                          <span class="slds-text-align--left ">
+                                            <b>{!if(OR(pocWrap.pocthree != null,pocWrap.pocthree != ''),pocWrap.pocthree,'0/0' )}</b>
+                                           </span>
+                                        </div>
+                                        
+                                        <div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">
+                                           <apex:outputPanel rendered="{!if(pocWrap.gscLinkthree==true,true,false)}">
+                                           <a class="slds-button slds-button--brand confirmButton" type="button" href="{!pocWrap.gscurlthree}" style= "color:white">Confirm</a>
+                                            </apex:outputPanel>
+                                            <button class="text_bold slds-col--bump-left slds-button slds-button--icon-border" type="button" id="3d" onclick="change_Pannel('3d','3dPannel');">
+                                               +
+                                            </button>
+                                        </div> 
+                                    </div>
+                                </div>
+                                
+                                <apex:outputPanel >
+                                    <div id="3dPannel" class="slds-is-collapsed" >
+                                    <div>
+                                    <!-- core start -->
+                                    <apex:outputPanel rendered="{!BrandSize['3D']==0}">
+                                        <span class="textcenterpoc">
+                                            No Records to display
+                                        </span>
+                                    </apex:outputPanel>
+                                    <apex:repeat value="{!lstAccountTarget}" var="actarget">
+                                        <apex:outputPanel rendered="{!actarget.Brand_Category__c=='3D'}">
+                                            <div class="slds-grid Accountgrdbg">
+                                                
+                                                <!-- Product Info -->
+                                                <div class="sslds-col--padded slds-size--1-of-2 slds-small-size--1-of-3 slds-medium-size--1-of-5 slds-text-align--center slds-media slds-media--center">{!actarget.FULL_TXT__c}</div>
+                                                <!-- Product Info -->
+                                          
+                                                <!-- Product Status Color -->
+                                                <div class="slds-col--padded slds-size--1-of-5 slds-small-size--1-of-5 slds-medium-size--1-of-5  slds-text-align--right slds-media slds-media--center">
+                                                                 
+                                                        <apex:outputPanel rendered="{!actarget.Acheivement_Score__c = 1 }" >
+                                                        <p class="green-circle_poc"></p>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel rendered="{!actarget.Acheivement_Score__c != 1 }" >
+                                                        <p class="red-circle_poc"></p>
+                                                    </apex:outputPanel>
+                                                </div>
+                                                <!-- Product Status Color -->
+                                            </div>
+                                        
+                                            <!-- For Bootm Line -->
+                                            <div class="broderClass_poc"></div>    
+                                        </apex:outputPanel>
+                                    </apex:repeat>
+                                    <!-- core End -->
+                                    </div>
+                                    </div>
+                                </apex:outputPanel>
+                                <div class="slds-m-top--xx-small"></div>
+                            
+                            </apex:outputPanel>
+                            <!-- 3d Pannel  --> 
+                                </apex:outputPanel>
+                                <div class="slds-m-top--xx-small"></div> 
+                          
+                            </apex:outputPanel>
+                            <!-- only core End-->
+                            
+                            
+                           <!-- </div>-->
+                         </div>
+                         <!-- End of slds conatiner-->
+                     </div>
+                     </div>
+                     <!-- End of slds div-->
+                 </div>
+                 <!-- End Of Poc Page -->
+               </apex:outputPanel>
+                 </apex:outputPanel>
+                
+                
+                <!-- End : POC details -->
+                                         
+                </div><!-- freeze pannel End -->
+                <!-- Scroll Pannel start -->
+                <div id="scrollpannel1" class ='scrollable'>
+                    <div>
+                        <span id="em" class="slds-text-heading--Large text_bold textcenter" ></span>
+                    </div>
+                    <div id="division">
+                    </div>
+                </div>
+                <!--Scroll Pannel End -->
+               
+              
+                
+            </div>
+            <!--Slds Container -->
+        </div>
+        <!--slds -->          
+    </apex:outputPanel>
+    <!--End Main Page -->
+    </div>
+   
+     <!-- Start footer-->
+    <div class="slds" id="sldsclassfooter">
+        <!-- start of slds conatiner-->
+        <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large ">
+            <!-- Freeze Pan -->
+            <div id="freezepan">
+                <!-- slds collbar start-->
+                <div class="slds-grid collBar" >
+                   <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical'  >
+                        <span class='slds-avatar slds-avatar--Large'  >
+                            <img src="{!URLFOR($Resource.LDS, '/assets/images/Survey_1.png')}"  onclick="LoadSurvey();" alt='Header logo' style="cursor: pointer; cursor: hand;"/>
+                        </span>
+                        <span class = "slds-text-heading--small account_heading_color" >
+                        <label style="cursor: pointer; cursor: hand;">Survey</label> 
+                        </span>
+                    </div>  
+                   <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical'  >
+                        <span class='slds-avatar slds-avatar--Large'  >
+                            <img src="{!URLFOR($Resource.LDS, '/assets/images/Refresh_1.png')}"  onclick="loadNewData();" alt='Header logo' style="cursor: pointer; cursor: hand;"/>
+                        </span>
+                        <span class = "slds-text-heading--small account_heading_color" >
+                        <label style="cursor: pointer; cursor: hand;">Refresh</label> 
+                        </span>
+                    </div>                           
+                    <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical' >
+                            <span class='slds-avatar slds-avatar--Large'>
+                                <img src="{!URLFOR($Resource.LDS, '/assets/images/Questions2.png')}"  onclick="navigateFaqPage();" alt='Header logo' style="cursor: pointer; cursor: hand;"  />
+                            </span>
+                            <span class = "slds-text-heading--small account_heading_color" >
+                             <label style="cursor: pointer; cursor: hand;">Help</label> 
+                            </span>
+                        
+                     </div>           
+                </div>
+                <!-- slds collbar End-->
+            </div>
+            <!-- Freeze pan -->
+        </div>
+        <!-- slds container End-->
+    </div>
+    <!-- slds main end-->
+    <!--  End footer-->
+     <apex:form >
+     <!-- Action function start -->
+     <apex:actionFunction name="pocAccount" action="{!pocdetails}" reRender="pocPanel,scrptPanel" status="status" oncomplete="recorderPannel();displayPocPannel();buttonColor();" >
+         <apex:param name="accParam" assignTo="{!accountId}" value="" />
+         <apex:param name="firstParam" assignTo="{!userLats}" value="" />
+         <apex:param name="secondParam" assignTo="{!userLongs}" value="" />
+     </apex:actionFunction>
+     <!-- Action function End -->
+     </apex:form>
+    <!-- Slds Spinner start -->
+    <div id="sldsSpinner" class="slds-spinner_container SpinnerBackground" style="display:none">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--medium" role="alert">
+            <span class="slds-assistive-text">Loading</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    <!-- Slds Spinner End-->
+    </body>
+   
+    <apex:outputPanel id="scrptPanel">
+     
+    <script>
+        var myList = new Array();        
+        <apex:repeat value="{!assortmentList}" var="assort">
+            myList.push(assortmentInnerMap[assort]);
+        </apex:repeat>
+        <apex:repeat value="{!executionList}" var="exe">
+            myList.push(executionInnerMap[exe]);
+        </apex:repeat>
+        function redorder()
+        {
+                    alert(myList);
+
+            var order= myList.join();
+            var orderSplit=order.split(",");
+            var stringOrder = stringOrder  === "" ? null: stringOrder;
+            $('#allPannels').reOrder(stringOrder );
+        }
+        (function($) 
+        {
+            $.fn.reOrder = function(array) 
+            {
+                return this.each(function()
+                {
+                  for(var i=0; i < array.length; i++)
+                  {
+                      $(this).append(array[i]);
+                      alert(array[i]);
+                  }
+                })
+             }
+             
+        });
+        
+       
+        
+        $(function()
+        {
+            var h = window.innerHeight -151;
+            $('.scrollable').css({'height':h + 'px'});
+            $(window).resize(function(){
+                $('.scrollable').css({'height': h +'px'});
+            });
+        });
+    
+        //Display Poc Map 
+        function initialize_poc() 
+        { 
+            var poclag="{!pocWrap.objPocAccount.BillingLatitude}";
+            var poclng='{!pocWrap.objPocAccount.BillingLongitude}'; 
+            var mainName='{!pocWrap.pocName}';      
+            var pinColor = '{!pocWrap.mapPocPinColor}';
+            var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+pinColor;
+            var mypocLatlng = new google.maps.LatLng(poclag,poclng);
+            var mapOptions = {center: mypocLatlng ,
+                              icon: pinsImage,
+                              mapTypeId: google.maps.MapTypeId.ROADMAP,
+                              zoom: 10,
+                             };
+            var markers = new google.maps.Marker({
+                               position: mypocLatlng,
+                               icon: pinsImage,
+            });
+        
+            map = new google.maps.Map(document.getElementById('map_canvas_poc'),mapOptions);
+            markers.setMap(map);
+           
+            var iscore='{!pocWrap.isPocCore}';
+            var ishighEnd='{!pocWrap.isPocHighEnd}'
+            var isFMB='{!pocWrap.isPocFmb}'
+            var core='{!pocWrap.pocCore}';
+            var highEnd='{!pocWrap.pocHighEnd}';
+            var fmb='{!pocWrap.pocFmb}';
+            var iwContent='';
+            var name='{!pocWrap.pocName}';
+            var palat='{!pocWrap.palat}';
+            var palon='{!pocWrap.palon}';
+            var ulatlng = new google.maps.LatLng(palat,palon);
+            var userColorPin='blue-dot.png'
+  
+            if(iscore == 'true' && ishighEnd == 'true' && isFMB == 'true')
+            {
+                  iwContent = '<div id="iw_container">' +
+                  '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold">'+name + '</font>'+'</div>'+
+                  '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+core+ '</font>'+ '</div>' +
+                  '<div class="iw_content">' +'<font color="Green",weight="bold">'+'High End:'+highEnd+ '</font>'+'<br />' 
+                  +'<font color="Green",weight="bold">'+'FMB:'+fmb+ '</font>'+'<br />'+'</div></div>';
+            }else if(iscore == 'true' && ishighEnd == 'false' && isFMB == 'false')
+            {
+                  iwContent = '<div id="iw_container">' +
+                  '<div style="font-weight: normal;font-size: 14px;">'+'<font color="black",weight="bold">'+name + '</font>'+'</div>' +
+                  '<div class="iw_title" style="font-weight: normal;font-size: 12px;" >'+'<font color="Green",weight="bold">' +'Core:'+core+ '</font>'+ '</div>' +
+                  '<div class="iw_content">' +'<font color="Green",weight="bold">'+'</font>'+'<br />'+ 
+                  '</div></div>';
+            
+            }else{
+            
+                  iwContent =iwContent = '<div id="iw_container">' +
+                  '<div style="font-weight: normal;font-size: 14px;">'+'<font color="brown",weight="bold">'+name + '</font>'+'</div></div>'
+            }
+            var infowindow = new google.maps.InfoWindow({
+                 content: iwContent 
+            });
+              
+            markers.addListener('click', function() {
+                 infowindow.open(map, this);
+            });
+    
+            // assuming you also want to hide the infowindow when user mouses-out
+            markers.addListener('mouseout', function() {
+                infowindow.close();
+            });
+            createMarker_poc(ulatlng,userColorPin,mypocLatlng,map);
+        }
+     
+        function createMarker_poc(latlng,colormap,myLatlng,map)
+        {
+            var pinColor = colormap;
+            var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+pinColor;
+            var marker = new google.maps.Marker
+            ({
+             map: map,
+             position: latlng,
+             //title: name,
+             icon: pinsImage,
+             //url: urls
+             });
+         
+             var mapBoundary = new google.maps.LatLngBounds();
+             mapBoundary.extend(myLatlng);
+             mapBoundary.extend(latlng);
+             map.fitBounds(mapBoundary);
+             //map.setCenter(new google.maps.LatLng(palat,palon));
+            
+        }
+      
+        function change_Pannel(Id,Pannel)
+        {
+            var NAME = document.getElementById(Pannel);
+            var currentClass = NAME.className;
+            var scr='#'+Id;
+            if(currentClass == "slds-is-collapsed") {
+                NAME.className = "slds-is-expanded";   // Set other class name
+                document.getElementById(Id).innerHTML = "-";
+            }else{
+                NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
+                document.getElementById(Id).innerHTML = "+";
+            }
+            $('body').animate({
+            scrollTop: $(scr).offset().top},
+            'slow');
+        } 
+       
+        function buttonColor()
+        {
+            var iscore='{!pocWrap.isPocCore}';
+            var ishighEnd='{!pocWrap.isPocHighEnd}';
+            var isfmb='{!pocWrap.isPocFmb}';
+            var is3d='{!pocWrap.pocthree}'
+            var sapChannel='{!pocWrap.objPocAccount.SAP_Channel__c}'
+            //alert('{!pocWrap.ispocthree}');
+            if( iscore == 'true' && ishighEnd == 'true' && isfmb == 'true'){
+               var colorCore='{!pocWrap.colorPocCore}'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+               var colorHighEnd='{!pocWrap.colorPocHighEnd}'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+               var colorFmb='{!pocWrap.colorPocFmb}'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+               var colorpromOpti='{!pocWrap.poccolorPromOpti}'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+               if(colorpromOpti == '_pocss text_bold slds-col--bump-left slds-button slds-button--icon-border')
+               {
+                    colorpromOpti='Redcircle'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+               }
+               document.getElementById('core').className = colorCore;
+               document.getElementById('highEnd').className =colorHighEnd;
+               document.getElementById('fmb').className = colorFmb;
+               document.getElementById('promOpti').className = colorpromOpti;
+               if(sapChannel =='Large Format')
+               {
+                    var colorFeatureDisplay='{!pocWrap.poccolorFeatureDisplay}'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+                    if(colorFeatureDisplay == '_pocss text_bold slds-col--bump-left slds-button slds-button--icon-border')
+                    {
+                        colorFeatureDisplay='Redcircle'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+                    }
+                    document.getElementById('FeaturesDisplays').className = colorFeatureDisplay;
+               }
+               if(sapChannel =='Small Format')
+               {
+                    var colorBudLight='{!pocWrap.poccolorBudlight}'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+                    if(colorBudLight == '_pocss text_bold slds-col--bump-left slds-button slds-button--icon-border')
+                    {     
+                        colorBudLight='Redcircle'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+                    }
+                    document.getElementById('budlight').className = colorBudLight;
+               }
+               
+            }else if(iscore =='true')
+            {
+               var colorALNR='{!pocWrap.colorPocCore}'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+               var color3d='{!pocWrap.poccolorThree}'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+               if(color3d == '_pocss text_bold slds-col--bump-left slds-button slds-button--icon-border')
+                    color3d='Redcircle'+'_pocss'+' '+'text_bold slds-col--bump-left slds-button slds-button--icon-border';
+               document.getElementById('3d').className = color3d;
+               document.getElementById('ALNR').className = colorALNR;
+            }
+        
+        }
+        function recorderPannel()
+        {
+            var assortment =[];
+            var sortList=[];
+            var execution=[];
+            var executionList=[];
+            var finalPannel=[];
+            <apex:repeat value="{!assortmentList }" var="t">
+                assortment.push('{!JSENCODE(t)}');
+            </apex:repeat>
+            <apex:repeat value="{!executionList}" var="t">
+                execution.push('{!JSENCODE(t)}');
+            </apex:repeat> 
+            
+            sortList=assortment.sort(endComparator); 
+            executionList=execution.sort(endComparator);
+            finalPannel= sortList.concat(executionList);
+            //alert(finalPannel);
+            sortDivs(finalPannel);
+            
+        }
+       
+        function sortDivs(myList)
+        {
+            var elemObj={};
+            $('.sortdiv').each(function(){
+                elemObj[$(this).attr('id')] = $(this).clone();
+            });
+            $('.sortdiv').remove();
+            $.each(myList,function(i,v){
+                $.each(elemObj,function(key,val){
+                    if(v == key)
+                    {
+                        $('#allPannels').append(elemObj[myList[i]]);
+                        delete elemObj[myList[i]];
+                    }
+                });
+            });
+        }
+        
+        function endComparator(a,b) 
+        {
+            if (a.slice(-1) < b.slice(-1)) return -1;
+                if (a.slice(-1) > b.slice(-1)) return 1;
+            return 0;
+        }
+    </script>
+    <style>
+       
+    </style>
+    </apex:outputPanel>
+    </html>
+</apex:page>
