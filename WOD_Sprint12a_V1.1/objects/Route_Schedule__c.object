@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Scheduled_Count__c</fullName>
+        <description>This field is for calculation of Sales Excellence dashboard on M360 application.</description>
+        <externalId>false</externalId>
+        <formula>1</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Scheduled Count</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Time_Spent__c</fullName>
+        <description>This field is for calculation of Sales Excellence dashboard (Time to Sale) on M360 application.
+Fills with value of total time spent to complete visit, &quot;Visit End Time - Visit Start Time&quot;</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Fills with value of total time spent to complete visit, &quot;Visit End Time - Visit Start Time&quot;</inlineHelpText>
+        <label>Time Spent</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Visits_Count__c</fullName>
+        <description>This field is for calculation of Sales Excellence dashboard on M360 application.
+Counts 1 if a visit completed with in the gps range from M360 app for this schedule.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Counts 1 if a visit completed with in the gps range from M360 app for this schedule.</inlineHelpText>
+        <label>Visits Count</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>
