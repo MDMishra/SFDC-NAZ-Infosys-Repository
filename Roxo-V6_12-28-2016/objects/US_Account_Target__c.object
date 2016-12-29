@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Bonus__c</fullName>
+        <defaultValue>&apos;N&apos;</defaultValue>
+        <externalId>false</externalId>
+        <label>Bonus</label>
+        <length>1</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Counts_Towards_Achievement__c</fullName>
+        <externalId>false</externalId>
+        <label>Counts Towards Achievement</label>
+        <length>1</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Denom__c</fullName>
+        <externalId>false</externalId>
+        <label>Denom</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>FULL_TXT__c</fullName>
+        <description>FULL_TXT</description>
+        <externalId>false</externalId>
+        <label>FULL_TXT</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Num__c</fullName>
+        <externalId>false</externalId>
+        <label>Num</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sap_color__c</fullName>
+        <description>Hold the Achievement score color</description>
+        <externalId>false</externalId>
+        <formula>CASE( Acheivement_Score__c , 0, &apos;Red&apos;, 1,&apos;Yellow&apos;,2,&apos;Green&apos;,&apos;Green&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Sap color</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

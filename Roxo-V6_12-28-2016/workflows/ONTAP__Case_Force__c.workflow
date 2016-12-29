@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>AB_IQSupportEmail</fullName>
+        <description>AB_IQSupportEmail</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Send_Email_To_AB_Support</template>
+    </alerts>
+    <alerts>
+        <fullName>AB_IQUserEmail</fullName>
+        <ccEmails>kumari.raichal@appshark.com</ccEmails>
+        <ccEmails>deepthi.toranala@appshark.com</ccEmails>
+        <description>AB_IQUserEmail</description>
+        <protected>false</protected>
+        <recipients>
+            <field>LastModifiedById</field>
+            <type>userLookup</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/AB_IQUserEmail</template>
+    </alerts>
+    <rules>
+        <fullName>AB Send Mail To AB Support</fullName>
+        <actions>
+            <name>AB_IQSupportEmail</name>
+            <type>Alert</type>
+        </actions>
+        <actions>
+            <name>AB_IQUserEmail</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>ONTAP__Case_Force__c.ONTAP__Subject__c</field>
+            <operation>notEqual</operation>
+        </criteriaItems>
+        <criteriaItems>
+            <field>ONTAP__Case_Force__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>SAP_Cases</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>ONTAP__Case_Force__c.ONTAP__Description__c</field>
+            <operation>notEqual</operation>
+        </criteriaItems>
+        <description>send mail to AB support team when a case logged</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+</Workflow>

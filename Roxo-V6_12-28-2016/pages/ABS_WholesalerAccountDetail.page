@@ -1,0 +1,1814 @@
+<apex:page docType="html-5.0" controller="ABS_WholesalerAccountDetail"  CACHE="True"  showHeader="false" setup="false" id="wholePage">
+   <html lang="en" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport"  content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+        <apex:includeScript value="{!URLFOR($Resource.ABS_Bootstrap, 'jquery.min.js')}"/>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB5OoIjmYbz9A9clKvOC-y7EqWZw7wRRc" type="text/javascript"></script>      
+        <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+        <script src="../../soap/ajax/37.0/connection.js" type="text/javascript"></script>
+        <script src="https://code.jquery.com/jquery-1.8.2.js"></script>
+        <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+        <script src="https://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css"/>
+        <apex:stylesheet value="{!URLFOR($Resource.LDS, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
+        <style>
+            body{font-family: "Salesforce Sans",Arial,sans-serif !important;}
+            .header {background-color:#000033;color: #ffffff;padding: 10px;}                                              
+            #map_canvas {margin:0 auto;height:400px;min-width:100%;float:right;}
+            #map_canvas {margin:0 auto;height:400px;min-width:100%;float:right;}
+            #map_wrapper {height: 300px;}                                                
+            #map_canvas { width: 100%; height: 100%;}
+            .collBar{height: 50px;border-radius: 0px;background-image: linear-gradient(black,black);}
+            .SpinnerBackground{border-radius: 1px;background-image: linear-gradient(white,white);}
+            .scrollable {overflow-y:auto;margin-top : 5px;}
+            .mapping{overflow-y:auto;}
+            .line-separator{height:1px;background:#d8dde6;border-bottom:0px solid #313030;}
+            .slds-p-around--xxx-small{padding: .01rem !important;}
+            .retailerBar{border: 0px solid #d8dde6;height: 45px;border-radius: 0px;background: #EFEFF4;}
+            .Greencircle{font-size:15px;font-weight:bold;text-align:center; background:green;color: white;}
+            .Yellowcircle{width:60px;height:60px;border-radius:260px;font-size:15px;font-weight:bold;line-height:60px;text-align:center;background:yellow;color: white;}
+            .Redcircle{font-size:15px;font-weight:bold;text-align:center; background:Red;color: white;}           
+            .bold_text{ font-weight: bold;}
+            .bolder_text{font-weight: bolder;}
+            .color_black{ color: #000000;}
+            .Channel_heading_color{color: black !important;}
+            .text_bold {font-size: 30px; font-weight: bold; color: white !important;}
+            .text_bold1{font-size: 30px;font-weight: bold;}
+            .plus_symbol{color: white;cursor:pointer;}
+            .account_heading_color{color: white;}
+            .textcenter{left: 0;line-height: 200px;margin-top: -100px;position: absolute;text-align: center;top: 50%;width: 100%;}
+            .textcenterRe{ left: 0;line-height: 363px;text-align: center; top: 50%;width: 100%;padding-left: 365px;}
+            .textu{text-decoration: underline}
+            .textcur{cursor: pointer; cursor: hand; }
+            ul li{margin-left:0px;}
+            .slds-card+.slds-card {margin-top: 5px !important;}
+            .item-cls{ border:1px solid #ddd;margin:2px;border-radius:5px;margin:auto}
+            .border-round{ border-radius:50%;}
+            .clr-red{background-color:#E14938;}
+            .clr-green{background-color:#41A85F;}
+            .txt-center{text-align:center;}
+            .innerdiv-3{margin:auto;color:#fff; border-radius:50%; width:62px; height:62px; line-height:62px;overflow:hidden;}
+            .innerdiv-2{margin:auto;color:#fff;width:62px; height:62px; line-height:62px;border-radius:50%;overflow:hidden;}
+            .innerdiv-1{margin:auto;color:#fff; border-radius: 50%; width:62px; height:62px; line-height: 62px; overflow:hidden;}
+            .info{margin-left:0.5%; padding:0.5%}
+            .lef-bor{ border-right: 1px solid #ddd;}
+            .pd1{padding-bottom: 1%;}
+            .BlackCircle{font-size:15px;font-weight:bold;text-align:center; background:Black;color: white;margin:auto;color:#fff;border-radius:50%;width:48px; height:48px; line-height:48px;overflow:hidden;}
+            .text_bold1_poc{font-size: 30px;font-weight: bold;}
+            .plus_symbol_poc{color: white;cursor:pointer;}
+            .Greencircle_pocss{color: black;cursor:pointer;background-color:#61bd43 !important;border-color: #61bd43 !important;}  
+            .Yellowcircle_pocss{color: black;cursor:pointer;background-color: yellow !important;border-color: yellow !important;}    
+            .Redcircle_pocss{color: black;cursor:pointer;background-color: red !important;border-color: red !important;}     
+            .Greencircle_pocss:hover{color: black;cursor:pointer;background-color: #61bd43 !important;border-color: #61bd43 !important;}
+            .Yellowcircle_pocss:hover{color: black;cursor:pointer; background-color: yellow !important; border-color: yellow !important;}
+            .Redcircle__pocss:hover{color: black;cursor:pointer;background-color: red !important;border-color: red !important;}
+            #map_canvas_poc {margin:0 auto;height:400px;min-width:100%;float:right;}
+            #map_canvas_poc {margin:0 auto;height:400px;min-width:100%;float:right;}
+            #map_wrapper_poc {height: 300px;}
+            #map_canvas_poc {width: 50%; height: 100%;}
+            .retailerBar_poc { border: 1px solid #d8dde6;border-radius: 7px;background: #fff;}
+            .textcenter_poc{left: 0;line-height: 150px;margin-top: -101px; text-align: center; top: 50%;width: 100%;margin-left: 450px;}
+            .green-circle_poc {background-color:green;height:25px;width:25px; -webkit-border-radius:75px;-moz-border-radius:75px;border-radius:20px;}
+            .yellow-circle_poc {background-color:yellow;height:25px;width:25px;-webkit-border-radius:75px;-moz-border-radius:75px;border-radius:20px;}
+            .red-circle_poc {background-color:red;height:25px;width:25px;-webkit-border-radius:75px;-moz-border-radius:75px;border-radius:20px;}
+            .imageWidth{width:auto !important;height: 78px !important;padding:5px 0px 5px 0px;}
+            .emptyPanel{height:0.5px;}
+            .broderClass_poc{border-bottom: 1px solid #9C9C9C;box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);}
+            .headerpoc {background-color:#000033;color: #ffffff;padding: 10px;}
+            .FilterBg{ background: #EFEFF4;}
+            .button{background-color: lightblue !important;border: 2px;color: white;text-align: center;text-decoration: none;display: inline-block;font-size: 15px;margin: 4px 2px;cursor: pointer;border-radius: 4px;background-image: none !important;} 
+            .Filterhg {overflow-y:auto; margin-top : 5px;}  
+            .pocPagePanel1 {overflow-y:auto; margin-top : 5px;}         
+            .Accountgrdbg{background-color: #ffffff !important;}
+            .textcenterpoc{left: 0;line-height: 150px;margin-top: -101px;text-align: center;top: 50%;width: 100%;margin-left: 450px;}
+            .textcenterpoc1{left: 0;line-height: 150px;margin-top: -101px;text-align: center;top: 50%;width: 100%;margin-left: 130px;}
+            .textcenterpoc2{line-height: 150px;}
+            .slds-grid .slds-size--1-of-3, .slds-grid .slds-large-size--1-of-1{ position:relative;}
+            .slds-grid .slds-size--1-of-2, .slds-grid .slds-large-size--1-of-1{ position:relative;}
+            .slds-grid .slds-popover{ position:absolute !important;  width:100%; min-width: 100px;max-width: 100px;  margin-top: -12px !important; left:auto; right:auto;}
+            .slds-nubbin--top-left:after{left: inherit;}
+            .slds-nubbin--top-left:before{left: inherit; }
+            @media only screen and (min-width:480px) and (max-width: 767px) {
+            .innerdiv-3{margin:auto;color:#fff; border-radius:50%; width:42px; height:42px; line-height:42px;overflow:hidden;}
+            .innerdiv-2{margin:auto;color:#fff;width:42px; height:42px; line-height:42px;border-radius:50%;overflow:hidden;}
+            .innerdiv-1{margin:auto;color:#fff; border-radius: 50%; width:42px; height:42px; line-height: 42px; overflow:hidden;}
+            .innerdiv-3, .innerdiv-2, .innerdiv-1{ font-size: 13px;}  
+            }
+            @media only screen and (min-width:320px) and (max-width: 479px) 
+            {
+            .innerdiv-3{margin:auto;color:#fff; border-radius:50%; width:42px; height:42px; line-height:42px;overflow:hidden;}
+            .innerdiv-2{margin:auto;color:#fff;width:42px; height:42px; line-height:42px;border-radius:50%;overflow:hidden;}
+            .innerdiv-1{margin:auto;color:#fff; border-radius: 50%; width:42px; height:42px; line-height: 42px; overflow:hidden;}
+            .innerdiv-3, .innerdiv-2, .innerdiv-1{ font-size: 13px;} 
+            .slds-grid .slds-popover{width: 160px;min-width: 100px;max-width: 100px;}
+            .slds-nubbin--top-left:after{ left: 20px;}
+            .slds-nubbin--top-left:before { left: 20px;}
+            .slds-grid .slds-popover {width: 100px !important;min-width: 100px;max-width: 100px;}
+           }
+           .POCItemRounded{border-radius: 10px; background-image: linear-gradient(black,black); color: white !important;}
+           .confirmButton{color: white; padding-left: 3px; padding-right: 3px; font-weight: bold;}   
+           .font-12{font-size: 12px;}
+           .ui-autocomplete {max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-right: 20px;}
+        </style>
+        <script type="text/javascript">
+            var objAccountdata = new Object();
+            var namelist=[];
+            var userMainlat;
+            var userMainlng;
+            var navLog=0;
+            var navlat=0;
+            var glat;
+            var glong;
+            var NoRecords = 'false';
+            var isPocMap = 'false';
+            var curCtrl = 'list';
+            function resizePage()
+            {
+                switch(curCtrl) {
+                case "map":
+                    var h = window.innerHeight -100;
+                    $('.mapping').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.mapping').css({'height': h +'px'});
+                    });
+                    break;
+                case "list":
+                    var h = window.innerHeight -151;
+                        $('.scrollable').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.scrollable').css({'height': h +'px'});
+                        });
+                    break;
+                case "filter":
+                    var h = window.innerHeight - 105;
+                                    $('.Filterhg ').css({'height':h + 'px'});
+                                    $(window).resize(function()
+                                    {
+                                        $('.Filterhg').css({'height': h +'px'});
+                                    });
+                                
+                    break;  
+                case "poc":
+                    var h = window.innerHeight -105;
+                        $('.pocPagePanel1').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.pocPagePanel1').css({'height': h +'px'});
+                        });  
+                    break;
+                 case "mappoc":
+                     var h = window.innerHeight -100;
+                        $('.mapping_poc').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.mapping_poc').css({'height': h +'px'});
+                        });    
+                 break;
+                 default:
+                 var h = window.innerHeight -151;
+                        $('.scrollable').css({'height':h + 'px'});
+                        $(window).resize(function(){
+                        $('.scrollable').css({'height': h +'px'});
+                        });
+                    break;
+                            
+                }
+            }
+            window.addEventListener("orientationchange", function() 
+            {
+                resizePage();
+            },false);
+            $(function()
+            {
+                var h = window.innerHeight -151;
+                $('.scrollable').css({'height':h + 'px'});
+                $(window).resize(function(){
+                    $('.scrollable').css({'height': h +'px'});
+                });
+            });
+            
+            String.prototype.replaceAll = function(search, replacement){
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+            };
+            
+            function myfiltersVal()
+            {
+                var myRetailer='{!viewByProfile}'
+                var retailersTeam='{!$currentPage.parameters.retailersTeam}';
+                if((myRetailer == 'true' && retailersTeam !='undefined' ) || retailersTeam == 'true' )
+                {
+                    document.getElementById('wholePage:filtersform:isinstance1').checked=true;
+                }else{
+                
+                    document.getElementById('wholePage:filtersform:isinstance1').checked=false;
+                }
+            }
+          
+            //Main Remote actions
+            function loadPocs(lat,long) 
+            {
+                document.getElementById('sldsSpinner').style.display='block';
+                var retailersTeam;
+                var OnPremise;
+                var OffPremise;
+                var Channel;
+                var targetAchievement;
+                var isFilteradded;
+                var largeFormats;
+                var sapColor;
+                var recSize='{!$currentPage.parameters.size}';
+                var recmiles='{!$currentPage.parameters.miles}';
+                retailersTeam='{!$currentPage.parameters.retailersTeam}';
+                OnPremise='{!$currentPage.parameters.OnPremise}';
+                OffPremise='{!$currentPage.parameters.OffPremise}';
+                Channel='{!$currentPage.parameters.Channel}';
+                targetAchievement='{!$currentPage.parameters.ClosetoTargetAchievement}';
+                isFilteradded='{!$currentPage.parameters.isFilteradded}';
+                largeFormat='{!$currentPage.parameters.LargeFormat}';
+                sapColor='{!$currentPage.parameters.sapcolor}';
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.ABS_WholesalerAccountDetail.findPocs}',lat,long,retailersTeam,OnPremise,OffPremise,Channel,recSize,targetAchievement,isFilteradded,recmiles,largeFormat,sapColor,
+                function(result, event)
+                {
+                    if(event.status)
+                    {
+                        if(result.length==0)
+                        {
+                            document.getElementById('em').innerHTML  = "&nbsp;&nbsp;&nbsp;&nbsp;No records found";  
+                            document.getElementById('sldsSpinner').style.display='none';
+                            myfiltersVal();
+                            NoRecords  = 'true';
+                        }
+                        //scrollpannel div start
+                        var strTable = "<div id=\"scrollpannel\">";
+                        //wholePage:wholeSalerForm:pocPanel span start
+                        strTable += "<span id=\"wholePage:wholeSalerForm:pocPanel\">";
+                        //wholePage:wholeSalerForm:j_id28 span start
+                        strTable += "<span id=\"wholePage:wholeSalerForm:j_id28\">";
+                        //document.getElementById('retName').innerHTML= result.length;
+                        for (var i=0; i<result.length; i++) 
+                        {
+                            //console.log(result[i].lstSeq1);
+                            //console.log(result[i].lstSeq2);
+                            if(result[0].Filter =='All Retailers')
+                            {
+                                document.getElementById('retName').style.display='block';
+                                document.getElementById('wholePage:filtersform:isinstance1').checked=false;
+
+                            }else{
+                                document.getElementById('myretName').style.display='block';
+                                document.getElementById('wholePage:filtersform:isinstance1').checked=true;
+                            }
+                            objAccountdata[result[i].id] = result[i];
+                            var accname=result[i].pocAccount.Name
+                            var varTitle = $('<textarea />').html(accname).text();
+                            namelist.push(varTitle); 
+                            var divIdIs = "div-"+result[i].id;
+                            //slds-card div start
+                            strTable += "<div id=\""+divIdIs;
+                            strTable += "\" class=\"slds-card Accountgrdbg\">";
+                            //slds-grid div start
+                            strTable += "<div class=\"slds-grid slds-card__header slds-wrap slds-p-left--large slds-p-top--small\">";
+                            //slds-media div start
+                            strTable += "<div class=\"slds-media slds-media--center slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-p-top--x-small\">";
+                            //slds-tile tile div start
+                            strTable += "<div class=\"slds-tile slds-media\">";
+                            
+                            //slds-media__body div start
+                            strTable += "<div class=\"slds-media__body\">";
+                            //slds-grid slds- div start
+                            strTable += "<div class=\"slds-grid slds-grid--align-spread slds-has-flexi-truncate\">";
+                              strTable += "<p class=\"slds-text-heading--medium bold_text \">";
+                            //strTable += "<a id=\"rnames\" onclick=\"navigatePage(\""+objpocAccounts[i].Id+"\");\" target=\"_blank\">";
+                            strTable += "<a id=\"rnames\" class= \"Channel_heading_color\" onclick=\"javascript:return navigatePage('"+result[i].id + "');\" target=\"_blank\">";
+                            strTable += result[i].pocAccount.Name;
+                            strTable += "</a>";
+                            strTable += "</p>";
+                            //slds-grid slds- div end
+                            strTable += "</div>";
+                            //slds-tile__detail div start
+                            strTable += "<div class=\"slds-tile__detail slds-text-body--small\">";
+                            strTable += "<ul class=\"slds-list--horizontal\">";
+                            strTable += "<li class=\"slds-item\">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            strTable += ((result[i].pocAccount.SAP_Channel__c==undefined)?"":result[i].pocAccount.SAP_Channel__c);
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "</ul>";
+                            strTable += "<ul class=\"slds-list--horizontal\">";
+                            strTable += "<li class=\"slds-item slds-p-right--x-small\">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            strTable += "Channel : ";
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "<li class=\"slds-item \">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            if(result[i].pocAccount.RTL_SEG_NM_US__c == undefined)
+                            {
+                                strTable += " ";
+                            }
+                            else
+                            {  
+                                //strTable += result[i].pocAccount.RTL_SEG_NM_US__c;
+                                strTable += toTitleCase(result[i].pocAccount.RTL_SEG_NM_US__c);
+                            }
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "</ul>";
+                            //slds-tile__detail div end
+                            strTable += "</div>";
+                            //slds-media__body div end
+                            strTable += "</div>";
+                            //slds-tile tile div end
+                            strTable += "</div>";
+                            //slds-media div end
+                            strTable += "</div>";
+                            console.log(result[i].lstSeq1);
+                            console.log(result[i].lstSeq2);
+                            // TODO:  Sequence  preparation
+                             strTable += "<div class=\"slds-grid slds-grid--vertical-stretch pd1 slds-size--1-of-1\">";
+                             strTable += ATPGroup(result[i].lstSeq1,'show') + ATPGroup(result[i].lstSeq2,'none');
+                             strTable += "</div>";
+                            // END :  Sequence  preparation
+                            // console.log("HTML for KPIs "  + strTable);
+                            //slds-col div start
+                            strTable += "<div class=\"slds-col slds-size--1-of-1 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-p-top--xx-small\">";
+                            strTable += "<span id=\"wholePage:wholeSalerForm:j_id29:0:j_id33\">";
+                            strTable += "<span id=\"wholePage:wholeSalerForm:j_id29:0:j_id34\">";
+                            //slds-grid div start
+                            //slds-grid div start
+                            strTable +="<div class=\"slds-grid\">";                       
+                            //slds-grid close
+                            strTable += "</div>";
+                            strTable += "</span>";
+                            strTable += "</span>";
+                            //slds-col div end
+                            strTable += "</div>";
+                            //slds-grid div end
+                            strTable += "</div>";                        
+                            //slds-card div end
+                            strTable += "</div>";
+                        }
+                        //wholePage:wholeSalerForm:j_id28 span end
+                        strTable += "</span>";
+                        //wholePage:wholeSalerForm:pocPanel span end
+                        strTable += "</span>";
+                        //scrollpannel div end
+                        strTable += "</div>";                    
+                        //console.log(strTable);
+                        document.getElementById('division').innerHTML=strTable;
+                        document.getElementById('sldsSpinner').style.display='none';
+                    }else {
+                        //alert(event.message);
+                        document.getElementById('em').innerHTML  = "No Records found";  
+                        document.getElementById('sldsSpinner').style.display='none';
+                        NoRecords  = 'true';
+                        myfiltersVal();
+                    }
+                },
+                {escape: true});
+            }
+            // TODO: Program Target sequence of HTML Preparation
+            function ATPGroup(lstgrp,showRightBorder)
+            {
+                //var accId = "%Accountid%";
+                var pgmId = "%PGMId%";
+                var strKPIs = "";
+                var lengthOfClass = lstgrp.length;
+                // Need template for each program target
+                if(lstgrp.length >0 )
+                { 
+                var strRet = "<div class=\"slds-grid slds-grid--vertical-stretch slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2\">";
+                    strRet +="<div class=\"slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 txt-center\"><b>%GrpText%</b>";
+                    strRet +="<div class=\"slds-grid slds-grid--vertical-stretch lef-bor\">%KPI%</div></div></div>";
+                if(showRightBorder=='none')  
+                {
+                    strRet=strRet.replaceAll(' lef-bor','');
+                }            
+                var strKPITemplate =  "<div class=\"slds-size--1-of-%ClassSize% slds-small-size--1-of-%ClassSize% slds-medium-size--1-of-%ClassSize% slds-large-size--1-of-%ClassSize%\">";
+                    strKPITemplate += "<div class=\"%colorClass% innerdiv-3\" id=\"divAccountid\" onclick=\"openPopUp(this)\"  style=\"cursor: pointer;\">%PanelDisplay%</div>";
+                    strKPITemplate += "<h5>%KPItext%</h5><div id=\"divAccountid\" class=\"slds-popover slds-nubbin--top slds-hide slds-size--1-of-1\" aria-hidden=\"false\" aria-describedby=\"%Accountid%\">";
+                    strKPITemplate += "<div class=\"slds-popover__header\"><div class=\"slds-text-align--right\"><a onclick=\"closePopup(this)\">X</a></div></div>";
+                    strKPITemplate += "<div class=\"slds-popover__body\"><p>Program</p><p>Target</p><p>%pgmTrgtLvl%</p></div></div></div>";
+                    var lengthOfClass = lstgrp.length;                
+                    for (j = 0; j< lstgrp.length; j++)
+                    {
+                        // TODO: looping for KPIs Data 
+                        strKPIs += strKPITemplate.replaceAll('%ClassSize%',lengthOfClass).replaceAll('%colorClass%',lstgrp[j].pannelColor==undefined?'Redcircle':lstgrp[j].pannelColor).replaceAll('%PanelDisplay%',lstgrp[j].panelDisplay==undefined?'':lstgrp[j].panelDisplay).replaceAll('%KPItext%',lstgrp[j].brandcat==undefined?'':lstgrp[j].brandcat).replaceAll('%pgmTrgtLvl%',lstgrp[j].pgmTrgtLvl==undefined?'0':lstgrp[j].pgmTrgtLvl).replaceAll('%Accountid%',lstgrp[j].accountId);
+                        
+                    }
+                    
+                        return strRet.replaceAll('%KPI%',strKPIs).replaceAll('%GrpText%',lstgrp[0].brandGrp==undefined?'</br>':lstgrp[0].brandGrp);
+                }
+                else
+                    return  '</br>';
+            }
+            // END: Program Target sequence of HTML Preparation
+            
+            // changes the channel from upper case to lower case
+            function toTitleCase(str)
+            {
+                    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+            }
+        
+            //fuction which loads on page load pull geo loacation values
+            function callbackSuccess()
+            {
+                if(navigator.geolocation)
+                {
+                    navigator.geolocation.getCurrentPosition(jsfind,showError,{timeout: 5000});
+                }
+                else{
+                    console.log('navigator not supported');
+                }
+            }
+            
+            // fuction is called if geolocation is not pulled
+            function showError(error)
+            {
+                glat=0;
+                glong=0;
+                loadPocs(0,0);
+            }
+              
+            //fuction which send geolocation is to action function
+            function jsfind(position)
+            {
+                //get latitude and longitude
+                var pos = {};
+                pos = position.coords;
+                console.log(pos);
+                var lat = pos.latitude;
+                var lon = pos.longitude;
+                glat=pos.latitude;
+                glong=pos.longitude;
+                loadPocs(lat,lon);
+            }
+        
+            //function to implement search
+            function search()
+            {
+                suggest();
+                var temp= document.getElementById('searchName').value;           
+                for (var property in objAccountdata) 
+                {               
+                    var tempAcc = objAccountdata[property];
+                    var name=$('<textarea />').html(tempAcc.pocAccount.Name).text()
+                    var sapchannel = tempAcc.pocAccount.SAP_Channel__c;
+                    var channel = tempAcc.pocAccount.RTL_SEG_NM_US__c; 
+                    var divIdIs = "div-"+property;
+                    //alert(temp.indexOf(searchString));
+                    if(name.indexOf(temp) != -1)
+                    {   
+                       //console.log(document.getElementById(divIdIs).style.display);
+                       if(document.getElementById(divIdIs).style.display=== 'none')
+                       {
+                           document.getElementById(divIdIs).style.display= ""; 
+                       }                  
+                    }else
+                    {
+                   
+                       document.getElementById(divIdIs).style.display= "none";
+                    }
+                }          
+            }
+              $(function() { 
+                $('div').click(function(e) {                    
+                    var o = {
+                        left: e.pageX- e.srcElement.offsetWidth, 
+                        top: e.pageY+12 
+                    };
+                    if (e.srcElement.id !='divAccountid')
+                    {$('.slds-popover').hide(); }
+                    $('.slds-popover').offset(o);
+                });
+            });
+            // program target pop up open
+            function openPopUp(thisPtr)
+            {  
+                $('.slds-popover').hide();              
+                $(thisPtr).siblings('.slds-popover').show();
+            }
+            // program target pop up close
+            function closePopup(thisPtr)
+            {
+                $(thisPtr).parents('.slds-popover').hide();
+            }
+            // Poc Panel action function called
+            function navigatePage(accountid)
+            {
+                var id=accountid;
+                pocAccount(accountid,glat,glong);
+              
+            }
+            // close of poc pannel
+            function closePocPanel()
+            {
+                curCtrl='list';
+                document.getElementById('MainPage').style.display='block';
+                document.getElementById('pocPagePanel').style.display='none';
+                var h = window.innerHeight -151;
+                $('.scrollable').css({'height':h + 'px'});
+                $(window).resize(function(){
+                $('.scrollable').css({'height': h +'px'});
+                });
+            }
+            // poc pannel Display
+            function displayPocPannel()
+            {
+                curCtrl='poc';
+                isPocMap = 'true';
+                document.getElementById("collpased").className = 'slds-is-collapsed';
+                document.getElementById("pocPagePanel").className = 'slds-hide';
+                document.getElementById("scrollpannel1").className = 'scrollable slds-hide'; 
+                document.getElementById("pocPagePanel").className = 'slds-show';
+                document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                document.getElementById("lineSeparatorPoc").className="slds-grid slds-p-around--xxx-small";
+                document.getElementById("span_Filter").innerText = 'Close';
+                document.getElementById("scrollpannel1").style.dispaly = "none";
+                document.getElementById("scrollpannel1").style.height = "0px";
+                document.getElementById("dvFilter").className = 'slds-hide';
+                
+                var h = window.innerHeight -105;
+                $('.pocPagePanel1').css({'height':h + 'px'});
+                $(window).resize(function(){
+                $('.pocPagePanel1').css({'height': h +'px'});
+                });
+            }
+            
+             /* For POC   This Method is written to Make the div collpaseable*/
+            function change_autorefreshdiv_poc()
+            {
+                var NAME = document.getElementById("collpased_poc");
+                var currentClass = NAME.className;
+             
+                if(currentClass == "slds-is-collapsed") 
+                { 
+                    NAME.className = "slds-is-expanded";   // Set other class name
+                    document.getElementById("pocPagePanel").className = 'slds-hide';
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("lineSeparatorPoc").className="slds-grid slds-p-around--xxx-small";
+                    document.getElementById("accord").innerHTML = "List";
+                    document.getElementById("scrollpannel1").style.dispaly = "none"; 
+                    document.getElementById("scrollpannel1").style.height = "0px";
+                    document.getElementById("dvFilter").className = 'slds-hide';
+                    document.getElementById("scrollpannel1").className = 'scrollable slds-hide'; 
+                    curCtrl='mappoc';
+                    var h = window.innerHeight -100;
+                    $('.mapping_poc').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.mapping_poc').css({'height': h +'px'});
+                    });
+                
+                }else
+                {
+                    NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
+                    document.getElementById("pocPagePanel").className = 'slds-hide';
+                    document.getElementById("scrollpannel1").className = 'scrollable slds-hide'; 
+                    document.getElementById("pocPagePanel").className = 'slds-show';
+                    document.getElementById("lineSeparatorPoc").className="slds-grid slds-p-around--xxx-small";
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("scrollpannel1").style.dispaly = "none";
+                    document.getElementById("scrollpannel1").style.height = "0px";
+                    document.getElementById("dvFilter").className = 'slds-hide';
+                    document.getElementById("accord").innerHTML = "Map";
+                    curCtrl='poc';
+                    var h = window.innerHeight -105;
+                    $('.pocPagePanel1').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.pocPagePanel1').css({'height': h +'px'});
+                    });
+                }
+                //initialize_poc();
+            } 
+ 
+            //fuction to collpase and expanding
+            function change_autorefreshdiv()
+            {
+                if (isPocMap == 'true')
+                {
+                    change_autorefreshdiv_poc(); 
+                    initialize_poc();                   
+                    return;
+                }
+                if (NoRecords == 'true')
+                {
+                    document.getElementById('em').innerHTML  = "No Records found";
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                }
+                var NAME = document.getElementById("collpased");
+                var currentClass = NAME.className;
+                document.getElementById('searchName').value= "";
+                if (currentClass == "slds-is-collapsed") 
+                {
+                    curCtrl='map';
+                    // Check the current class name
+                    document.getElementById('em').innerHTML = "";
+                    NAME.className = "slds-is-expanded";   // Set other class name
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                    document.getElementById("accord").innerHTML = "List";
+                    document.getElementById("span_Filter").innerText = 'Filter';
+                    document.getElementById("scrollpannel1").style.dispaly = "none";
+                    document.getElementById("scrollpannel1").style.height = "0px";
+                    document.getElementById("dvFilter").className = 'slds-hide';
+                    document.getElementById("scrollpannel1").className = 'scrollable slds-hide'; 
+                     var h = window.innerHeight -100;
+                    $('.mapping').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.mapping').css({'height': h +'px'});
+                    });
+                    initialize() ;
+                }else
+                {
+                    curCtrl='list';
+                    NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar";
+                    document.getElementById("lineSeparator").className="line-separator";
+                    document.getElementById("accord").innerHTML = "Map";
+                    document.getElementById("span_Filter").innerText = 'Filter';
+                    document.getElementById("scrollpannel1").style.dispaly = "inline";
+                    document.getElementById("dvFilter").className = 'slds-hide';
+                    document.getElementById("scrollpannel1").className = 'scrollable slds-show'; 
+                    var h = window.innerHeight -151;
+                    $('.scrollable').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.scrollable').css({'height': h +'px'});
+                    });
+                }
+                ClearFilter();
+            }
+            
+            // function which diplays wholesaler pointer
+            function initialize() 
+            { 
+                var userName;
+                //console.log(objAccountdata);
+                for (var propt in objAccountdata)
+                {
+                    var temp = objAccountdata[propt];
+                    userMainlat=temp.userlat;
+                    userMainlng=temp.userlong;
+                    userName=temp.userName;
+                    break;
+                }
+                var pinColor = 'blue-dot.png';
+                var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+pinColor;
+                var myLatlng = new google.maps.LatLng(userMainlat,userMainlng);
+                var mapOptions = {center: myLatlng,
+                                  mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                  zoom: 15,
+                                  };
+                var markers = new google.maps.Marker({
+                              position: myLatlng,
+                              icon: pinsImage,
+                              zoom: 15,
+                                   
+                });
+                map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
+                markers.setMap(map);
+                var mapBoundary = new google.maps.LatLngBounds();
+                mapBoundary.extend(myLatlng );
+                map.fitBounds(mapBoundary);
+              
+                // Variable to define the HTML content to be inserted in the infowindow
+                var iwContent = '<div id="con">' +
+                                '<div class="ti">' + userName + '</div>' +
+                                '</div>';
+                
+                var infowindow = new google.maps.InfoWindow({
+                                 content: iwContent 
+                });
+                  
+                // Event that opens the InfoWindow with a click on the map
+                google.maps.event.addListener(markers, 'click', function() {
+                                              infowindow.open(map, markers); 
+                });
+              
+                // Event that closes the InfoWindow with a click on the map
+                google.maps.event.addListener(map, 'click', function() { infoWindow.close(); });
+               
+              
+                // Finally displayMarkers() function is called to begin the markers creation
+                displayMarkers();
+            }
+             
+            // function which send data to create Poc markers
+            function displayMarkers()
+            {
+                var bounds = new google.maps.LatLngBounds();
+                for (var propt in objAccountdata)
+                {
+                    var temp = objAccountdata[propt];
+                    var lstSeq1 = objAccountdata[propt].lstSeq1;
+                    console.log(lstSeq1);
+                    var latlng = new google.maps.LatLng(temp.pocAccount.BillingLatitude, temp.pocAccount.BillingLongitude);
+                    var urls=temp.mapUrl;
+                    var RecordIds=temp.id;
+                    var name=temp.pocAccount.Name;
+                    var mappin=(temp.pocAccount.SAP_Color__c=="Green"?"green-dot.png":"red-dot.png");
+                    var mapPinColor=mappin;
+                    createMarker(latlng,urls,RecordIds,name,mapPinColor,lstSeq1);
+                    bounds.extend(latlng);
+                }
+                for (var propt in objAccountdata)
+                {
+                    var temp = objAccountdata[propt];
+                    userMainlat=temp.userlat;
+                    userMainlng=temp.userlong;
+                    var latlng = new google.maps.LatLng(userMainlat,userMainlng);
+                    userName=temp.userName;
+                    //createMarker(latlng,'','','','blue-dot.png','');
+                    bounds.extend(latlng);
+                    break;
+                    
+                }
+                map.fitBounds(bounds);
+            }
+            
+            // function which creates map pointers
+            function createMarker(latlng,urls,RecordIds,name,mapPinColor,lstSeq)
+            {
+                var value = RecordIds;
+                //var pinColor = colormap;
+                var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+mapPinColor;
+                name = name.replace("\\","");
+                var marker = new google.maps.Marker({
+                             map: map,
+                             position: latlng,
+                             title: name,
+                             icon: pinsImage,
+                             //url: urls
+                             });
+              
+                // Variable to define the HTML content to be inserted in the infowindow
+                var iwContent='';
+                var nodata='';
+                iwContent = '<div style="font-weight: normal;font-size: 14px;"><font color="brown",weight="bold"><a target="_blank" onclick="navigatePage(\''+RecordIds+'\');">'+name + '</a></font></div>'; 
+                var valuesData = '';
+                var PinTemplate  = '<div class="iw_title" style="font-weight: normal;font-size: 12px;" ><font color="Green",weight="bold">%DisplayValues%</font></div>';
+                
+                for (var i = 0; i<lstSeq.length; i++)
+                {
+                 
+                 var value = lstSeq[i].brandcat +' : ' + lstSeq[i].panelDisplay;
+                 console.log(value);
+                    valuesData += PinTemplate.replaceAll('%DisplayValues%',value);
+                    //valuesData += PinTemplate.replaceAll('%DisplayValues%',lstSeq[i].brandcat==undefined?'':lstSeq[i].brandcat );// +' : ' +lstSeq[i].panelDisplay==undefined?'':lstSeq[i].panelDisplay);
+                } 
+                console.log(lstSeq);
+                console.log(valuesData);
+                iwContent += valuesData;
+                var infowindow = new google.maps.InfoWindow({content: iwContent}); 
+                      
+                marker.addListener('click', function(){infowindow.open(map, this);});
+                    
+                /*google.maps.event.addListener(marker, 'dblclick', function() 
+                {
+                    try
+                    {
+                        sforce.one.navigateToURL(marker.url);
+                    }
+                    catch(e)
+                    {
+                        window.location.href = marker.url;
+                    }
+                              
+                });*/
+                map.setCenter(new google.maps.LatLng(userMainlat,userMainlng));
+            }
+            
+            function suggest()
+            {
+                var j$=jQuery.noConflict(); 
+                j$('[id$=searchName]').autocomplete({
+                   source:namelist
+                });           
+            }
+            function ClosePocPage()
+            {
+                if(NoRecords == 'true')
+                {
+                    document.getElementById('em').innerHTML  = "No Records found";
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                }
+                isPocMap = 'false';
+                document.getElementById("collpased_poc").className =  "slds-is-collapsed";
+                curCtrl = 'list';
+                document.getElementById("pocPagePanel").className = 'slds-hide';
+                document.getElementById("span_Filter").innerText = 'Filter';
+                document.getElementById("dvFilter").className = 'slds-hide';
+                document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar";
+                document.getElementById("lineSeparator").className="line-separator";
+                document.getElementById("accord").innerHTML = "Map";
+                document.getElementById("scrollpannel1").style.height = "100%";
+                document.getElementById("scrollpannel1").style.dispaly = "inline";
+                document.getElementById("scrollpannel1").className = 'scrollable slds-show';
+                    
+                var h = window.innerHeight -151;
+                $('.scrollable').css({'height':h + 'px'});
+                $(window).resize(function(){
+                $('.scrollable').css({'height': h +'px'});
+                });
+             } 
+            
+             function navigateFilterPage()
+             {
+                if(document.getElementById("span_Filter").innerText == 'Close')
+                {
+                    document.getElementById("span_Filter").innerText = 'Filter';
+                    if(NoRecords == 'true')
+                    {
+                        document.getElementById('em').innerHTML  = "No Records found";
+                        document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                        document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                    }
+                    curCtrl = 'list';
+                    isPocMap = 'false';
+                    document.getElementById("collpased_poc").className =  'slds-is-collapsed';
+                    document.getElementById("pocPagePanel").className = 'slds-hide';
+                    document.getElementById("span_Filter").innerText = 'Filter';
+                    document.getElementById("dvFilter").className = 'slds-hide';
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar";
+                    document.getElementById("lineSeparator").className="line-separator";
+                    document.getElementById("accord").innerHTML = "Map";
+                    document.getElementById("scrollpannel1").style.height = "100%";
+                    document.getElementById("scrollpannel1").style.dispaly = "inline";
+                    document.getElementById("scrollpannel1").className = 'scrollable slds-show';
+                    var h = window.innerHeight -151;
+                    $('.scrollable').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.scrollable').css({'height': h +'px'});
+                    });
+                    return;
+                }
+                var NAME = document.getElementById("collpased");
+                NAME.className = "slds-is-collapsed";
+                document.getElementById('searchName').value= "";
+                document.getElementById('em').innerHTML  = "";
+                if(document.getElementById("span_Filter").innerText == 'Filter')
+                {
+                    curCtrl = 'filter';
+                    document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                    document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                    document.getElementById("span_Filter").innerText = 'Cancel';
+                    document.getElementById("scrollpannel1").style.dispaly = "none";
+                    document.getElementById("scrollpannel1").style.height = "0px";
+                    document.getElementById("dvFilter").className = 'slds-show';
+                    document.getElementById("scrollpannel1").className = 'scrollable slds-hide';
+                    var h = window.innerHeight - 105;
+                    $('.Filterhg ').css({'height':h + 'px'});
+                    $(window).resize(function()
+                    {
+                        $('.Filterhg').css({'height': h +'px'});
+                    });
+                }else
+                {
+                    if (NoRecords == 'true')
+                    {
+                        document.getElementById('em').innerHTML  = "No Records found";
+                        document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar slds-hide";
+                        document.getElementById("lineSeparator").className="slds-grid slds-p-around--xxx-small";
+                     }
+                     curCtrl = 'list';
+                     document.getElementById("span_Filter").innerText = 'Filter';
+                     document.getElementById("dvFilter").className = 'slds-hide';
+                     document.getElementById("retailerHeader").className="slds-grid slds-p-around--x-small retailerBar";
+                     document.getElementById("lineSeparator").className="line-separator";
+                     document.getElementById("accord").innerHTML = "Map";
+                     document.getElementById("scrollpannel1").style.height = "100%";
+                     document.getElementById("scrollpannel1").style.dispaly = "inline";
+                     document.getElementById("scrollpannel1").className = 'scrollable slds-show';
+                      var h = window.innerHeight -151;
+                     $('.scrollable').css({'height':h + 'px'});
+                     $(window).resize(function(){
+                     $('.scrollable').css({'height': h +'px'});
+                     });
+                     ClearFilter();
+                }
+            }
+         
+            $(function()
+            {
+                var h = window.innerHeight - 108 ;
+                $('.Filterhg ').css({'height':h + 'px'});
+                $(window).resize(function(){
+                $('.Filterhg').css({'height': h +'px'});
+                });
+            });
+            
+            function ClearFilter()
+            {
+                 var recSize='{!$currentPage.parameters.size}';
+                 var recmiles='{!$currentPage.parameters.miles}';
+                 var retailersTeam='{!$currentPage.parameters.retailersTeam}';
+                 var OnPremise='{!$currentPage.parameters.OnPremise}';
+                 var OffPremise='{!$currentPage.parameters.OffPremise}';
+                 var Channel='{!$currentPage.parameters.Channel}';
+                 var targetAchievement='{!$currentPage.parameters.ClosetoTargetAchievement}';
+                 largeFormat='{!$currentPage.parameters.LargeFormat}'
+                 sapColor='{!$currentPage.parameters.sapcolor}'
+                 recSize ==''?document.getElementById('wholePage:filtersform:size1').value=20:document.getElementById('wholePage:filtersform:size1').value=recSize;
+                 recmiles==''?document.getElementById('wholePage:filtersform:miles').value=100:document.getElementById('wholePage:filtersform:miles').value=recmiles;
+                (retailersTeam==''||retailersTeam == 'undefined')?document.getElementById('wholePage:filtersform:isinstance1').checked=false:document.getElementById('wholePage:filtersform:isinstance1').checked=true;
+                (OnPremise==''||OnPremise == 'undefined')?document.getElementById('wholePage:filtersform:isinstance2').checked=false:document.getElementById('wholePage:filtersform:isinstance2').checked=true;
+                (OffPremise==''||OffPremise == 'undefined')?document.getElementById('wholePage:filtersform:isinstance3').checked=false:document.getElementById('wholePage:filtersform:isinstance3').checked=true;
+                (largeFormat==''||largeFormat == 'undefined')?document.getElementById('wholePage:filtersform:isinstance4').checked=false:document.getElementById('wholePage:filtersform:isinstance4').checked=true;
+                (Channel ==''||Channel==undefined)?document.getElementById('wholePage:filtersform:channel1').value='None':document.getElementById('wholePage:filtersform:channel1').value=Channel;
+                (targetAchievement ==''||targetAchievement==undefined)?document.getElementById('wholePage:filtersform:ClosetoTarget1').value='None':document.getElementById('wholePage:filtersform:ClosetoTarget1').value=targetAchievement;
+                (sapColor ==''||sapColor==undefined)?document.getElementById('wholePage:filtersform:SapColor1').value='None':document.getElementById('wholePage:filtersform:SapColor1').value=sapColor;
+            
+            }
+            function loadNewData()
+            {
+                setTimeout(function ()
+                {
+                    url='/apex/ABS_WholesalerAccountDetail';
+                    url=window.location.href;
+                    try
+                    {
+                        sforce.one.navigateToURL(url);
+                    }
+                    catch(e)
+                    {
+                        window.location.href = url;
+                    }
+                    loader.style.display = "none";
+                },1000);
+            }
+            function navigateFaqPage()
+            {
+                var url='';
+                var currentUrl=window.location.href;
+                var nIndex = currentUrl.indexOf("?");
+                if(nIndex > 0) {
+                    url =currentUrl.substring(nIndex);
+                }
+                try
+                {
+                    sforce.one.navigateToURL('/apex/ABS_FAQs'+url);
+                }
+                catch(e)
+                {
+                    window.location.href = '/apex/ABS_FAQs'+url;                
+                }
+        
+            }
+            var iosVer=0;
+            var ua=navigator.userAgent;              
+            window.onload = function() 
+            {
+                try
+                {
+                    if (/iP(hone|od|ad)/.test(navigator.platform))
+                    {
+                        var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+                        var ver=[parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+                        iosVer=ver[0];
+                     }
+                     var a=navigator.userAgent; 
+                     if((a.indexOf('Salesforce')!=-1)&&(a.indexOf('iPhone')!=-1||a.indexOf('iPad')!=-1)&&(a.indexOf('OS/'+iosVer)!=-1||a.indexOf('OS '+iosVer)!=-1)&&(a.indexOf('Safari')==-1))
+                     {
+                         var s=document.createElement('style'); 
+                         s.innerHTML="html,html body{overflow: auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}"; 
+                         document.getElementsByTagName('head')[0].appendChild(s);
+                     }
+                 }catch(e){}
+            };
+         
+            if((ua.indexOf('Salesforce')!=-1)&&(ua.indexOf('iPhone')!=-1||ua.indexOf('iPad')!=-1)&&(ua.indexOf('OS/'+iosVer)!=-1||ua.indexOf('OS '+iosVer)!=-1)&&(ua.indexOf('Safari')==-1))
+            { 
+                function IOS_SCROLL_BOOTSTRAP() 
+                { 
+                    var children = Array.prototype.slice.call(document.body.children), 
+                    placeholder = document.createElement('section'), 
+                    fragment = document.createDocumentFragment(), 
+                    styles, 
+                    width, 
+                    height; 
+                    children.forEach(function(c){fragment.appendChild(c);}); 
+                    placeholder.appendChild(fragment); 
+                    styles = [ 
+                    'width:100%;', 
+                    'height:', (window.screen.height - 42), 'px;', 
+                    'position: absolute; overflow: auto; -webkit-overflow-scrolling: touch' 
+                    ].join(''); 
+                    placeholder.style.cssText = styles; 
+                    document.body.appendChild(placeholder); 
+                } 
+                window.addEventListener('load',function (e) { 
+                IOS_SCROLL_BOOTSTRAP(); 
+                }); 
+            } 
+            
+            function navigatemainPage()
+            {
+                var sizerec=document.getElementById('wholePage:filtersform:size1').value;
+                var url='/apex/ABS_WholesalerAccountDetail?size='+sizerec;
+                if(document.getElementById('wholePage:filtersform:channel1').value != null)
+                {
+                    var Channel=document.getElementById('wholePage:filtersform:channel1').value;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel;
+                }
+                if(document.getElementById('wholePage:filtersform:isinstance1').checked)
+                {
+                    var retailersTeam=true;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam;
+
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&retailersTeam='+retailersTeam;
+                }
+                if(document.getElementById('wholePage:filtersform:isinstance2').checked)
+                {
+                    var OnPremise=true;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise;
+                }
+                if(document.getElementById('wholePage:filtersform:isinstance3').checked)
+                {
+                    var OffPremise=true;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise+'&OffPremise='+OffPremise;
+                }
+                if(document.getElementById('wholePage:filtersform:isinstance4').checked)
+                {
+                    var LargeFormat=true; 
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise+'&OffPremise='+OffPremise+'&LargeFormat='+LargeFormat;
+                }
+                if(document.getElementById('wholePage:filtersform:ClosetoTarget1').value != null)
+                {
+                    var ClosetoTargetAchievement=document.getElementById('wholePage:filtersform:ClosetoTarget1').value;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise+'&OffPremise='+OffPremise+'&LargeFormat='+LargeFormat+'&ClosetoTargetAchievement='+ClosetoTargetAchievement+'&isFilteradded=true';
+                }
+                if(document.getElementById('wholePage:filtersform:miles').value != null)
+                {
+                    var milesdisplay=document.getElementById('wholePage:filtersform:miles').value;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise+'&OffPremise='+OffPremise+'&LargeFormat='+LargeFormat+'&ClosetoTargetAchievement='+ClosetoTargetAchievement+'&isFilteradded=true'+'&miles='+milesdisplay;
+                }
+                if(document.getElementById('wholePage:filtersform:SapColor1').value != null)
+                {
+                    var sapcolor=document.getElementById('wholePage:filtersform:SapColor1').value;
+                    url='/apex/ABS_WholesalerAccountDetail?size='+sizerec+'&Channel='+Channel+'&retailersTeam='+retailersTeam+'&OnPremise='+OnPremise+'&OffPremise='+OffPremise+'&LargeFormat='+LargeFormat+'&ClosetoTargetAchievement='+ClosetoTargetAchievement+'&isFilteradded=true'+'&miles='+milesdisplay+'&sapcolor='+sapcolor;
+                }
+                try
+                {
+                    sforce.one.navigateToURL(url);
+                }
+                catch(e)
+                {
+                    window.location.href = url;
+                }
+            }
+                          
+            // Called on page load
+            google.maps.event.addDomListener(window, 'load',callbackSuccess);
+            
+            function LoadSurvey()
+            {
+                //var gospotCheck='gospotcheck://places/11771835/missions/77923?user_id=143189';
+               // alert('ABI IQ Survey Link');
+                //SurveyLog('ABI IQ Survey Link','');
+                EvntLog('AB-IQ Survey Link','');
+                //alert('Strat:Survey Link Tracked');
+                var gospotCheck='gospotcheck://open';
+                try
+                {
+                    sforce.one.navigateToURL(gospotCheck);
+                }
+                catch(e)
+                {
+                    window.location.href = gospotCheck;
+                }
+            }
+            function EvntLogTrack(evntType, evnt)
+            {
+                //alert('sdfsdf');
+                EvntLog(evntType,evnt);
+            }
+        </script>   
+    </head>
+    <body>
+    <div id="MainPage">
+        <apex:outputPanel id="recordsmainPanel">
+        <!-- start of slds -->
+        <div class="slds " id="sldsclass">
+            <!-- start of slds conatiner-->
+            <div  id="sldscontainer" class="slds-container--center FilterBg slds-container--small slds-container--medium slds-container--large ">
+                <!-- freeze pannel start -->
+                <div id="freezepan">
+                    <!--Start of  slds grid -->
+                    <div class="slds-grid collBar">
+                    
+                        <!--Star: Header changes -->
+                        <div class='slds-m-top--small slds-size--2-of-8 slds-small-size--6-of-10 slds-medium-size--1-of-12 slds-text-align--center'>
+                            <!--<span class='slds-avatar slds-avatar--large'>
+                            <img src="{!URLFOR($Resource.LDS, '/assets/images/headlogo.png')}" alt='Header logo' />
+                            </span>-->
+
+                            <span class="slds-text-heading--medium account_heading_color textcur" style="cursor: pointer;" id="span_Filter" onclick="navigateFilterPage();" >Filter </span>
+                        </div>
+                        <!--End: Header changes -->
+                        <div class="slds-global-header__item slds-global-header__item--search slds-m-top--small slds-size--4-of-6 slds-small-size--6-of-8 slds-medium-size--10-of-12 slds-text-align--center">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                                    <label class="slds-assistive-text" for="searchName">Search</label>
+                                    <c:ABS_Component styleClass="slds-input__icon slds-icon-text-default" path="/assets/icons/utility-sprite/svg/symbols.svg#search" />
+                                    <input  id="searchName" onsubmit="return false;" onkeydown="search();"   class="slds-input slds-lookup__search-input" type="search" placeholder="Search" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class='slds-m-top--small slds-size--1-of-6 slds-small-size--1-of-8 slds-medium-size--1-of-12 slds-text-align--center '>
+                            <!--<span class='slds-avatar slds-avatar--medium slds-m-top--x-small'>
+                            <img src="{!URLFOR($Resource.LDS, '/assets/images/search-close-icons.png')}" alt='Header logo' id = "CloseClear" onclick="javascript:return SearchClear();" />
+                            </span> -->
+                            <span id="accord" class="slds-text-heading--medium account_heading_color textcur" style="cursor: pointer;" onclick="change_autorefreshdiv();" >Map</span>
+                        </div>
+  
+                    </div>
+                    <!--ENd of  slds grid -->
+                  
+                    <!-- Map -->
+                    <apex:outputPanel id="mapPanel">
+                        <div id="collpased" class="slds-is-collapsed" >
+                            <div id="map_wrapper">
+                                <div id="map_canvas" class="mapping">
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <!-- Map Pannel End-->                        
+                    
+                    <!--Retailers Header Start slds grid start-->     
+                    <div id="retailerHeader" class="slds-grid slds-p-around--x-small retailerBar">                            
+                        <div class='slds-size--1-of-1 slds-col slds-has-flexi-truncate' id='Retailers' >
+                            <span id="retName" style="display:none" class="slds-section__title">Retailers Nearby</span>
+                            <span id="myretName" style="display:none" class="slds-section__title">My Retailers</span>
+                        </div>
+                        <div class="slds-text-align--right slds-col slds-no-flex">
+                            Data Upload &nbsp;
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!dataloaderDate}" /> 
+                            </apex:outputText>
+                        </div>
+                    </div>
+                    
+                    <!--Retailers Header End slds grid start--> 
+                    <div id="lineSeparator" class='line-separator' ></div>
+               
+                    <!-- My Filter Pannel start-->
+                    <apex:form id="filtersform">
+                    <!-- dvFilter start -->
+                    <div id="dvFilter" class = "slds-hide" >                   
+                        <!--slds FilterBg start-->
+                        <div class="slds FilterBg Filterhg" id="sldsclass1">
+                            <!-- start of slds conatiner-->
+                            <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12">
+                                <div class="slds-col--padded slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12 slds-m-top--large slds-text-align--center">
+                                    <div class="slds-text-heading--large bold_text">Filters</div>
+                                </div>             
+                                <apex:actionRegion >
+                                    <div class="slds-col--padded slds-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--6-of-12  slds-p-left--xx-large slds-m-top--x-large">
+                                        <div class="slds-grid  slds-grid--vertical-align-center">
+                                            <label class="slds-form-element__label bolder_text color_black" for="text-input-01">Display</label>
+                                            <div class="slds-select_container slds-size--1-of-3 slds-medium-size--3-of-6 slds-large-size--4-of-12">
+                                                <apex:selectList value="{!size}" multiselect="false" id="size1" size="1" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!paginationSizeOptions}"/>
+                                                </apex:selectList>
+                                            </div>
+                                            <label class="slds-form-element__label bolder_text color_black" for="text-input-01">&nbsp;retailers</label> 
+                                        </div>
+                                    </div> 
+                                    <div class="slds-col--padded slds-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--6-of-12 slds-m-top--large slds-p-left--xx-large slds-m-top--x-large">
+                                        <div class="slds-grid slds-grid--vertical-align-top">                                    
+                                            <div>         
+                                                <label class="slds-form-element__label bolder_text color_black slds-m-top--xx-small" for="text-input-01 bold_text">Show only:</label>
+                                            </div>
+                                            <div>
+                                                <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                    <apex:inputcheckbox id="isinstance1" value="{!MyRetailersTeam}"/>
+                                                    <span class="slds-checkbox--faux"></span>
+                                                    <span class="slds-form-element__label bolder_text color_black">&nbsp;My retailers</span>                                               
+                                                </div>
+                                                <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                    <apex:inputcheckbox id="isinstance2" value="{!OnPremise}" />
+                                                    <span class="slds-checkbox--faux"></span>
+                                                    <span class="slds-form-element__label bolder_text color_black">&nbsp;On Premise</span>
+                                                </div>  
+                                                <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                    <apex:inputcheckbox id="isinstance3" value="{!OffPremise}"  />
+                                                    <span class="slds-checkbox--faux"></span>
+                                                    <span class="slds-form-element__label bolder_text color_black">&nbsp;Small Format</span>
+                                                </div> 
+                                                <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                    <apex:inputcheckbox id="isinstance4" value="{!largeformat}"  />
+                                                    <span class="slds-checkbox--faux"></span>
+                                                    <span class="slds-form-element__label bolder_text color_black">&nbsp;Large Format</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   </div> 
+                                   <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--4-of-6 slds-large-size--6-of-12 slds-m-top--large slds-p-left--xx-large">
+                                       <div class="slds-grid slds-grid--vertical-align-center">
+                                           <label class="slds-form-element__label bolder_text color_black" for="text-input-01">Channel</label>
+                                           <div class="slds-select_container slds-size--1-of-2 slds-medium-size--4-of-6 slds-large-size--5-of-12"> 
+                                                <apex:selectList value="{!channel}" multiselect="false" size="1" id="channel1" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!ChannelOptions}"/>
+                                                </apex:selectList>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-m-top--large slds-p-left--xx-large">
+                                       <div class="slds-grid slds-wrap slds-grid--vertical-align-center slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">                                                                            
+                                            <label class="font-12 bolder_text color_black">Accounts</label><label class="font-12 bolder_text color_black">&nbsp;within</Label>  
+                                            
+                                            <div class="slds-select_container">
+                                                <apex:selectList value="{!ClosetoTargetAchievement}" multiselect="false" size="1" id="ClosetoTarget1" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!ClosetoTarget}"/>
+                                                </apex:selectList>
+                                            </div>  
+                                            <label class="font-12 bolder_text color_black">of</label>
+                                            <label class="font-12 bolder_text color_black">&nbsp;target</label>                                         
+                                            <label class="font-12 bolder_text color_black">&nbsp;achievement</label>
+                                       </div>
+                                    </div>  
+                                    <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--4-of-6 slds-large-size--6-of-12 slds-m-top--large slds-p-left--xx-large">
+                                       <div class="slds-grid slds-grid--vertical-align-center">
+                                           <label class="slds-form-element__label bolder_text color_black" for="text-input-01">SAP Color</label>
+                                           <div class="slds-select_container slds-size--1-of-2 slds-medium-size--4-of-6 slds-large-size--5-of-12"> 
+                                                <apex:selectList value="{!recColor}" multiselect="false" size="1" id="SapColor1" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!recColorOptions}"/>
+                                                </apex:selectList>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-m-top--large slds-p-left--xx-large">
+                                        <div class="slds-grid slds-wrap slds-grid--vertical-align-center slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">                                                                            
+                                            <label class="font-12 bolder_text color_black">Accounts</label><label class="font-12 bolder_text color_black">&nbsp;within</label>    
+                                            <div class="slds-select_container">
+                                                <apex:selectList value="{!miles}" multiselect="false" size="1" id="miles" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!milesOptions}"/>
+                                                </apex:selectList>
+                                            </div>  
+                                            <label class="font-12 bolder_text color_black">of my</label>
+                                            <label class="font-12 bolder_text color_black">&nbsp;Current</label>                                         
+                                            <label class="font-12 bolder_text color_black">&nbsp;location</label>
+                                        </div>
+                                    </div>                                                        
+                                    <div class="slds-col--padded slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12 slds-m-top--large slds-text-align--center">                                     
+                                        <button type="button" class="slds-button slds-button--brand" onclick="navigatemainPage({!size},'{!retailer}','{!Premise}','{!channel}');">Apply</button>
+                                    </div>
+                                </apex:actionRegion>
+                            </div>
+                            <!-- slds Container End -->
+                        </div>
+                        <!--slds FilterBg End-->
+                    </div>  
+                    <!-- dvFilter end -->
+                    </apex:form>
+                    <!-- My Filter Pannel End -->
+                
+                
+                    <!-- Strat : POC details -->
+                    <!-- start Of Poc Page -->
+                    <apex:outputPanel id="pocPanel">
+                    <apex:outputPanel > 
+                
+                        <!-- Map Start-->
+                        <apex:outputPanel id="mapPanel_Poc">
+                            <div id="collpased_poc" class="slds-is-collapsed" >
+                                <div id="map_wrapper_poc">
+                                <div id="map_canvas_poc" class="mapping_poc"></div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                        <!-- Map End-->
+                    
+                        <div id="lineSeparatorPoc" class='line-separator' ></div>
+                
+                        <div id="pocPagePanel" class = "slds-hide ">
+                            <div class = "pocPagePanel1">
+                            <!-- start of slds div-->
+                            <div class="slds">
+                                <!-- start of slds conatiner-->
+                                <div class="slds-container--center slds-container--large">
+                                    <!-- Head Pannel Start -->
+                                    <!-- Head End Start -->
+                                    <!-- Collapse Pannel Start -->
+                                    <div class="slds-m-top--xx-small"></div>
+                          
+                                    <!--ENd of  slds grid -->
+                                    <!-- Collapse Pannel End -->
+                                    <!--  Map -->
+                                    <div class="slds-m-top--xx-small"></div>
+                                    <div class="slds-grid slds-p-left--medium slds-text-heading--medium bold_text " id='wholesalers'>
+                                        Wholesaler-{!pocWrap.objPocAccount.Wholesaler__r.name}
+                                    </div> 
+                                    <div class="slds-size--1-of-1">
+                                        <div class="slds-grid slds-p-bottom--medium slds-p-left--small slds-size--1-of-1" >
+                                            <div class="slds-text-align--left slds-col slds-has-flexi-truncate bold_text">{!pocWrap.objPocAccount.name}</div>
+                                        </div>
+                                    </div>
+                                    <div class="broderClass"></div>
+                                    <div id="brandPannel"></div>
+                                 
+                                </div>
+                                <!-- End of slds conatiner-->
+                            </div>
+                            </div>
+                            <!-- End of slds div-->
+                        </div>
+                        <!-- End Of Poc Page -->
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+                    <!-- End : POC details -->
+                                         
+                </div><!-- freeze pannel End -->
+                <!-- Scroll Pannel start -->
+                <div id="scrollpannel1" class ='scrollable'>
+                    <div>
+                        <span id="em" class="slds-text-heading--Large text_bold textcenter" ></span>
+                    </div>
+                    <div id="division">
+                    </div>
+                </div>
+                <!--Scroll Pannel End -->
+               
+              
+                
+            </div>
+            <!--Slds Container -->
+        </div>
+        <!--slds -->          
+    </apex:outputPanel>
+    <!--End Main Page -->
+    </div>
+   
+     <!-- Start footer-->
+     <apex:outputPanel id="SurveyPanel">
+     </apex:outputPanel>
+    <div class="slds" id="sldsclassfooter">
+        <!-- start of slds conatiner-->
+        <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large ">
+            <!-- Freeze Pan -->
+            <div id="freezepan">
+                <!-- slds collbar start-->
+                <div class="slds-grid collBar" >
+                   <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical'  >
+                        <span class='slds-avatar slds-avatar--Large'  >
+                            <img src="{!URLFOR($Resource.LDS, '/assets/images/Survey_1.png')}"  onclick="LoadSurvey();" alt='Header logo' style="cursor: pointer; cursor: hand;"/>
+                        </span>
+                        <span class = "slds-text-heading--small account_heading_color" >
+                        <label style="cursor: pointer; cursor: hand;">Validate</label> 
+                        </span>
+                    </div>  
+                   <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical'  >
+                        <span class='slds-avatar slds-avatar--Large'  >
+                            <img src="{!URLFOR($Resource.LDS, '/assets/images/Refresh_1.png')}"  onclick="loadNewData();" alt='Header logo' style="cursor: pointer; cursor: hand;"/>
+                        </span>
+                        <span class = "slds-text-heading--small account_heading_color" >
+                        <label style="cursor: pointer; cursor: hand;">Refresh</label> 
+                        </span>
+                    </div>                           
+                    <div class='slds-size--1-of-3 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical' >
+                            <span class='slds-avatar slds-avatar--Large'>
+                                <img src="{!URLFOR($Resource.LDS, '/assets/images/Questions2.png')}"  onclick="navigateFaqPage();" alt='Header logo' style="cursor: pointer; cursor: hand;"  />
+                            </span>
+                            <span class = "slds-text-heading--small account_heading_color" >
+                             <label style="cursor: pointer; cursor: hand;">Help</label> 
+                            </span>
+                        
+                     </div>           
+                </div>
+                <!-- slds collbar End-->
+            </div>
+            <!-- Freeze pan -->
+        </div>
+        <!-- slds container End-->
+    </div>
+    <!-- slds main end-->
+    <!--  End footer-->
+     <apex:form >
+     
+     <!--  Action for LOG Tracking -->
+     <apex:actionFunction name="EvntLog" action="{!EvntLgTrack}" reRender="SurveyPanel"  >
+      <apex:param name="paramEventType"  value="evntType" />
+      <apex:param name="paramEvent"  value="evnt" />
+     </apex:actionFunction>
+   
+     
+     <!--  END Action for LOG Tracking -->
+     <!-- Action function start -->
+     <apex:actionFunction name="pocAccount" action="{!pocdetails}" reRender="pocPanel,scrptPanel" status="status" oncomplete="displayPannel();displayPocPannel();" >
+         <apex:param name="accParam" assignTo="{!accountId}" value="" />
+         <apex:param name="firstParam" assignTo="{!userLats}" value="" />
+         <apex:param name="secondParam" assignTo="{!userLongs}" value="" />
+     </apex:actionFunction>
+     <!-- Action function End -->
+     </apex:form>
+    <!-- Slds Spinner start -->
+    <div id="sldsSpinner" class="slds-spinner_container SpinnerBackground" style="display:none">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--medium" role="alert">
+            <span class="slds-assistive-text">Loading</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    <!-- Slds Spinner End-->
+    </body>
+   
+    <apex:outputPanel id="scrptPanel">
+     
+    <script>
+      function template1(pannels,innserList)
+      { 
+        var pannelbrand=pannels.AtpId;
+        var pannelbrand1=pannels.brandCategory;
+        var gscChecked=pannels.gscChecked;
+        var gscurl=pannels.gscurl;
+        var norecord='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        norecord+='<div class="slds-size--1-of-1">';
+        norecord+='<div class="slds-col textcenterpoc2"><div class="slds-text-align--center"><b>No Records to display</b></div></div>';
+        norecord+='</div>';
+        norecord+='</div><div class="slds-m-top--xx-small"></div>';
+        var appendStr = '<div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">';                                                                                       
+        appendStr += '<div class="slds-grid slds-size--1-of-1"><div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>@pannelName@</b></div>';
+        appendStr += '<div class="slds-text-align--left slds-col slds-size--1-of-12"><span class="slds-text-align--left"><b>@Pannelvalue@</b></span></div>';
+        appendStr += '<div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">';             
+        var strConfirmCall= "EvntLogTrack('Promopti Action','" + gscurl+ "')"; 
+        if(gscChecked=="true")
+        {
+            appendStr +='<a class="slds-button slds-button--brand confirmButton" onclick="'+strConfirmCall+'" type="button"  href="' + gscurl+ '"    >Confirm</a>';
+        }
+        var strFunctionCall= "change_Pannel('"+pannelbrand + "','" + pannelbrand + "Panel')"; 
+        appendStr += '<input class="text_bold slds-col--bump-left slds-button slds-button--icon-border @PannelColor@" id="'+pannelbrand+'" onclick="'+strFunctionCall+'" value="+" type="button"/>';
+        appendStr += '</div></div></div>';
+        //appendStr += '<div class="slds-m-top--xx-small"></div>';
+        appendStr=appendStr.replaceAll('@pannelName@',pannels.brandcat).replaceAll('@Pannelvalue@',pannels.panelDisplay).replaceAll('@PannelColor@',pannels.pannelColor).replaceAll('@gscurl@',pannels.gscurl);
+        var innerLst='';
+        innerLst +='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        var recExsits=false;
+        for(var i=0;i<innserList.length;i++)
+        {
+            if(pannelbrand1==innserList[i].brandCat && recExsits==false)
+            {
+                recExsits=true;
+            }
+            if(pannelbrand1==innserList[i].brandCat)
+            {
+                innerLst +='<div class="slds-grid Accountgrdbg">';
+                //<!-- Product Image -->
+                innerLst +='<div class="slds-col--padded slds-size--1-of-3 slds-small-size--1-of-3 slds-medium-size--1-of-4 ">'; 
+                //innerLst +='<span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-m-top--xx-small slds-m-bottom--xx-small slds-small-size--1-of-3">';                   
+                //innerLst +='@BrandImage@';  
+                if(innserList[i].Imageurl != '')
+                    innerLst+='<img src="@BrandImage@" alt="" class="imageWidth"/>';
+                //innerLst +='</span>';
+                innerLst +='</div>';
+                //<!-- Product Image -->
+                //<!-- Product Info -->
+                innerLst +='<div class="slds-col--padded slds-size--8-of-12 slds-small-size--8-of-12 slds-medium-size--8-of-12 slds-media slds-media--center slds-m-top--xx-small slds-p-left--xx-large">';
+                innerLst +='<div>@fulltext@<br/>';
+                if(innserList[i].bonus=='Y')
+                {
+                    innerLst +=' <b>Bonous SKU</b>';
+                }
+                innerLst +='</div></div>';
+                //<!-- Product Info -->
+                //<!-- Product Status Color -->
+                innerLst +='<div class="slds-col--padded slds-size--4-of-12 slds-small-size--4-of-12 slds-medium-size--4-of-12 slds-text-align--center  slds-media slds-media--center slds-m-top--x-large slds-m-bottom--x-large slds-p-left--medium">';
+                innerLst +='<p class="@sapColor@-circle_poc"></p>'
+                innerLst +='</div>';
+                //<!-- Product Status Color -->
+                innerLst +='</div>';
+                //<!-- For Bootm Line -->
+                innerLst +='<div class="broderClass_poc"></div>'; 
+                innerLst=innerLst.replaceAll('@BrandImage@',innserList[i].Imageurl).replaceAll('@fulltext@',innserList[i].fulltext).replaceAll('@sapColor@',innserList[i].Sapcolor);  
+            }
+        } 
+        innerLst+='</div><div class="slds-m-top--xx-small"></div>';
+        if(recExsits==true)
+        {
+            return(appendStr+innerLst);
+        }
+        else{
+            return(appendStr+norecord);
+        }
+        
+      }
+   
+      function template2(pannels,innserList)
+      { 
+        var pannelbrand=pannels.AtpId;
+        var gscChecked=pannels.gscChecked;
+        var gscurl=pannels.gscurl;
+        var pannelbrand1=pannels.brandCategory;
+        var norecord='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        norecord+='<div class="slds-size--1-of-1">';
+        norecord+='<div class="slds-col textcenterpoc2"><div class="slds-text-align--center"><b>No Records to display</b></div></div>';
+        norecord+='</div>';
+        norecord+='</div><div class="slds-m-top--xx-small"></div>';
+        var strFunctionCall= "change_Pannel('"+pannelbrand + "','" + pannelbrand + "Panel')"; 
+        var appendStr = '<div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">';
+        appendStr += '<div class="slds-grid slds-size--1-of-1"><div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>@pannelName@</b></div>';
+        appendStr += '<div class="slds-text-align--left slds-col slds-size--1-of-12"><span class="slds-text-align--left"><b>@Pannelvalue@</b></span></div>';
+        appendStr += '<div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">';
+        var strConfirmCall= "EvntLogTrack('Promopti Action','" + gscurl+ "')"; 
+        if(gscChecked=="true")
+        {
+            appendStr +='<a class="slds-button slds-button--brand confirmButton" onclick="'+strConfirmCall+'" type="button"   href="' + gscurl+ '"   >Confirm</a>';
+        }
+        appendStr += '<input class="text_bold slds-col--bump-left slds-button slds-button--icon-border @PannelColor@" id="'+pannelbrand+'" onclick="'+strFunctionCall+'" value="+" type="button"/>';
+        appendStr += '</div></div></div>';
+        //appendStr += '<div class="slds-m-top--xx-small"></div>';
+        appendStr=appendStr.replaceAll('@pannelName@',pannels.brandcat).replaceAll('@Pannelvalue@',pannels.panelDisplay).replaceAll('@PannelColor@',pannels.pannelColor);
+        var innerLst='';
+        var recExsits=false;
+        console.log(innserList);
+        innerLst +='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        for(var i=0;i<innserList.length;i++)
+        {
+            if(pannelbrand1==innserList[i].brandCat && recExsits==false)
+            {
+                recExsits=true;
+            }
+            if(pannelbrand1==innserList[i].brandCat)
+            {
+                recExsits=true;
+                innerLst+='<div class="slds-grid Accountgrdbg">';
+                //<!-- Product Image -->
+                innerLst+='<div class="slds-col--padded slds-size--3-of-8 slds-small-size--3-of-8 slds-medium-size--3-of-8">'; 
+                //innerLst+='<span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-m-top--xx-small slds-m-bottom--xx-small slds-small-size--1-of-3">';                   
+                //innerLst+='@BrandImage@';
+                if(innserList[i].Imageurl != '')
+                    innerLst+='<img src="@BrandImage@" alt="" class="imageWidth"/>';
+                //innerLst+='</span>';
+                innerLst+='</div>';
+                //<!-- Product Image -->
+                //<!-- Product Info -->
+                innerLst+='<div class="slds-col--padded slds-col--padded slds-size--4-of-8 slds-small-size--4-of-8 slds-medium-size--4-of-8 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small slds-p-left--xx-large">';
+                innerLst+='<div><div class="BlackCircle">@num@</div><h5>Display</h5></div>';
+                innerLst+='</div>';                                        
+                innerLst+='<div class="slds-col--padded slds-col--padded slds-size--2-of-8 slds-small-size--2-of-8 slds-medium-size--2-of-8 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small">';
+                innerLst+='<div><div class="BlackCircle">@denum@</div><h5>Features</h5></div>';
+                innerLst+='</div>';                                        
+                //<!-- Product Info -->
+                innerLst+='</div>'; 
+                //<!-- For Bootm Line -->
+                innerLst+='<div class="broderClass_poc"></div>';                               
+                innerLst=innerLst.replaceAll('@BrandImage@',innserList[i].Imageurl).replaceAll('@num@',innserList[i].Denom).replaceAll('@denum@',innserList[i].Num);  
+             } //end If
+         }//End For
+         innerLst +='</div><div class="slds-m-top--xx-small"></div>'; 
+         if(recExsits==true)
+         {
+            return(appendStr+innerLst);
+         }
+         else{
+            return(appendStr+norecord);
+         }
+      }
+      function template3(pannels,innserList)
+      {
+        var pannelbrand=pannels.AtpId;
+        var gscChecked=pannels.gscChecked;
+        var gscurl=pannels.gscurl;
+        var pannelbrand1=pannels.brandCategory;
+        var norecord='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        norecord+='<div class="slds-size--1-of-1">';
+        norecord+='<div class="slds-col textcenterpoc2"><div class="slds-text-align--center"><b>No Records to display</b></div></div>';
+        norecord+='</div>';
+        norecord+='</div><div class="slds-m-top--xx-small"></div>';
+        var strFunctionCall= "change_Pannel('"+pannelbrand + "','" + pannelbrand + "Panel')"; 
+        var appendStr = '<div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">';
+        appendStr += '<div class="slds-grid slds-size--1-of-1"><div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>@pannelName@</b></div>';
+        appendStr += '<div class="slds-text-align--left slds-col slds-size--1-of-12"><span class="slds-text-align--left"><b>@Pannelvalue@</b></span></div>';
+        appendStr += '<div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">';
+        var strConfirmCall= "EvntLogTrack('Promopti Action','" + gscurl+ "')"; 
+        if(gscChecked=="true")
+        {
+            appendStr +='<a class="slds-button slds-button--brand confirmButton" onclick="'+strConfirmCall+'" type="button"   href="' + gscurl+ '" >Confirm</a>';
+        }
+        appendStr += '<input class="text_bold slds-col--bump-left slds-button slds-button--icon-border @PannelColor@" id="'+pannelbrand+'" onclick="'+strFunctionCall+'" value="+" type="button"/>';
+        appendStr += '</div></div></div>';
+        //appendStr += '<div class="slds-m-top--xx-small"></div>';
+        appendStr=appendStr.replaceAll('@pannelName@',pannels.brandcat).replaceAll('@Pannelvalue@',pannels.panelDisplay).replaceAll('@PannelColor@',pannels.pannelColor);
+        var innerLst='';
+        innerLst +='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        var recExsits=false;
+        for(var i=0;i<innserList.length;i++)
+        {
+            if(pannelbrand1==innserList[i].brandCat && recExsits==false)
+            {
+                recExsits=true;
+            }
+            if(pannelbrand1==innserList[i].brandCat)
+            {
+                innerLst +='<div class="slds-grid Accountgrdbg">';
+                //<!-- Product Info -->
+                innerLst +='<div class="slds-col--padded slds-size--10-of-12 slds-small-size--10-of-12 slds-medium-size--8-of-12 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small slds-p-left--xx-large"><b>@fulltext@</b></div>';
+                //<!-- Product Info -->
+                //<!-- Product Status Color -->
+                innerLst +='<div class="slds-col--padded slds-size--2-of-12 slds-small-size--2-of-12 slds-medium-size--4-of-12 slds-text-align--center  slds-media slds-media--center slds-m-top--x-large slds-m-bottom--x-large slds-p-left--medium">';
+                innerLst +='<p class="@sapColor@-circle_poc"></p>';
+                innerLst +='</div>';
+                //<!-- Product Status Color -->
+                innerLst +='</div>';
+                //<!-- For Bootm Line -->
+                innerLst +='<div class="broderClass_poc"></div>'; 
+                innerLst=innerLst.replaceAll('@fulltext@',innserList[i].fulltext).replaceAll('@sapColor@',innserList[i].Sapcolor);  
+            }
+        }
+        innerLst +='</div><div class="slds-m-top--xx-small"></div>';
+        if(recExsits==true)
+        {
+            return(appendStr+innerLst);
+        }
+        else{
+            return(appendStr+norecord);
+        }
+      }
+      var list2=[];
+     
+      function displayPannel()
+      {
+        var list1=[];
+        var innserList=[];
+        var pannelfullStr='';
+        <apex:repeat value="{!pocWrap.lstSeq3}" var="ts">
+            var atpData = new Object();
+            atpData.panelDisplay='{!ts.panelDisplay}';
+            atpData.pannelColor='{!ts.pannelColor}_pocss';
+            atpData.Pannelvalue='{!ts.Pannelvalue}';
+            atpData.panelDisplay='{!ts.panelDisplay}';
+            atpData.brandcat='{!ts.brandcat}';
+            atpData.AtpId='{!ts.AtpId}';
+            atpData.gscurl='{!ts.gscurl}';
+            atpData.gscChecked='{!ts.gscChecked}';
+            atpData.brandCategory='{!ts.brandCategory}';
+            list2.push(atpData)
+            list1.push(atpData); 
+        </apex:repeat>
+        console.log(list1);
+        <apex:repeat value="{!pocWrap.lstSeq4}" var="ts">
+            var atpDatas = new Object();
+            atpDatas.panelDisplay='{!ts.panelDisplay}';
+            atpDatas.pannelColor='{!ts.pannelColor}_pocss';
+            atpDatas.Pannelvalue='{!ts.Pannelvalue}';
+            atpDatas.panelDisplay='{!ts.panelDisplay}';
+            atpDatas.brandcat='{!ts.brandcat}';
+            atpDatas.AtpId='{!ts.AtpId}';
+            atpDatas.gscurl='{!ts.gscurl}';
+            atpDatas.gscChecked='{!ts.gscChecked}';
+            atpDatas.brandCategory='{!ts.brandCategory}';
+            list1.push(atpDatas); 
+        </apex:repeat>
+        console.log(list1);
+        <apex:repeat value="{!wraptarget}" var="actarget">
+            var apData = new Object();
+            apData.Denom='{!actarget.Denom}';
+            apData.Imageurl='{!actarget.Imageurl}';
+            apData.Num='{!actarget.Num}';
+            apData.achivemnetScore='{!actarget.achivemnetScore}';
+            apData.bonus='{!actarget.bonus}';
+            apData.brandCat='{!actarget.brandCat}';
+            apData.fulltext='{!actarget.fulltext}';
+            apData.Sapcolor='{!Lower(actarget.SapColor)}';
+            innserList.push(apData);
+        </apex:repeat>
+        console.log(innserList);
+        console.log(list1);
+        
+        for(var i=0;i<list1.length; i++)
+        {
+            if(list1[i].Pannelvalue=="pannel 1")
+            {
+                pannelfullStr+=template1(list1[i],innserList);
+            }
+            if(list1[i].Pannelvalue=="pannel 2")
+            {
+                pannelfullStr+=template2(list1[i],innserList);
+            }
+            if(list1[i].Pannelvalue=="pannel 3")
+            {
+                pannelfullStr+=template3(list1[i],innserList);
+            }
+        }
+        $('#brandPannel').append(pannelfullStr);
+        
+      }
+       
+        $(function()
+        {
+            var h = window.innerHeight -151;
+            $('.scrollable').css({'height':h + 'px'});
+            $(window).resize(function(){
+                $('.scrollable').css({'height': h +'px'});
+            });
+        });
+    
+        //Display Poc Map 
+        function initialize_poc() 
+        { 
+            var poclag="{!pocWrap.objPocAccount.BillingLatitude}";
+            var poclng='{!pocWrap.objPocAccount.BillingLongitude}';
+            var mainName='{!pocWrap.pocName}';  
+            var pinColor = '{!lower(pocWrap.mapPocPinColor)}-dot.png';
+            var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+pinColor;
+            var mypocLatlng = new google.maps.LatLng(poclag,poclng);
+            var mapOptions = {center: mypocLatlng ,
+                              icon: pinsImage,
+                              mapTypeId: google.maps.MapTypeId.ROADMAP,
+                              zoom: 10,
+                             };
+            var markers = new google.maps.Marker({
+                               position: mypocLatlng,
+                               icon: pinsImage,
+            });
+            
+            map = new google.maps.Map(document.getElementById('map_canvas_poc'),mapOptions);
+            markers.setMap(map);
+            
+            var iwContent='';
+            var name='{!pocWrap.pocName}';
+            iwContent = '<div style="font-weight: normal;font-size: 14px;"><font color="brown",weight="bold">'+name +'</font></div>'; 
+            var valuesData = '';
+            var PinTemplate  = '<div class="iw_title" style="font-weight: normal;font-size: 12px;" ><font color="Green",weight="bold">%DisplayValues%</font></div>';
+            for (var i = 0; i<list2[i].length; i++)
+            {
+                if(list2[i].Pannelvalue!=undefined && list2[i].Pannelvalue=="pannel 1")
+                {
+                    //valuesData += PinTemplate.replaceAll('%DisplayValues%',list2[i].brandcat==undefined?'':list2[i].brandcat+(list2[i].brandcat==undefined && list2[i].panelDisplay==undefined)?'':' : ' +list2[i].panelDisplay==undefined?'':list2[i].panelDisplay);
+                      valuesData += PinTemplate.replaceAll('%DisplayValues%',list2[i].brandcat+' : ' +list2[i].panelDisplay);       
+                }
+            } 
+            iwContent += valuesData;
+            var name='{!pocWrap.pocName}';
+            var palat='{!pocWrap.palat}';
+            var palon='{!pocWrap.palon}';
+            var ulatlng = new google.maps.LatLng(palat,palon);
+            var userColorPin='blue-dot.png'
+            var infowindow = new google.maps.InfoWindow({
+                 content: iwContent 
+            });
+              
+            markers.addListener('click', function() {
+                 infowindow.open(map, this);
+            });
+    
+            // assuming you also want to hide the infowindow when user mouses-out
+            markers.addListener('mouseout', function() {
+                infowindow.close();
+            });
+            createMarker_poc(ulatlng,userColorPin,mypocLatlng,map);
+        }
+     
+        
+        function createMarker_poc(latlng,colormap,myLatlng,map)
+        {
+            var pinColor = colormap;
+            var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+pinColor;
+            var marker = new google.maps.Marker
+            ({
+             map: map,
+             position: latlng,
+             //title: name,
+             icon: pinsImage,
+             //url: urls
+             });
+         
+             var mapBoundary = new google.maps.LatLngBounds();
+             mapBoundary.extend(myLatlng);
+             mapBoundary.extend(latlng);
+             map.fitBounds(mapBoundary);
+             //map.setCenter(new google.maps.LatLng(palat,palon));
+            
+        }
+      
+        function change_Pannel(Id,Pannel)
+        {
+            var NAME = document.getElementById(Pannel.trim());
+            var currentClass = NAME.className;
+            var scr='#'+Id.trim();
+            if(currentClass == "slds-is-collapsed") {
+                NAME.className = "slds-is-expanded";   // Set other class name
+                document.getElementById(Id.trim()).value = "-";
+            }else{
+                NAME.className = "slds-is-collapsed";  // Otherwise, use `second_name`
+                document.getElementById(Id.trim()).value = "+";
+            }
+             $("div.pocPagePanel1").scrollTop( $("div.pocPagePanel1").scrollTop() + 150 );
+            /*$('body').animate({
+            scrollTop: $(scr).offset().top},
+            'slow');*/
+        } 
+      
+        
+        
+       
+        
+    </script>
+    <style>
+       
+    </style>
+    </apex:outputPanel>
+    </html>
+ 
+   </apex:page>

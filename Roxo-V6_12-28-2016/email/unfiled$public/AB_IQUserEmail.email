@@ -1,0 +1,27 @@
+Hello {!ONTAP__Case_Force__c.CreatedBy},
+
+
+Thank you for submitting feedback on the Salesforce application.
+
+Your feedback is being reviewed by the support team and they will follow up if additional details are required.
+
+
+Thanks for your support and have a great day!
+
+
+Mobility Support
+
+ABInBev, North America
+
+Supportmobility360@anheuser-busch.com
+
+
+Feedback Details:
+
+             Ticket # : {!ONTAP__Case_Force__c.Name} 
+
+             Priority : {!ONTAP__Case_Force__c.ONTAP__Priority__c} 
+
+             Subject : {!ONTAP__Case_Force__c.ONTAP__Subject__c} 
+
+             Description : {!ONTAP__Case_Force__c.ONTAP__Description__c}

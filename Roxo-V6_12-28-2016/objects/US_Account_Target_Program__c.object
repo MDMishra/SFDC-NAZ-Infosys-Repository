@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Achievement_PCT_Goal__c</fullName>
+        <externalId>false</externalId>
+        <formula>WSLR_Target_Program__r.Achievement_Goal__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Achievement PCT Goal</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Brand_Cat_Seq__c</fullName>
+        <externalId>false</externalId>
+        <label>Brand Cat Seq</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Brand_Category_Text__c</fullName>
+        <description>Text displayed in the ABIQ app to name products.</description>
+        <externalId>false</externalId>
+        <label>Brand Category Text</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>GSC_Link__c</fullName>
+        <externalId>false</externalId>
+        <formula>OR(
+ 	Brand_Category_Text__c = &quot;FeaturesDisplays&quot;,
+ 	Brand_Category_Text__c= &quot;PromOpti&quot;,
+ 	Brand_Category_Text__c= &quot;Bud Club&quot;,
+	Brand_Category_Text__c=&quot;3D&quot;)</formula>
+        <label>GSC Link</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>GSC_Url__c</fullName>
+        <description>Url for Gospot check</description>
+        <externalId>false</externalId>
+        <formula>&quot;gospotcheck://places/&quot;+ Account__r.GSC_Place_ID__c+ &quot;/missions/&quot;+ Missions_id__c +&quot;?user_id=&quot;+ $User.GSC_User_ID__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>GSC_Url</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>KPI_CAT_Value__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF( AND(KPI_Group_Seq__c == 1, Brand_Cat_Seq__c == 1 ), &apos;1&apos;, &apos;0&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>KPI&amp;CAT Value</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>KPI_Group_Seq__c</fullName>
+        <externalId>false</externalId>
+        <label>KPI Group Seq</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>KPI_Group_Text__c</fullName>
+        <description>Text above KPI circles on main page in the ABIQ app.</description>
+        <externalId>false</externalId>
+        <label>KPI Group Text</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>KPI_Group__c</fullName>
+        <externalId>false</externalId>
+        <label>KPI Group</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>KPI_Measurement__c</fullName>
+        <description>Used for a formula field to categorize the panel display.</description>
+        <externalId>false</externalId>
+        <label>KPI Measurement</label>
+        <length>50</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Missions_id__c</fullName>
+        <description>Which hold the mission id</description>
+        <externalId>false</externalId>
+        <label>Missions_id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Panel_Display__c</fullName>
+        <externalId>false</externalId>
+        <formula>Case(
+  KPI_Measurement__c,&quot;percent&quot;, TEXT(
+  round(
+   ABS(
+    (IF(OR(ISBLANK(Sum_Denom__c),Sum_Denom__c = 0), 0 ,Sum_Num__c/Sum_Denom__c))*100
+   ),0
+  )
+ ) &amp; &apos;%&apos;,
+ &quot;XY&quot;, TEXT(Achieved_Targets__c) &amp; &apos;/&apos; &amp; TEXT(Count_of_SKUs__c),
+&quot;&quot;)</formula>
+        <label>Panel Display</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Pannel_Color__c</fullName>
+        <description>Panel Color formula</description>
+        <externalId>false</externalId>
+        <formula>IF(SAP_Color_Indicator__c &gt; 0, &apos;Greencircle&apos;,  IF(SAP_Color_Indicator__c &lt; 0, &apos;Redcircle&apos;, &apos;Redcircle&apos;) )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Pannel Color</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Pannel_Value__c</fullName>
+        <description>Formula which holds the template value</description>
+        <externalId>false</externalId>
+        <formula>CASE( LOWER(Brand_Category_Text__c) ,
+ &quot;core&quot;, &quot;pannel 1&quot;,
+ &quot;he&quot;, &quot;pannel 1&quot;,
+ &quot;high end&quot;,&quot;pannel 1&quot;,
+ &quot;fmb&quot;,&quot;pannel 1&quot;,
+ &quot;feat+disp&quot;,&quot;pannel 2&quot;,
+ &quot;promopti lf&quot;,&quot;pannel 2&quot;,
+ &quot;promopti sf&quot;,&quot;pannel 2&quot;,
+ &quot;promopti&quot;,&quot;pannel 2&quot;,
+ &quot;bud club&quot;,&quot;pannel 3&quot;,
+ &quot;3d&quot;,&quot;pannel 3&quot; ,NULL)</formula>
+        <label>Pannel Value</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Program_Target_Pop_Up__c</fullName>
+        <externalId>false</externalId>
+        <formula>Case( 
+KPI_Measurement__c,&quot;percent&quot;, TEXT(Achievement_PCT_Goal__c * 100) &amp; &apos;%&apos;, 
+&quot;XY&quot;, TEXT(Program_Target_Level__c), 
+&quot;&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Program Target Pop Up</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sum_Denom__c</fullName>
+        <externalId>false</externalId>
+        <label>Sum Denom</label>
+        <summarizedField>US_Account_Target__c.Denom__c</summarizedField>
+        <summaryForeignKey>US_Account_Target__c.Account_Target_Program__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Sum_Num__c</fullName>
+        <externalId>false</externalId>
+        <label>Sum Num</label>
+        <summarizedField>US_Account_Target__c.Num__c</summarizedField>
+        <summaryForeignKey>US_Account_Target__c.Account_Target_Program__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+</CustomObject>
