@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>RAS_CustID__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_CustID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RAS_LocationWhslrNbr__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_LocationWhslrNbr</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RAS_OrderSourceDetail__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_OrderSourceDetail</label>
+        <length>20</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RAS_OrderSource__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_OrderSource</label>
+        <length>20</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RAS_RouteKey__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_RouteKey</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RAS_RouteNbr__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_RouteNbr</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RAS_SubmitDateTime__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_SubmitDateTime</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>RAS_Volume__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_Volume</label>
+        <precision>13</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RAS_WSLRNbrCustIDRouteNbr__c</fullName>
+        <description>This field is used for Strike Rate dashboard in Mobility 360 Application.</description>
+        <externalId>false</externalId>
+        <label>RAS_WSLRNbrCustIDRouteNbr</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>
