@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Call_Route_Adherence__c</fullName>
+        <description>This field is used in M360 application. It stores the Route Adherence target percentage which is displayed in M360 Sales Excellence dashboard.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Fill in the target percentage number for Route Adherence.</inlineHelpText>
+        <label>Call Route Adherence</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Strike_Rate_Adherence__c</fullName>
+        <description>This field is used in M360 application. It stores the Strike Rate target percentage which is displayed in M360 Sales Excellence dashboard.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Fill in the target percentage number for Strike Rate.</inlineHelpText>
+        <label>Strike Rate Adherence</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Tapwiser_Adherence__c</fullName>
+        <description>This field is used in M360 application. It stores the Tapwiser target percentage which is displayed in M360 Sales Excellence dashboard.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Fill in the target percentage number for Tapwiser.</inlineHelpText>
+        <label>Tapwiser Adherence</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+</CustomObject>
