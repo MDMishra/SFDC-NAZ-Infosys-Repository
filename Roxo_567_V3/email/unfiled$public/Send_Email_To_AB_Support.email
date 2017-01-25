@@ -1,0 +1,9 @@
+Ticket # : {!ONTAP__Case_Force__c.Name}
+Created By : {!ONTAP__Case_Force__c.CreatedBy}
+Owner : {!ONTAP__Case_Force__c.OwnerFullName}
+Issue Submission Date and time : {!ONTAP__Case_Force__c.CreatedDate}
+User ID : {!ONTAP__Case_Force__c.OwnerEmail}
+
+Priority : {!ONTAP__Case_Force__c.ONTAP__Priority__c}
+Subject : {!ONTAP__Case_Force__c.ONTAP__Subject__c}
+Description : {!ONTAP__Case_Force__c.ONTAP__Description__c}
