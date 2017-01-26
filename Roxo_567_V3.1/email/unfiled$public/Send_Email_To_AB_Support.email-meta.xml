@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Send Email To AB Support when a case created from IOS</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Send Email To AB Support</name>
+    <style>none</style>
+    <subject>{!ONTAP__Case_Force__c.ONTAP__Subject__c}</subject>
+    <type>text</type>
+</EmailTemplate>
