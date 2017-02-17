@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>RouteKey__c</fullName>
+        <description>the field is used as an identifier for mobility routes for sales routes</description>
+        <externalId>false</externalId>
+        <label>RouteKey</label>
+        <length>20</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Send_To_Global__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>M_360 purpose - to send user to Global</description>
+        <externalId>false</externalId>
+        <label>Send To Global</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Username_Suffix_Global__c</fullName>
+        <description>M360 purpose</description>
+        <externalId>false</externalId>
+        <label>Username Suffix Global</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>
