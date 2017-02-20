@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>M360_Dashboards__c</fullName>
+        <description>User selected dashboard tiles will be saved for M360 app</description>
+        <externalId>false</externalId>
+        <label>M360 Dashboards</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Temp_Route__c</fullName>
+        <description>M360 purpose - To store temporary route id with date selected by user from IOS device</description>
+        <externalId>false</externalId>
+        <label>Temp Route</label>
+        <length>45</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>
