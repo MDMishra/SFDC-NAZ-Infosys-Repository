@@ -1,5 +1,3 @@
-<runTest>AB_AccountDetails_Service_Test</runTest>
-<runTest>AB_AccountDetailsService_Test</runTest>
 <runTest>AB_AccountTeam_Test</runTest>
 <runTest>AB_AccountTeamfromRouteCust_Test</runTest>
 <runTest>AB_AccountTeamMembsService_Test</runTest>
@@ -24,7 +22,8 @@
 <runTest>AB_VisitedAndFutureActivities_Test</runTest>
 <runTest>AB_VisitStartEnd_Service_Test</runTest>
 <runTest>Test_ABS_SAP_Score</runTest>
-
+<runTest>AB_AccountDetails_Service_Test</runTest>
+<runTest>AB_AccountDetailsService_Test</runTest>
 
 https://releasenotes.docs.salesforce.com/en-us/summer15/release-notes/rn_deployment_run_subset_of_tests.htm
 
