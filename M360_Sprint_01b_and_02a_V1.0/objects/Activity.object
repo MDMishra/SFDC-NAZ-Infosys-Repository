@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>BAM_Call_Purpose__c</fullName>
+        <description>M360 Purpose</description>
+        <externalId>false</externalId>
+        <label>BAM Call Purpose</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Activation Call</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sales Call</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Completed_By__c</fullName>
+        <description>M360 Purpose: To store the user name who completed this task(if he is not the owner/assigned user)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>M360 Purpose: To store the user name who completed this task(if he is not the owner/assigned user)</inlineHelpText>
+        <label>Completed By</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>
