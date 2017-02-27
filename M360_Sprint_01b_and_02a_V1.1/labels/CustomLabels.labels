@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>AB_UserCreation_Url</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>AB_UserCreation_Url</shortDescription>
+        <value>https://abiglobal--gsfo.cs12.my.salesforce.com/services/apexrest/CreateUserService</value>
+    </labels>
+</CustomLabels>
