@@ -1,0 +1,1146 @@
+<apex:page docType="html-5.0" controller="ABS_WholesalerAccountDetail"  CACHE="True"  showHeader="false" setup="false" id="wholePage">
+   <html lang="en" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport"  content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+        <apex:includeScript value="{!URLFOR($Resource.ABS_Bootstrap, 'jquery.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.ABIQ, 'assets/styles/ABS_WholesalerAccountDetail_js.js')}"/>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB5OoIjmYbz9A9clKvOC-y7EqWZw7wRRc" type="text/javascript"></script>      
+        <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+        <script src="../../soap/ajax/37.0/connection.js" type="text/javascript"></script>
+        <script src="https://code.jquery.com/jquery-1.8.2.js"></script>
+        <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+        <script src="https://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css"/>
+        <apex:stylesheet value="{!URLFOR($Resource.LDS, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.ABIQ, 'assets/styles/ABS_WholesalerAccountDetail.css')}" />
+        
+        <script type="text/javascript">
+            var gobMyFilters='';
+            Visualforce.remoting.timeout = 120000; // Set timeout at page level
+            // Called on page load
+            google.maps.event.addDomListener(window, 'load',callbackSuccess);
+            
+            //Main Remote actions
+            function loadPocs(lat,long) 
+            {
+                document.getElementById('sldsSpinner').style.display='block';
+                var retailersTeam;
+                var OnPremise;
+                var OffPremise;
+                var Channel;
+                var targetAchievement;
+                var isFilteradded;
+                var largeFormats;
+                var sapColor;
+                var recSize='{!$currentPage.parameters.size}';
+                var recmiles='{!$currentPage.parameters.miles}';
+                retailersTeam='{!$currentPage.parameters.retailersTeam}';
+                OnPremise='{!$currentPage.parameters.OnPremise}';
+                OffPremise='{!$currentPage.parameters.OffPremise}';
+                Channel='{!$currentPage.parameters.Channel}';
+                targetAchievement='{!$currentPage.parameters.ClosetoTargetAchievement}';
+                isFilteradded='{!$currentPage.parameters.isFilteradded}';
+                largeFormat='{!$currentPage.parameters.LargeFormat}';
+                sapColor='{!$currentPage.parameters.sapcolor}';
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.ABS_WholesalerAccountDetail.findPocs}',lat,long,retailersTeam,OnPremise,OffPremise,Channel,recSize,targetAchievement,isFilteradded,recmiles,largeFormat,sapColor,
+                function(result, event)
+                {
+                    if(event.status)
+                    {
+                        if(result.length==0)
+                        {
+                            document.getElementById('em').innerHTML  = "&nbsp;&nbsp;&nbsp;&nbsp;No records found";  
+                            document.getElementById('sldsSpinner').style.display='none';
+                            myfiltersVal();
+                            NoRecords  = 'true';
+                        }
+                        //scrollpannel div start
+                        var strTable = "<div id=\"scrollpannel\">";
+                        //wholePage:wholeSalerForm:pocPanel span start
+                        strTable += "<span id=\"wholePage:wholeSalerForm:pocPanel\">";
+                        //wholePage:wholeSalerForm:j_id28 span start
+                        strTable += "<span id=\"wholePage:wholeSalerForm:j_id28\">";
+                        //document.getElementById('retName').innerHTML= result.length;
+                        for (var i=0; i<result.length; i++) 
+                        {
+                            //console.log(result[i].lstSeq1);
+                            //console.log(result[i].lstSeq2);
+                            gobMyFilters=result[0].Filter;
+                            //alert(gobMyFilters);
+                            //alert(result[0].Filter);
+                            if(result[0].Filter =='All Retailers')
+                            {
+                                
+                                document.getElementById('retName').style.display='block';
+                                document.getElementById('wholePage:filtersform:isinstance1').checked=false;
+
+                            }else{
+                                document.getElementById('myretName').style.display='block';
+                                document.getElementById('wholePage:filtersform:isinstance1').checked=true;
+                            }
+                            objAccountdata[result[i].id] = result[i];
+                            var accname=result[i].pocAccount.Name
+                            var varTitle = $('<textarea />').html(accname).text();
+                            namelist.push(varTitle); 
+                            var divIdIs = "div-"+result[i].id;
+                            //slds-card div start
+                            strTable += "<div id=\""+divIdIs;
+                            strTable += "\" class=\"slds-card Accountgrdbg\">";
+                            //slds-grid div start
+                            strTable += "<div class=\"slds-grid slds-card__header slds-wrap slds-p-left--large slds-p-top--small\">";
+                            //slds-media div start
+                            strTable += "<div class=\"slds-media slds-media--center slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-p-top--x-small\" onclick=\"navigatePage('"+result[i].id + "');\" style='cursor: pointer; cursor: hand;'>";
+                            //slds-tile tile div start
+                            strTable += "<div class=\"slds-tile slds-media\">";
+                            //slds-media__body div start
+                            strTable += "<div class=\"slds-media__body\">";
+                            //slds-grid slds- div start
+                            strTable += "<div class=\"slds-grid slds-grid--align-spread slds-has-flexi-truncate\">";
+                              strTable += "<p class=\"slds-text-heading--small bold_text \">";
+                            //strTable += "<a id=\"rnames\" onclick=\"navigatePage(\""+objpocAccounts[i].Id+"\");\" target=\"_blank\">";
+                            strTable += "<a id=\"rnames\" class= \"Channel_heading_color\" target=\"_blank\">";
+                            strTable += result[i].pocAccount.Name;
+                            strTable += "</a>";
+                            strTable += "</p>";
+                            //slds-grid slds- div end
+                            strTable += "</div>";
+                            //slds-tile__detail div start
+                            strTable += "<div class=\"slds-tile__detail slds-text-body--small\">";
+                            strTable += "<ul class=\"slds-list--horizontal\">";
+                            strTable += "<li class=\"slds-item\">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            strTable += ((result[i].pocAccount.SAP_Channel__c==undefined)?"":result[i].pocAccount.SAP_Channel__c);
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "</ul>";
+                            strTable += "<ul class=\"slds-list--horizontal\">";
+                            strTable += "<li class=\"slds-item slds-p-right--x-small\">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            strTable += "Channel : ";
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "<li class=\"slds-item \">";
+                            strTable += "<p class=\"slds-text-heading--small\">";
+                            if(result[i].pocAccount.RTL_SEG_NM_US__c == undefined)
+                            {
+                                strTable += " ";
+                            }
+                            else
+                            {  
+                                strTable += toTitleCase(result[i].pocAccount.RTL_SEG_NM_US__c);
+                            }
+                            strTable += "</p>";
+                            strTable += "</li>";
+                            strTable += "</ul>";
+                            //slds-tile__detail div end
+                            strTable += "</div>";
+                            //slds-media__body div end
+                            strTable += "</div>";
+                            //slds-tile tile div end
+                            strTable += "</div>";
+                            //slds-media div end
+                            strTable += "</div>";
+                            console.log(result[i].lstSeq1);
+                            console.log(result[i].lstSeq2);
+                            // TODO:  Sequence  preparation
+                             strTable += "<div class=\"slds-grid slds-grid--vertical-stretch pd1 slds-size--1-of-1\">";
+                             strTable += ATPGroup(result[i].lstSeq1,'show') + ATPGroup(result[i].lstSeq2,'none');
+                             strTable += "</div>";
+                            // END :  Sequence  preparation
+                            // console.log("HTML for KPIs "  + strTable);
+                            //slds-col div start
+                            strTable += "<div class=\"slds-col slds-size--1-of-1 slds-small-size--1-of-2 slds-medium-size--1-of-2 slds-p-top--xx-small\">";
+                            strTable += "<span id=\"wholePage:wholeSalerForm:j_id29:0:j_id33\">";
+                            strTable += "<span id=\"wholePage:wholeSalerForm:j_id29:0:j_id34\">";
+                            //slds-grid div start
+                            //slds-grid div start
+                            strTable +="<div class=\"slds-grid\">";                       
+                            //slds-grid close
+                            strTable += "</div>";
+                            strTable += "</span>";
+                            strTable += "</span>";
+                            //slds-col div end
+                            strTable += "</div>";
+                            //slds-grid div end
+                            strTable += "</div>";                        
+                            //slds-card div end
+                            strTable += "</div>";
+                        }
+                        //wholePage:wholeSalerForm:j_id28 span end
+                        strTable += "</span>";
+                        //wholePage:wholeSalerForm:pocPanel span end
+                        strTable += "</span>";
+                        //scrollpannel div end
+                        strTable += "</div>";                    
+                        //console.log(strTable);
+                        document.getElementById('division').innerHTML=strTable;
+                        document.getElementById('sldsSpinner').style.display='none';
+                    }else {
+                        //alert(event.message);
+                        document.getElementById('em').innerHTML  = "No Records found";  
+                        document.getElementById('sldsSpinner').style.display='none';
+                        NoRecords  = 'true';
+                        myfiltersVal();
+                    }
+                },
+                {escape: true});
+            }
+            
+            function ClearFilter()
+            {
+                //alert(gobMyFilters);
+                var recSize='{!$currentPage.parameters.size}';
+                var recmiles='{!$currentPage.parameters.miles}';
+                var retailersTeam='{!$currentPage.parameters.retailersTeam}';
+                var OnPremise='{!$currentPage.parameters.OnPremise}';
+                var OffPremise='{!$currentPage.parameters.OffPremise}';
+                var Channel='{!$currentPage.parameters.Channel}';
+                var targetAchievement='{!$currentPage.parameters.ClosetoTargetAchievement}';
+                largeFormat='{!$currentPage.parameters.LargeFormat}'
+                sapColor='{!$currentPage.parameters.sapcolor}'
+                recSize ==''?document.getElementById('wholePage:filtersform:size1').value=20:document.getElementById('wholePage:filtersform:size1').value=recSize;
+                recmiles==''?document.getElementById('wholePage:filtersform:miles').value=100:document.getElementById('wholePage:filtersform:miles').value=recmiles;
+                (retailersTeam==''||retailersTeam == 'undefined')?document.getElementById('wholePage:filtersform:isinstance1').checked=false:document.getElementById('wholePage:filtersform:isinstance1').checked=true;
+                (OnPremise==''||OnPremise == 'undefined')?document.getElementById('wholePage:filtersform:isinstance2').checked=false:document.getElementById('wholePage:filtersform:isinstance2').checked=true;
+                (OffPremise==''||OffPremise == 'undefined')?document.getElementById('wholePage:filtersform:isinstance3').checked=false:document.getElementById('wholePage:filtersform:isinstance3').checked=true;
+                (largeFormat==''||largeFormat == 'undefined')?document.getElementById('wholePage:filtersform:isinstance4').checked=false:document.getElementById('wholePage:filtersform:isinstance4').checked=true;
+                (Channel ==''||Channel==undefined)?document.getElementById('wholePage:filtersform:channel1').value='None':document.getElementById('wholePage:filtersform:channel1').value=Channel;
+                (targetAchievement ==''||targetAchievement==undefined)?document.getElementById('wholePage:filtersform:ClosetoTarget1').value='None':document.getElementById('wholePage:filtersform:ClosetoTarget1').value=targetAchievement;
+                (sapColor ==''||sapColor==undefined)?document.getElementById('wholePage:filtersform:SapColor1').value='None':document.getElementById('wholePage:filtersform:SapColor1').value=sapColor;
+                if(gobMyFilters=='My Retailers')
+                {
+                    document.getElementById('wholePage:filtersform:isinstance1').checked=true;
+                }
+            }
+      
+            
+        </script>     
+    </head>
+    <body>
+    <apex:form id="filtersform">
+    <div id="MainPage">
+        <apex:outputPanel id="recordsmainPanel">
+        <!-- start of slds -->
+        <div class="slds " id="sldsclass">
+            <!-- start of slds conatiner-->
+            <div  id="sldscontainer" class="slds-container--center FilterBg slds-container--small slds-container--medium slds-container--large ">
+                <!-- freeze pannel start -->
+                <div id="freezepan">
+                    <!--Start of  slds grid -->
+                    <div class="slds-grid collBar">
+                        
+                        <img src="{!URLFOR($Resource.ABIQ, '/assets/images/SAPLogo.png')}" alt='Header logo' style='height:49px; cursor: pointer; cursor: hand;' onclick="backtoHome();" />
+                        
+                        <div class="slds-global-header__item slds-global-header__item--search slds-m-top--small slds-size--4-of-6 slds-small-size--6-of-8 slds-medium-size--10-of-12 slds-text-align--center slds-p-left--xx-large ">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                                    <label class="slds-assistive-text" for="searchName">Search</label>
+                                    <c:ABS_Component styleClass="slds-input__icon slds-icon-text-default" path="/assets/icons/utility-sprite/svg/symbols.svg#search" />
+                                    <input  id="searchName" onsubmit="return false;" onkeydown="search();"   class="slds-input slds-lookup__search-input" type="search" placeholder="Search" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class='slds-m-top--small slds-size--1-of-6 slds-small-size--1-of-8 slds-medium-size--1-of-12 slds-text-align--center '>
+                            <a onclick="ClosePocPage();"><img src="{!URLFOR($Resource.ABIQ, '/assets/images/CloseIcon.png')}" id = "imgMapClose" class = "slds-hide mapClose"/></a>
+                        </div>
+  
+                    </div>
+                    <!--ENd of  slds grid -->
+                  
+                    <!-- Map -->
+                    <apex:outputPanel id="mapPanel">
+                        <div id="collpased" class="slds-is-collapsed" >
+                            <div id="map_wrapper">
+                                <div id="map_canvas" class="mapping">
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <!-- Map Pannel End-->                        
+                    
+                    <!--Retailers Header Start slds grid start-->     
+                    <div id="retailerHeader" class="slds-grid slds-p-around--x-small retailerBar">                            
+                        <div class='slds-size--1-of-1 slds-col slds-has-flexi-truncate' id='Retailers' >
+                            <span id="retName" style="display:none" class="slds-section__title">Retailers Nearby</span>
+                            <span id="myretName" style="display:none" class="slds-section__title">My Retailers</span>
+                        </div>
+                    </div>
+                    
+                    <div id="lineSeparator" class='line-separator' ></div>
+               
+                    <!-- My Filter Pannel start-->
+                    <!-- dvFilter start -->
+                    <div id="dvFilter" class = "slds-hide" >                   
+                        <!--slds FilterBg start-->
+                        <div class="slds FilterBg Filterhg" id="sldsclass1">
+                            <!-- start of slds conatiner-->
+                            <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12">
+                                <div class="slds-col--padded slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12 slds-m-top--large slds-text-align--center">
+                                    <div class="slds-text-heading--large bold_text">Filters</div>
+                                </div>             
+                                <apex:actionRegion >
+                                    <div class="slds-col--padded slds-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--6-of-12  slds-p-left--xx-large slds-m-top--x-large">
+                                        <div class="slds-grid  slds-grid--vertical-align-center">
+                                            <label class="slds-form-element__label bolder_text color_black" for="text-input-01">Display</label>
+                                            <div class="slds-select_container slds-size--1-of-3 slds-medium-size--3-of-6 slds-large-size--4-of-12">
+                                                <apex:selectList value="{!size}" multiselect="false" id="size1" size="1" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!paginationSizeOptions}"/>
+                                                </apex:selectList>
+                                            </div>
+                                            <label class="slds-form-element__label bolder_text color_black" for="text-input-01">&nbsp;retailers</label> 
+                                        </div>
+                                    </div> 
+                                    <div class="slds-col--padded slds-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--6-of-12 slds-m-top--large slds-p-left--xx-large slds-m-top--x-large">
+                                        <div class="slds-grid slds-grid--vertical-align-top">                                    
+                                            <div>         
+                                                <label class="slds-form-element__label bolder_text color_black slds-m-top--xx-small" for="text-input-01 bold_text">Show only:</label>
+                                            </div>
+                                            <div>
+                                                <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                    <apex:inputcheckbox id="isinstance1" value="{!MyRetailersTeam}"/>
+                                                    <span class="slds-checkbox--faux"></span>
+                                                    <span class="slds-form-element__label bolder_text color_black">&nbsp;My retailers</span>                                               
+                                                </div>
+                                                <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                    <apex:inputcheckbox id="isinstance2" value="{!OnPremise}" />
+                                                    <span class="slds-checkbox--faux"></span>
+                                                    <span class="slds-form-element__label bolder_text color_black">&nbsp;On Premise</span>
+                                                </div>  
+                                                <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                    <apex:inputcheckbox id="isinstance3" value="{!OffPremise}"  />
+                                                    <span class="slds-checkbox--faux"></span>
+                                                    <span class="slds-form-element__label bolder_text color_black">&nbsp;Small Format</span>
+                                                </div> 
+                                                <div class="slds-grid slds-size--1-of-1 slds-m-top--x-small">
+                                                    <apex:inputcheckbox id="isinstance4" value="{!largeformat}"  />
+                                                    <span class="slds-checkbox--faux"></span>
+                                                    <span class="slds-form-element__label bolder_text color_black">&nbsp;Large Format</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   </div> 
+                                   <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--4-of-6 slds-large-size--6-of-12 slds-m-top--large slds-p-left--xx-large">
+                                       <div class="slds-grid slds-grid--vertical-align-center">
+                                           <label class="slds-form-element__label bolder_text color_black" for="text-input-01">Channel</label>
+                                           <div class="slds-select_container slds-size--1-of-2 slds-medium-size--4-of-6 slds-large-size--5-of-12"> 
+                                                <apex:selectList value="{!channel}" multiselect="false" size="1" id="channel1" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!ChannelOptions}"/>
+                                                </apex:selectList>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-m-top--large slds-p-left--xx-large">
+                                       <div class="slds-grid slds-wrap slds-grid--vertical-align-center slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">                                                                            
+                                            <label class="font-12 bolder_text color_black">Accounts</label><label class="font-12 bolder_text color_black">&nbsp;within</Label>  
+                                            
+                                            <div class="slds-select_container">
+                                                <apex:selectList value="{!ClosetoTargetAchievement}" multiselect="false" size="1" id="ClosetoTarget1" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!ClosetoTarget}"/>
+                                                </apex:selectList>
+                                            </div>  
+                                            <label class="font-12 bolder_text color_black">of</label>
+                                            <label class="font-12 bolder_text color_black">&nbsp;target</label>                                         
+                                            <label class="font-12 bolder_text color_black">&nbsp;achievement</label>
+                                       </div>
+                                    </div>  
+                                    <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--4-of-6 slds-large-size--6-of-12 slds-m-top--large slds-p-left--xx-large">
+                                       <div class="slds-grid slds-grid--vertical-align-center">
+                                           <label class="slds-form-element__label bolder_text color_black" for="text-input-01">SAP Color</label>
+                                           <div class="slds-select_container slds-size--1-of-2 slds-medium-size--4-of-6 slds-large-size--5-of-12"> 
+                                                <apex:selectList value="{!recColor}" multiselect="false" size="1" id="SapColor1" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!recColorOptions}"/>
+                                                </apex:selectList>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-m-top--large slds-p-left--xx-large">
+                                        <div class="slds-grid slds-wrap slds-grid--vertical-align-center slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">                                                                            
+                                            <label class="font-12 bolder_text color_black">Accounts</label><label class="font-12 bolder_text color_black">&nbsp;within</label>    
+                                            <div class="slds-select_container">
+                                                <apex:selectList value="{!miles}" multiselect="false" size="1" id="miles" styleClass="font-12 slds-select bold_text color_black">
+                                                    <apex:selectOptions value="{!milesOptions}"/>
+                                                </apex:selectList>
+                                            </div>  
+                                            <label class="font-12 bolder_text color_black">of my</label>
+                                            <label class="font-12 bolder_text color_black">&nbsp;Current</label>                                         
+                                            <label class="font-12 bolder_text color_black">&nbsp;location</label>
+                                        </div>
+                                    </div>                                                        
+                                    <div class="slds-col--padded slds-small-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--11-of-12 slds-m-top--large slds-text-align--center">                                     
+                                        <!--<button type="button" class="slds-button slds-button--brand" onclick="navigatemainPage({!size},'{!retailer}','{!Premise}','{!channel}');">Apply</button>-->
+                                        <button type="button" class="slds-button slds-button--brand" onclick="navigatemainPage();">Apply</button>
+                                        <button type="button" class="slds-button slds-button--destructive" onclick="backtoHome(); ClearFilter();">Cancel</button>
+                                    </div>
+                                </apex:actionRegion>
+                                  <div class="slds-col--padded slds-size--2-of-2 slds-medium-size--4-of-6 slds-large-size--6-of-12  slds-p-left--xx-large slds-m-top--x-large"></div>
+                            </div>
+                            <!-- slds Container End -->
+                        </div>
+                        <!--slds FilterBg End-->
+                    </div>  
+                    <!-- dvFilter end -->
+                    <!-- My Filter Pannel End -->
+                    <!--  Help Page Start -->
+                    <apex:outputPanel id="helpPanel">
+                    <div id = "divHelp" class ="slds-hide frmHelp">
+                    <apex:actionfunction name="SubmitAction"  action="{!submitCase}" oncomplete="feedOnComplete();" reRender="" />
+                                <div class="slds-grid HelpContainer">
+                                <div class="slds-col">
+                                    <div id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large">
+                                        <div class="slds-page-header">
+                                            <div class="slds-text-align--center slds-text-heading--large">
+                                                <b>Help Center</b></div>
+                                        </div>
+                                        <!--Tab section start-->
+                                        <div class="slds-tabs--default">
+                                            <ul class="slds-tabs--default__nav" role="tablist">
+                                                <li id="Itemtwo" class="slds-tabs__item slds-text-heading--label" role="presentation"
+                                                    title="Item Two"><a id="tabtwo" aria-selected="false" href="" onclick="changetab('tabtwo');"
+                                                        role="tab" tabindex="-1">User Guide</a> </li>
+                                                <li id="ItemOne" class="slds-tabs__item slds-text-heading--label slds-active" role="presentation"
+                                                    title="Item One"><a id="tabone" aria-selected="true" href="" onclick="changetab('tabone');"
+                                                        role="tab" tabindex="0">Submit Feedback</a> </li>
+                                            </ul>
+                                        </div>
+                                           <div class="slds-grid slds-p-right--small feed">
+
+                                            <div id="tab1" class="slds-tabs__content slds-show slds-small-size--1-of-2 " role="tabpanel">
+
+                                                <!-- Slds form start-->
+                                                <div  class = "userScroll" >
+                                                <div class="slds-card feed">
+                                                <div id="SubmitFeedBackId" class="slds-tabs__content slds-show slds-m-left--large">
+                                                    <div class="slds-form-element__control slds-p-top--small">
+                                                        <b>The following information will be included in your ticket</b><br />
+                                                    </div>
+                                                    <!--Name field-->
+                                                    <!--  <div class="slds-col slds-small-size--1-of-2 slds-medium-size--2-of-6 slds-large-size--12-of-12">-->
+                                                    <div class="slds-card slds-theme--default">
+                                                        <ul>
+                                                            <li class="slds-item">
+                                                                <div class="slds-form--horizontal">
+                                                                    <div class="slds-form-element slds-m-left--x-small slds-p-top--xx-small slds-p-bottom--xx-small">
+                                                                        <label class="slds-form-element__label bold_texthelp" for="inputSample2">
+                                                                            Name</label>
+                                                                        <div class="slds-form-element__control">
+                                                                            <apex:outputtext styleclass="slds-output slds-form-element__label" value="{!$User.FirstName} {!$User.LastName}" />
+                                                                            <!--{!sapCase.ONTAP__Contact_Name__c}-->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="slds-has-divider--top">
+                                                                <div class="slds-form--horizontal">
+                                                                    <div class="slds-form-element slds-m-left--x-small slds-p-top--xx-small slds-p-bottom--xx-small">
+                                                                        <label class="slds-form-element__label bold_texthelp" for="inputSample2">
+                                                                            E-mail Address</label>
+                                                                        <div class="slds-form-element__control">
+                                                                            <!--<apex:inputText styleclass="slds-input" value="{!sapCase.ONTAP__Email__c}" />-->
+                                                                            <apex:outputtext styleclass="slds-output" value="{!$User.Email}" />
+                                                                            <!--{!sapCase.ONTAP__Email__c}-->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="slds-form--horizontal">
+                                                        <div class="slds-form-element slds-p-top--xx-small slds-p-bottom--xx-small">
+                                                            <label class="slds-form-element__label bold_texthelp" for="inputSample2">
+                                                                Subject
+                                                                <abbr class="slds-required" title="required">
+                                                                    *</abbr></label>
+                                                            <div class="slds-form-element__control">
+                                                                <apex:inputtext styleclass="slds-input" value="{!sapCase.ONTAP__Subject__c}" id="SubjectId" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="slds-form-element  slds-p-top--xx-small slds-p-bottom--xx-small">
+                                                            <!--   <div class="slds-form-element">-->
+                                                            <label class="slds-form-element__label bold_texthelp" for="textareaSample2">
+                                                                Description
+                                                                <abbr class="slds-required" title="required">
+                                                                    *</abbr></label>
+                                                            <!--</div>-->
+                                                            <div class="slds-form-element__control">
+                                                                <apex:inputtextarea styleclass="slds-textarea" value="{!sapCase.ONTAP__Description__c}"
+                                                                    id="DescriptionId" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="slds-form-element  slds-p-top--xx-small slds-p-bottom--xx-small">
+                                                            <label class="slds-form-element__label bold_texthelp" for="inputSample2">
+                                                                Priority
+                                                            </label>
+                                                            <div class="slds-form-element__control">
+                                                                <apex:inputfield styleclass="slds-input" id="PriorityHelp" value="{!sapCase.ONTAP__Priority__c}" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-p-top--medium">
+                                                        <div class="slds-size--1-of-1 slds-text-align--center">
+                                                            <!--<apex:commandbutton styleclass="button" onclick="FunSubmit();" value="Submit Feedback"
+                                                                id="theCommandLink"  />-->
+                                                                  <button class="button" id="helpSubmit" onclick="FunSubmit();return false;" type="button">Submit Feedback</button>
+
+                                                            <!--action="{!submitCase}"-->
+                                                            <!-- <apex:commandLink styleclass="button" onclick="FunSubmit();" action="{!submitCase}" value="Submit Feedback" id="theCommandLink" />-->
+                                                        </div>
+                                                    </div>
+                                                    <!--</div>-->
+                                                </div>
+                                              </div>
+                                              </div>
+                                                <!-- Slds form End-->
+                                            </div>
+                                        </div>
+                                        <div id="tab2" class="slds-tabs__content slds-hide" role="tabpanel">
+                                            <!-- slds-m-left--large-->
+                                            <div id="divUsrguide" class ="userScroll" >
+                                                <div class="slds-card">
+                                                    <apex:repeat value="{!lstFAQs}" var="faq"> 
+                                                       <div class="slds-box slds-theme--default slds-m-vertical--xx-small">
+                                                           <div class="slds-form-element slds-m-left--large">
+                                                               <label class="slds-form-element__label bold_text slds-text-heading--small" 
+                                                                   for="text-input-01">
+                                                               {!faq.Name}</label>
+                                                               <div class="slds-form-element__control slds-text-heading--small">
+                                                                   <apex:outputText value="{!faq.Answer__c}" escape="false"/>
+                                                               </div>
+                                                           </div>
+                                                   </div>
+                                               </apex:repeat>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--/Tab section close-->
+                                    </div>
+                                </div>
+                            </div>
+                                
+                    
+                    
+                    
+                    </div>
+                    </apex:outputPanel>
+                    <!--  Help Page END   -->
+                
+                    <!-- Strat : POC details -->
+                    <!-- start Of Poc Page -->
+                    <apex:outputPanel id="pocPanel">
+                    <apex:outputPanel > 
+                
+                        <!-- Map Start-->
+                        <apex:outputPanel id="mapPanel_Poc">
+                            <div id="collpased_poc" class="slds-is-collapsed" >
+                           
+                                <div id="map_wrapper_poc">
+                                <div id="map_canvas_poc" class="mapping_poc">
+                               
+                                </div>
+                                 
+                                </div>
+                               
+                            </div>
+                        </apex:outputPanel>
+                        <!-- Map End-->
+                    
+                        <div id="lineSeparatorPoc" class='line-separator' ></div>
+                
+                        <div id="pocPagePanel" class = "slds-hide ">
+                            <div class = "pocPagePanel1">
+                            <!-- start of slds div-->
+                            <div class="slds">
+                                <!-- start of slds conatiner-->
+                                <div class="slds-container--center slds-container--large">
+                                    <!-- Head Pannel Start -->
+                                    <!-- Head End Start -->
+                                    <!-- Collapse Pannel Start -->
+                                    <!-- <div class="slds-m-top--xx-small"></div> -->
+                          
+                                    <!--ENd of  slds grid -->
+                                    <!-- Collapse Pannel End -->
+                                    <!--  Map -->
+                                     <!--  <div class="slds-m-top--xx-small"></div> -->
+                                    
+                                    <div class="slds-grid slds-size--1-of-1"> 
+                                    
+                                        <div class="slds-col  slds-p-left--small slds-size--11-of-12" >
+                                            <div class="slds-text-align--left slds-text-heading--medium bold_text " id='wholesalers'>
+                                                 {!pocWrap.objPocAccount.name}
+                                             </div> 
+                                            <div class="slds-text-align--left slds-col slds-has-flexi-truncate bold_text">{!pocWrap.objPocAccount.BillingStreet}</div>
+                                            <div class="slds-text-align--left slds-col slds-has-flexi-truncate bold_text">{!pocWrap.objPocAccount.Wholesaler__r.name}</div>
+                                        </div>
+                                          <div class='slds-col slds-text-align--right slds-align--absolute-center slds-size--1-of-12 slds-m-right--small' >
+                                                <span class='slds-avatar slds-avatar--Large'>
+                                                    <img src="{!URLFOR($Resource.ABIQ, '/assets/images/left-arrow.png')}"  onclick="backtoHome();" alt='Header logo' style="cursor: pointer; cursor: hand;"  />
+                                                </span>
+                                          </div>
+                                     </div> 
+                                    <div class="broderClass"></div>
+                                    <div id="brandPannel"></div>
+                                 
+                                </div>
+                                <!-- End of slds conatiner-->
+                            </div>
+                            </div>
+                            <!-- End of slds div-->
+                        </div>
+                        <!-- End Of Poc Page -->
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+                    <!-- End : POC details -->
+                                         
+                </div><!-- freeze pannel End -->
+                <!-- Scroll Pannel start -->
+                <div id="scrollpannel1" class ='scrollable'>
+                    <div>
+                        <span id="em" class="slds-text-heading--Large text_bold textcenter" ></span>
+                    </div>
+                    <div id="division">
+                    </div>
+                </div>
+                <!--Scroll Pannel End -->
+               
+              
+                
+            </div>
+            <!--Slds Container -->
+        </div>
+        <!--slds -->          
+    </apex:outputPanel>
+    <!--End Main Page -->
+    </div>
+   
+     <!-- Start footer-->
+     <apex:outputPanel id="SurveyPanel">
+     </apex:outputPanel>
+    <div class="slds" id="sldsclassfooter">
+        <!-- start of slds conatiner-->
+        <div  id="sldscontainer" class="slds-container--center slds-container--small slds-container--medium slds-container--large ">
+            <!-- Freeze Pan -->
+            <div id="freezepan">
+                <!-- slds collbar start-->
+                <div class="slds-grid collBar" >
+                   <div id='div_validate' class='slds-size--1-of-5 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical footer_addition' onclick="LoadSurvey('AB-IQ Survey Link','');"  >
+                        <span class='slds-avatar slds-avatar--Large'  >
+                            <img src="{!URLFOR($Resource.ABIQ, '/assets/images/Survey_1.png')}" alt='Header logo' style="cursor: pointer; cursor: hand;"/>
+                        </span>
+                        <span class = "slds-text-heading--small account_heading_color" >
+                        <label style="cursor: pointer; cursor: hand; font-size:12px" >Validate</label> 
+                        </span>
+                    </div>  
+                    <div id='div_Map' class='slds-size--1-of-5 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical footer_addition'  >
+                        <span class='slds-avatar slds-avatar--Large'  >
+                            <img src="{!URLFOR($Resource.ABIQ, '/assets/images/map.png')}" alt='Header logo' style="cursor: pointer; cursor: hand;" onclick="change_autorefreshdiv();"/>
+                        </span>
+                        <span class = "slds-text-heading--small account_heading_color" >
+                       <!-- <label style="cursor: pointer; cursor: hand;" onclick="change_autorefreshdiv();">Map</label> -->
+                        
+                        <span id="accord"  style="cursor: pointer; font-size:12px" onclick="change_autorefreshdiv();" >Map</span>
+                        </span>
+                    </div>  
+                    
+                    
+                    <div id='div_filter' class='slds-size--1-of-5 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical footer_addition'  >
+                        <span class='slds-avatar slds-avatar--Large'  >
+                            <img src="{!URLFOR($Resource.ABIQ, '/assets/images/filter.png')}"   alt='Header logo' style="cursor: pointer; cursor: hand;" id = "ftimage" onclick="navigateFilterPage();"/>
+                        </span>
+                        <span class = "slds-text-heading--small account_heading_color" >
+                        <!--<label style="cursor: pointer; cursor: hand;" onclick="navigateFilterPage();" >Filter</label> -->
+                        
+                         <span  style="cursor: pointer; font-size:12px" id="span_Filter" onclick="navigateFilterPage();"  >Filter </span> 
+                        </span>
+                    </div>  
+                    
+                                            
+                    <div id='div_help' class='slds-size--1-of-5 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical footer_addition' >
+                            <span class='slds-avatar slds-avatar--Large'>
+                                <img src="{!URLFOR($Resource.ABIQ, '/assets/images/Questions2.png')}"  onclick="navigateFaqPage();defTab();" alt='Header logo' style="cursor: pointer; cursor: hand;"  />
+                            </span>
+                            <span class = "slds-text-heading--small account_heading_color" >
+                             <label style="cursor: pointer; cursor: hand;font-size:12px" onclick="navigateFaqPage();defTab();">Help</label> 
+                            </span>
+                        
+                     </div>   
+                     <div id='div_home' class='slds-size--1-of-5 slds-text-align--center slds-grid slds-grid--vertical slds-navigation-list--vertical footer_addition' >
+                            <div class='slds-hide' id ='dvhome' >
+                                 <div class='slds-col slds-avatar slds-avatar--Large'>
+                                    <img src="{!URLFOR($Resource.ABIQ, '/assets/images/homeicon.png')}"  onclick="backtoHome();" alt='Header logo' style="cursor: pointer; cursor: hand;"  />
+                                 </div>
+                                <div class = "slds-col slds-text-heading--small account_heading_color" >
+                                 <label style="cursor: pointer; cursor: hand;font-size:12px" onclick="backtoHome();">Home</label> 
+                                </div>
+                             </div>
+                             <div class='slds-show' id ='dvRefresh' >
+                                  <div class='slds-col slds-avatar slds-avatar--Large'  >
+                                        <img src="{!URLFOR($Resource.ABIQ, '/assets/images/Refresh_1.png')}"  onclick="loadNewData();" alt='Header logo' style="cursor: pointer; cursor: hand;"/>
+                                   </div>
+                                   <div class = "slds-col slds-text-heading--small account_heading_color" >
+                                        <label style="cursor: pointer; cursor: hand; font-size:12px" onclick="loadNewData();">Refresh</label> 
+                                   </div>
+                             </div>
+                        
+                     </div>
+                     
+                  
+                </div>
+                <!-- slds collbar End-->
+            </div>
+            <!-- Freeze pan -->
+        </div>
+        <!-- slds container End-->
+    </div>
+    <!-- slds main end-->
+    <!--  End footer-->
+     
+     <!--  Action for LOG Tracking -->
+     <apex:actionFunction name="EvntLog" action="{!EvntLgTrack}" reRender="SurveyPanel"  >
+      <apex:param name="paramEventType"  value="evntType" />
+      <apex:param name="paramEvent"  value="evnt" />
+      <apex:param name="pocAccId"  value="pocAccId" />
+     </apex:actionFunction>
+   
+     
+     <!--  END Action for LOG Tracking -->
+     <!-- Action function start -->
+     <apex:actionFunction name="pocAccount" action="{!pocdetails}" reRender="pocPanel,scrptPanel" status="counterStatus" oncomplete="displayPannel();displayPocPannel();" >
+         <apex:param name="accParam" assignTo="{!accountId}" value="" />
+         <apex:param name="firstParam" assignTo="{!userLats}" value="" />
+         <apex:param name="secondParam" assignTo="{!userLongs}" value="" />
+     </apex:actionFunction>
+     <!-- Action function End -->
+    <!-- Slds Spinner start -->
+    <div id="sldsSpinner" class="slds-spinner_container SpinnerBackground" style="display:none">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--medium" role="alert">
+            <span class="slds-assistive-text">Loading</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    <!-- Slds Spinner End-->
+    
+     <!-- Slds Spinner start -->
+     <apex:actionstatus id="counterStatus">
+       <apex:facet name="start">
+    <div id="sldsSpinner" class="slds-spinner_container SpinnerBackground">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--medium" role="alert">
+            <span class="slds-assistive-text">Loading</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+            
+        </div>
+    </div>
+    </apex:facet>
+    </apex:actionstatus>
+    <!-- Slds Spinner End-->
+    </apex:form>
+    </body>
+   
+    <apex:outputPanel id="scrptPanel">
+     
+    <script>
+     
+      function template1(pannels,innserList)
+      { 
+        var pannelbrand=pannels.AtpId;
+        var pannelbrand1=pannels.brandCategory;
+        var gscChecked=pannels.gscChecked;
+        var gscurl=pannels.gscurl;
+        var dataloadDate=pannels.dataLoaddate;
+        var norecord='';
+        var appendStr='';
+        norecord='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        norecord+='<div class="slds-size--1-of-1">';
+        norecord+='<div class="slds-col textcenterpoc2"><div class="slds-text-align--center"><b>No Records to display</b></div></div>';
+        norecord+='</div>';
+        norecord+='</div><div class="slds-m-top--xx-small"></div>';
+        appendStr = '<div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">';                                                                                       
+        appendStr += '<div class="slds-grid slds-size--1-of-1"><div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>@pannelName@</b></div>';
+        appendStr += '<div class="slds-text-align--left slds-col slds-size--2-of-12"><span class="slds-text-align--left"><b>@Pannelvalue@</b></span></div>';
+        appendStr += '<div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">';             
+        //var strConfirmCall= "EvntLogTrack('Promopti Action','" + gscurl+ "')";
+       var strConfirmCall= "LoadSurvey('"+pannels.brandcat+"' + ' Action','"+pannels.accountId+"')"; 
+        if(gscChecked=="true")
+        {
+            //appendStr +='<a class="slds-button slds-button--brand confirmButton" onclick="'+strConfirmCall+'" type="button"  href="' + gscurl+ '"    >Confirm</a>';
+            appendStr +='<a class="slds-button slds-button--brand confirmButton" onclick="'+strConfirmCall+'"  type="button"  href="#">Validate</a>';
+        }
+        var strFunctionCall= "change_Pannel('"+pannelbrand + "','" + pannelbrand + "Panel')"; 
+        appendStr += '<input class="text_bold slds-col--bump-left slds-button slds-button--icon-border @PannelColor@" id="'+pannelbrand+'" onclick="'+strFunctionCall+'" value="+" type="button"/>';
+        appendStr += '</div></div></div>';
+        //appendStr += '<div class="slds-m-top--xx-small"></div>';
+        appendStr=appendStr.replaceAll('@pannelName@',pannels.brandcat).replaceAll('@Pannelvalue@',pannels.panelDisplay.replaceAll('/','&#x200B;/')).replaceAll('@PannelColor@',pannels.pannelColor).replaceAll('@gscurl@',pannels.gscurl);
+        var innerLst='';
+        innerLst +='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        var lastUpdated = '' ;
+        if (dataloadDate != '')
+            lastUpdated = 'Data Thru ' + dataloadDate;
+        innerLst +='<div class="slds-text-align--right Accountgrdbg"><div class="slds-m-right--small">'+lastUpdated+'</div></div>'
+        var recExsits=false;
+        for(var i=0;i<innserList.length;i++)
+        {
+            if(pannelbrand1==innserList[i].brandCat && recExsits==false)
+            {
+                recExsits=true;
+            }
+            if(pannelbrand1==innserList[i].brandCat)
+            {
+                innerLst +='<div class="slds-grid Accountgrdbg">';
+                //<!-- Product Image -->
+                innerLst +='<div class="slds-col--padded slds-size--4-of-12 slds-small-size--3-of-12 slds-medium-size--3-of-12 ">'; 
+                //innerLst +='<span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-m-top--xx-small slds-m-bottom--xx-small slds-small-size--1-of-3">';                   
+                //innerLst +='@BrandImage@';  
+                if(innserList[i].Imageurl != '')
+                    innerLst+='<img src="@BrandImage@" alt="" class="imageWidth"/>';
+                //innerLst +='</span>';
+                innerLst +='</div>';
+                //<!-- Product Image -->
+                //<!-- Product Info -->
+                innerLst +='<div class="slds-col--padded slds-size--5-of-12 slds-small-size--5-of-12 slds-medium-size--5-of-12 slds-media slds-media--center slds-m-top--xx-small">';
+                innerLst +='<div>@fulltext@<br/>';
+                if(innserList[i].bonus=='Y')
+                {
+                    innerLst +=' <b>Bonus SKU</b>';
+                }
+                innerLst +='</div></div>';
+                //<!-- Product Info -->
+                //<!-- Product Status Color -->
+                innerLst +='<div class="slds-col--padded slds-size--3-of-12 slds-small-size--3-of-12 slds-medium-size--3-of-12 slds-text-align--center  slds-media slds-media--center slds-m-top--x-large slds-m-bottom--x-large slds-p-left--medium">';
+                innerLst +='<p class="@sapColor@-circle_poc"></p>'
+                innerLst +='</div>';
+                //<!-- Product Status Color -->
+                innerLst +='</div>';
+                //<!-- For Bootm Line -->
+                innerLst +='<div class="broderClass_poc"></div>'; 
+                innerLst=innerLst.replaceAll('@BrandImage@',innserList[i].Imageurl).replaceAll('@fulltext@',innserList[i].fulltext).replaceAll('@sapColor@',innserList[i].Sapcolor);  
+            }
+        } 
+        innerLst+='</div><div class="slds-m-top--xx-small"></div>';
+        if(recExsits==true)
+        {
+            return(appendStr+innerLst);
+        }
+        else{
+            return(appendStr+norecord);
+        }
+        
+      }
+   
+      function template2(pannels,innserList)
+      { 
+        var pannelbrand=pannels.AtpId;
+        var gscChecked=pannels.gscChecked;
+        var gscurl=pannels.gscurl;
+        var pannelbrand1=pannels.brandCategory;
+        var dataloadDate=pannels.dataLoaddate;
+        var norecord='';
+        var appendStr='';
+        norecord='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        norecord+='<div class="slds-size--1-of-1">';
+        norecord+='<div class="slds-col textcenterpoc2"><div class="slds-text-align--center"><b>No Records to display</b></div></div>';
+        norecord+='</div>';
+        norecord+='</div><div class="slds-m-top--xx-small"></div>';
+        var strFunctionCall= "change_Pannel('"+pannelbrand + "','" + pannelbrand + "Panel')"; 
+        appendStr = '<div class="slds-box--x-small POCItemRounded slds-p-around--x-large slds-text-heading--small">';
+        appendStr += '<div class="slds-grid slds-size--1-of-1"><div class="slds-text-align--left slds-col slds-size--6-of-12 slds-large-size--8-of-12 slds-medium-size--7-of-12"><b>@pannelName@</b></div>';
+        appendStr += '<div class="slds-text-align--left slds-col slds-size--2-of-12"><span class="slds-text-align--left"><b>@Pannelvalue@</b></span></div>';
+        appendStr += '<div class="slds-text-align--right slds-col slds-size--4-of-12 slds-large-size--4-of-12 slds-medium-size--3-of-12">';
+        //var strConfirmCall= "EvntLogTrack('Promopti Action','" + gscurl+ "')"; 
+        //var strConfirmCall= pannels.brandcat + ' Action'; 
+        var strConfirmCall= "LoadSurvey('"+pannels.brandcat+"' + ' Action','"+pannels.accountId+"')"; 
+        
+        if(gscChecked=="true")
+        {
+            //appendStr +='<a class="slds-button slds-button--brand confirmButton" onclick="'+strConfirmCall+'" type="button"   href="' + gscurl+ '"   >Confirm</a>';
+            appendStr +='<a class="slds-button slds-button--brand confirmButton" onclick="'+strConfirmCall+'"  type="button"  href="#">Validate</a>';
+            
+        }
+        appendStr += '<input class="text_bold slds-col--bump-left slds-button slds-button--icon-border @PannelColor@" id="'+pannelbrand+'" onclick="'+strFunctionCall+'" value="+" type="button"/>';
+        appendStr += '</div></div></div>';
+        //appendStr += '<div class="slds-m-top--xx-small"></div>';
+        appendStr=appendStr.replaceAll('@pannelName@',pannels.brandcat).replaceAll('@Pannelvalue@',pannels.panelDisplay.replaceAll('/','&#x200B;/')).replaceAll('@PannelColor@',pannels.pannelColor);
+        var innerLst='';
+        var recExsits=false;
+        console.log(innserList);
+        innerLst +='<div id="'+pannelbrand+'Panel" class="slds-is-collapsed">';
+        innerLst +='<div class="slds-text-align--right Accountgrdbg"><div class="slds-m-right--small">Data Thru '+dataloadDate+'</div></div>'
+        for(var i=0;i<innserList.length;i++)
+        {
+            if(pannelbrand1==innserList[i].brandCat && recExsits==false)
+            {
+                recExsits=true;
+            }
+            if(pannelbrand1==innserList[i].brandCat)
+            {
+                recExsits=true;
+                innerLst+='<div class="slds-grid Accountgrdbg">';
+                //<!-- Product Image -->
+                innerLst+='<div class="slds-col--padded slds-size--3-of-8 slds-small-size--3-of-8 slds-medium-size--3-of-8">'; 
+                //innerLst+='<span class="slds-avatar slds-grid slds-grid--align-center slds-large-size--1-of-3 slds-medium-size--1-of-3 slds-m-top--xx-small slds-m-bottom--xx-small slds-small-size--1-of-3">';                   
+                //innerLst+='@BrandImage@';
+                if(innserList[i].Imageurl != '')
+                    innerLst+='<img src="@BrandImage@" alt="" class="imageWidth"/>';
+                //innerLst+='</span>';
+                innerLst+='</div>';
+                //<!-- Product Image -->
+                //<!-- Product Info -->
+                innerLst+='<div class="slds-col--padded slds-col--padded slds-size--4-of-8 slds-small-size--4-of-8 slds-medium-size--4-of-8 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small slds-p-left--xx-large">';
+                innerLst+='<div><div class="BlackCircle">@num@</div><h5>Display</h5></div>';
+                innerLst+='</div>';                                        
+                innerLst+='<div class="slds-col--padded slds-col--padded slds-size--2-of-8 slds-small-size--2-of-8 slds-medium-size--2-of-8 slds-text-align--center slds-media slds-media--center slds-m-top--xx-small">';
+                innerLst+='<div><div class="BlackCircle">@denum@</div><h5>Features</h5></div>';
+                innerLst+='</div>';                                        
+                //<!-- Product Info -->
+                innerLst+='</div>'; 
+                //<!-- For Bootm Line -->
+                innerLst+='<div class="broderClass_poc"></div>';                               
+                innerLst=innerLst.replaceAll('@BrandImage@',innserList[i].Imageurl).replaceAll('@num@',innserList[i].Num).replaceAll('@denum@',innserList[i].Denom);  
+             } //end If
+         }//End For
+         innerLst +='</div><div class="slds-m-top--xx-small"></div>'; 
+         if(recExsits==true)
+         {
+            return(appendStr+innerLst);
+         }
+         else{
+            return(appendStr+norecord);
+         }
+      }
+        
+      var list2=[];
+      var isDisplayBusy=false;
+      function displayPannel()
+      {
+        if(isDisplayBusy)
+        {
+            return true;
+            console.log(isDisplayBusy);
+        }
+        isDisplayBusy=true;
+        var list1=[];
+        var innserList=[];
+        var pannelfullStr='';
+        
+        <apex:repeat value="{!pocWrap.lstSeq3}" var="ts">
+            var atpData = new Object();
+            atpData.panelDisplay='{!ts.panelDisplay}';
+            atpData.pannelColor='{!ts.pannelColor}_pocss';
+            atpData.Pannelvalue='{!ts.Pannelvalue}';
+            atpData.panelDisplay='{!ts.panelDisplay}';
+            atpData.brandcat='{!ts.brandcat}';
+            atpData.AtpId='{!ts.AtpId}';
+            atpData.gscurl='{!ts.gscurl}';
+            atpData.gscChecked='{!ts.gscChecked}';
+            atpData.brandCategory='{!ts.brandCategory}';
+            atpData.dataLoaddate='{!ts.dataLoaddate}';
+            atpData.accountId ='{!ts.accountId }';
+            list2.push(atpData)
+            list1.push(atpData); 
+        </apex:repeat>
+        //console.log(list1);
+        <apex:repeat value="{!pocWrap.lstSeq4}" var="ts">
+            var atpDatas = new Object();
+            atpDatas.panelDisplay='{!ts.panelDisplay}';
+            atpDatas.pannelColor='{!ts.pannelColor}_pocss';
+            atpDatas.Pannelvalue='{!ts.Pannelvalue}';
+            atpDatas.panelDisplay='{!ts.panelDisplay}';
+            atpDatas.brandcat='{!ts.brandcat}';
+            atpDatas.AtpId='{!ts.AtpId}';
+            atpDatas.gscurl='{!ts.gscurl}';
+            atpDatas.gscChecked='{!ts.gscChecked}';
+            atpDatas.brandCategory='{!ts.brandCategory}';
+            atpDatas.dataLoaddate='{!ts.dataLoaddate}';
+            atpDatas.accountId ='{!ts.accountId }';
+            list1.push(atpDatas); 
+        </apex:repeat>
+        //console.log(list1);
+        <apex:repeat value="{!wraptarget}" var="actarget">
+            var apData = new Object();
+            apData.Denom='{!actarget.Denom}';
+            apData.Imageurl='{!actarget.Imageurl}';
+            apData.Num='{!actarget.Num}';
+            apData.achivemnetScore='{!actarget.achivemnetScore}';
+            apData.bonus='{!actarget.bonus}';
+            apData.brandCat='{!actarget.brandCat}';
+            apData.fulltext='{!JSINHTMLENCODE(actarget.fulltext)}';
+            apData.Sapcolor='{!Lower(actarget.SapColor)}';
+            innserList.push(apData);
+        </apex:repeat>
+        console.log(innserList);
+        console.log(list1);
+        
+        for(var i=0;i<list1.length; i++)
+        {
+            if(list1[i].Pannelvalue=="pannel 1")
+            {
+                pannelfullStr+=template1(list1[i],innserList);
+            }
+            if(list1[i].Pannelvalue=="pannel 2")
+            {
+                pannelfullStr+=template2(list1[i],innserList);
+            }
+        }
+        //alert(pannelfullStr);
+        //alert(list1);
+        $('#brandPannel').append(pannelfullStr);
+        pannelfullStr='';
+        list1=[];
+        isDisplayBusy=false;
+
+      }
+       
+       //Display Poc Map 
+        function initialize_poc() 
+        { 
+            var poclag="{!pocWrap.objPocAccount.BillingLatitude}";
+            var poclng='{!pocWrap.objPocAccount.BillingLongitude}';
+            var mainName='{!pocWrap.pocName}';  
+            var pinColor = '{!lower(pocWrap.mapPocPinColor)}-dot.png';
+            var pinsImage ="https://maps.google.com/mapfiles/ms/icons/"+pinColor;
+            var mypocLatlng = new google.maps.LatLng(poclag,poclng);
+            var mapOptions = {center: mypocLatlng ,
+                              icon: pinsImage,
+                              mapTypeId: google.maps.MapTypeId.ROADMAP,
+                              zoom: 10,
+                             };
+            var markers = new google.maps.Marker({
+                               position: mypocLatlng,
+                               icon: pinsImage,
+            });
+            
+            map = new google.maps.Map(document.getElementById('map_canvas_poc'),mapOptions);
+            markers.setMap(map);
+            
+            var iwContent='';
+            var name='{!pocWrap.pocName}';
+            iwContent = '<div style="font-weight: normal;font-size: 14px;"><font color="brown",weight="bold">'+name +'</font></div>'; 
+            var valuesData = '';
+            var PinTemplate  = '<div class="iw_title" style="font-weight: normal;font-size: 12px;" ><font color="Green",weight="bold">%DisplayValues%</font></div>';
+            for (var i = 0; i<list2[i].length; i++)
+            {
+                if(list2[i].Pannelvalue!=undefined && list2[i].Pannelvalue=="pannel 1")
+                {
+                    //valuesData += PinTemplate.replaceAll('%DisplayValues%',list2[i].brandcat==undefined?'':list2[i].brandcat+(list2[i].brandcat==undefined && list2[i].panelDisplay==undefined)?'':' : ' +list2[i].panelDisplay==undefined?'':list2[i].panelDisplay);
+                      valuesData += PinTemplate.replaceAll('%DisplayValues%',list2[i].brandcat+' : ' +list2[i].panelDisplay.replaceAll('/','&#x200B;/'));       
+                }
+            } 
+            iwContent += valuesData;
+            var name='{!pocWrap.pocName}';
+            var palat='{!pocWrap.palat}';
+            var palon='{!pocWrap.palon}';
+            var ulatlng = new google.maps.LatLng(palat,palon);
+            var userColorPin='blue-dot.png'
+            var infowindow = new google.maps.InfoWindow({
+                 content: iwContent 
+            });
+              
+            markers.addListener('click', function() {
+                 infowindow.open(map, this);
+            });
+    
+            // assuming you also want to hide the infowindow when user mouses-out
+            markers.addListener('mouseout', function() {
+                infowindow.close();
+            });
+            createMarker_poc(ulatlng,userColorPin,mypocLatlng,map);
+        }
+        
+        //  Start :Help Page script 
+        
+            // Validations of Submit and Description fields         
+            function FunSubmit(){
+                if(document.getElementById("wholePage:filtersform:DescriptionId").value == '' && document.getElementById("wholePage:filtersform:SubjectId").value == ''){
+                    alert("Description and Subject are Required");
+                    wholepage.FormId.DescriptionId.focus();
+                }
+                else{
+                    if(document.getElementById("wholePage:filtersform:SubjectId").value == ''){
+                        alert("Subject is Required");
+                        wholepage.FormId.SubjectId.focus();
+                    }
+                    if(document.getElementById("wholePage:filtersform:DescriptionId").value == ''){
+                        alert("Description is Required");
+                        wholepage.FormId.DescriptionId.focus();
+                    }
+                    if(document.getElementById("wholePage:filtersform:DescriptionId").value != '' && document.getElementById("wholePage:filtersform:SubjectId").value != ''){
+                        highlightItem('');
+                        SubmitAction();
+                        document.getElementById("helpSubmit").disabled = true;
+                        //url='/apex/ABS_WholesalerAccountDetail';
+                        //var currentUrl=window.location.href;
+                        //window.top.location= currentUrl;
+                    }
+                }
+            }
+            
+            function feedOnComplete(){
+                document.getElementById("helpSubmit").disabled = false;
+                document.getElementById("wholePage:filtersform:SubjectId").value == '';
+                document.getElementById("wholePage:filtersform:DescriptionId").value == '';
+                document.getElementById("wholePage:filtersform:PriorityHelp").value == '';
+                var currentUrl=window.location.href;
+                window.top.location= currentUrl;
+            }
+            function defTab(){
+                document.getElementById('tab1').className="slds-tabs__content slds-show slds-float--left slds-small-size--1-of-2";
+                document.getElementById('tab2').className="slds-tabs__content slds-hide ";
+                document.getElementById('ItemOne').className="slds-tabs__item slds-text-heading--label slds-active";
+                document.getElementById('Itemtwo').className="slds-tabs__item slds-text-heading--label";
+            }
+    
+            function changetab(id)
+            {
+                var tabname=id;
+                if(tabname==='tabone')
+                {
+                    document.getElementById('tab1').className="slds-tabs__content slds-show slds-float--left slds-small-size--1-of-2";
+                    document.getElementById('tab2').className="slds-tabs__content slds-hide ";
+                    document.getElementById('ItemOne').className="slds-tabs__item slds-text-heading--label slds-active"
+                    document.getElementById('Itemtwo').className="slds-tabs__item slds-text-heading--label"
+                }else if(tabname==='tabtwo')
+                {
+                    document.getElementById('tab2').className="slds-tabs__content slds-show";//slds-m-left--large
+                    document.getElementById('tab1').className="slds-tabs__content slds-hide";
+                    document.getElementById('Itemtwo').className="slds-tabs__item slds-text-heading--label slds-active"
+                    document.getElementById('ItemOne').className="slds-tabs__item slds-text-heading--label"
+                }
+            }
+        
+        // End: Help Page
+     
+         var h = window.innerHeight -215;
+                    $('.userScroll').css({'height':h + 'px'});
+                    $(window).resize(function(){
+                    $('.userScroll').css({'height': h +'px'});
+                    });
+    </script>
+    <style>
+    .userScroll{overflow-y:auto;}
+    .frmHelp{overflow-y:auto; background-color: white;}
+    .slds-tabs--default{ background-color: LightGray !important;}
+    .button {
+        background-color: DodgerBlue !important;
+        border: 2px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+        margin: 4px 2px;
+        cursor: pointer;
+         padding: 8px 12px;
+        border-radius: 4px;
+        background-image: none !important;
+    }
+    .HelpContainer {margin-top : 5px;}
+    .bold_texthelp{font-weight: bold;}
+    .slds-tabs--default{ background-color: LightGray !important;}
+    .feed{background-color: white;border: none;}
+    .ui-mobile .ui-page-active{display:block;overflow:visible;/*overflow-x:hidden*/}
+    </style>
+    </apex:outputPanel>
+    </html>
+ 
+   </apex:page>
