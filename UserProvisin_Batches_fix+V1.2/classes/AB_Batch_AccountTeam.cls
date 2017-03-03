@@ -1,0 +1,76 @@
+/*Author: Bharat*/
+/*Description: */ 
+
+/* Test class: AB_AccountTeam_Test*/
+
+global class AB_Batch_AccountTeam implements Database.Batchable<sobject>,Schedulable {//Database.Stateful,
+    global set<id> setIds = new set<id>();
+    global Database.QueryLocator start(Database.BatchableContext BC)
+    {
+      return Database.getQueryLocator([SELECT Id, FederationIdentifier,Username,LastName, FirstName,Email, Fax, 
+                        Alias,CommunityNickname,IsActive,TimeZoneSidKey,LocaleSidKey,ProfileId,
+                        EmailEncodingKey,LanguageLocaleKey,UserPreferencesDisableAutoSubForFeeds, 
+                        UserPermissionsMobileUser,Title,City,MobilePhone,PostalCode,State, phone,
+                        country, Send_To_Global__c,
+                        Street,CompanyName,Department,contactId FROM User WHERE Account_Team__c = true]);
+        
+    }
+   
+    global void execute(Database.BatchableContext BC, List<user> scope) {
+        system.debug('scope=='+scope);
+        if(scope != null && !scope.isEmpty()){
+            for(user obj : scope){
+                setIds.add(obj.id);
+            }
+            system.debug('setIds=='+setIds);
+            if(setIds != null && !setIds.isEmpty()){
+                AB_AccountTeam.addAccountTeam(setIds);
+                system.debug('Created Execute');
+                
+                system.debug(setIds);
+                list<user> lstFinal = new list<user>();
+                try{
+                    list<user> usrToUpdate = [select id,Account_Team__c from user where id in : setIds];
+                    if(usrToUpdate != null && !usrToUpdate .isEmpty()){
+                        for(user us : usrToUpdate){
+                            us.Account_Team__c = false;
+                            lstFinal.add(us);
+                        }
+                        system.debug('before lstFinal=='+lstFinal);
+                        update lstFinal;
+                        system.debug('after lstFinal=='+lstFinal);
+                    }
+                }
+                catch(exception e){
+                    system.debug(e.getmessage() + e.getlinenumber());
+                }
+            }
+        }
+    }
+    global void execute(schedulablecontext sc){
+        Database.executeBatch(new AB_Batch_AccountTeam(), 100);
+
+    }
+    
+    global void finish(Database.BatchableContext BC) {
+        /*system.debug('------');
+        system.debug(setIds);
+        list<user> lstFinal = new list<user>();
+        try{
+            list<user> usrToUpdate = [select id,Account_Team__c from user where id in : setIds];
+            if(usrToUpdate != null && !usrToUpdate .isEmpty()){
+                for(user us : usrToUpdate){
+                    us.Account_Team__c = false;
+                    lstFinal.add(us);
+                }
+                system.debug('before lstFinal=='+lstFinal);
+                update lstFinal;
+                system.debug('after lstFinal=='+lstFinal);
+            }
+        }
+        catch(exception e){
+            system.debug(e.getmessage() + e.getlinenumber());
+        }*/
+        
+    }
+}
