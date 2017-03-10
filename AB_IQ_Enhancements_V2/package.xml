@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AB_IQ_Enhancements_V2</fullName>
+    <description>1) Search Logic
+2) GSC link
+3) Performance Imporvement
+4) Loader
+5) BatchRegionRosterUpdate</description>
+    <types>
+        <members>ABS_WholesalerAccountDetail</members>
+        <members>ABS_WholesalerAccountDetail_Test</members>
+        <members>BatchRegionRosterUpdate</members>
+        <members>BatchRegionRosterUpdateTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>ABS_WholesalerAccountDetail</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>ABS_Profiles</members>
+        <members>AB_GSC_Link</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>ABIQ</members>
+        <name>StaticResource</name>
+    </types>
+    <version>37.0</version>
+</Package>

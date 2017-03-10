@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>ABS_Profiles</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ABS_Profiles</shortDescription>
+        <value>BAM Platform User,TAM Platform User,WOD Representative,IND Representative</value>
+    </labels>
+    <labels>
+        <fullName>AB_GSC_Link</fullName>
+        <categories>Link to enable/Disable GSC on ABIQ VF Page(Boolean Value)</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>AB_GSC_Link</shortDescription>
+        <value>false</value>
+    </labels>
+</CustomLabels>
