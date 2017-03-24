@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AB_IQ Changes_V 2%2E0</fullName>
+    <types>
+        <members>ABS_WholesalerAccountDetail</members>
+        <members>ABS_WholesalerAccountDetail_Test</members>
+        <members>AB_CreateUserFromContact_Handler</members>
+        <members>AB_CreateUserFromContact_Handler_Test</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>ABS_WholesalerAccountDetail</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>AB_Wholesaler_Filter__c.Limit__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>AB_WholeLimit</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>AB_Wholesaler_Filter__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>ABIQ</members>
+        <name>StaticResource</name>
+    </types>
+    <version>39.0</version>
+</Package>
