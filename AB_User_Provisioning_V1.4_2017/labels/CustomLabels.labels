@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Merchandiser</fullName>
+        <categories>User Portal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Merchandiser</shortDescription>
+        <value>Merchandiser</value>
+    </labels>
+    <labels>
+        <fullName>ReqErrorMsg</fullName>
+        <categories>User Portal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ReqErrorMsg</shortDescription>
+        <value>Required fields are missing</value>
+    </labels>
+    <labels>
+        <fullName>SalesManager</fullName>
+        <categories>User Portal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SalesManager</shortDescription>
+        <value>Sales Manager</value>
+    </labels>
+    <labels>
+        <fullName>SalesRep</fullName>
+        <categories>User Portal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SalesRep</shortDescription>
+        <value>Sales Rep</value>
+    </labels>
+    <labels>
+        <fullName>TeamLead</fullName>
+        <categories>User Portal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>TeamLead</shortDescription>
+        <value>Team Lead</value>
+    </labels>
+</CustomLabels>

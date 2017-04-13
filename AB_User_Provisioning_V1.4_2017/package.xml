@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AB_User_Provisioning_V1%2E4_2017</fullName>
+    <description>AB_UserProvisioning  changes 4/13/2017 Scott&amp;Deepthi</description>
+    <types>
+        <members>ABS_UserCreation_RestAPI</members>
+        <members>ABS_UserCreation_RestAPI_Test</members>
+        <members>AB_Batch_RestUserCreation</members>
+        <members>AB_CreateUserFromContact_Handler</members>
+        <members>AB_CreateUserFromContact_Handler_Test</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>HE_ContactTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>Contact.ABIQ_Access__c</members>
+        <members>Contact.Global_User_Only__c</members>
+        <members>Contact.GoSpotCheck_Access__c</members>
+        <members>Contact.Remote_Survey_Vendor_Enabled__c</members>
+        <members>Contact.Role_Picklist__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Merchandiser</members>
+        <members>ReqErrorMsg</members>
+        <members>SalesManager</members>
+        <members>SalesRep</members>
+        <members>TeamLead</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
+    </types>
+    <version>39.0</version>
+</Package>
